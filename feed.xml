@@ -1,0 +1,814 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+<title type="text">Rabbit Stack</title>
+<generator uri="https://github.com/jekyll/jekyll">Jekyll</generator>
+<link rel="self" type="application/atom+xml" href="http://rabbitstack.github.io/feed.xml" />
+<link rel="alternate" type="text/html" href="http://rabbitstack.github.io" />
+<updated>2015-02-24T20:13:57+01:00</updated>
+<id>http://rabbitstack.github.io/</id>
+<author>
+  <name>Nedim Šabić</name>
+  <uri>http://rabbitstack.github.io/</uri>
+  <email>bhnedo@hotmail.com</email>
+</author>
+
+
+  
+
+<entry>
+  <title type="html"><![CDATA[Introduction to CQRS]]></title>
+  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/introduction-to-cqrs/" />
+  <id>http://rabbitstack.github.io/introduction-to-cqrs</id>
+  <published>2015-02-21T19:11:46+01:00</published>
+  <updated>2015-02-21T19:11:46+01:00</updated>
+  <author>
+    <name>Nedim Šabić</name>
+    <uri>http://rabbitstack.github.io</uri>
+    <email>bhnedo@hotmail.com</email>
+  </author>
+  <content type="html">&lt;p&gt;
+In the world dominated by the IoT and the increasingly demanding users, the applications and the developers itself need to adapt a new paradigm to satisfy those needs. The users (customers) expectations are often very high as they want the contracted IT services highly available and the new feature requirements implemented as soon as possible. Besides that,
+project managers also want developers to complete the tasks in a time-constrained iterations guaranteeing the quality and good performance of the final product. Despite the increasing size and complexity of the applications, we still need to stay agile and deliver the product in established deadlines. Definitely, not a trivial task, at least not in a monolithic tightly coupled application architectures.
+&lt;/p&gt;
+&lt;p&gt;
+It is where &lt;strong&gt;CQRS&lt;/strong&gt; comes to the rescue. CQRS stands for &lt;i&gt;Command Query Responsibility Segregation&lt;/i&gt;, a design pattern with a very simple foundation: seperate the application into two parts - one that is responsible for executing actions and other one providing a thin data layer for query execution. So we have two models, the &lt;strong&gt;write&lt;/strong&gt; model and the &lt;strong&gt;read&lt;/strong&gt; model. Although at first glance may seem irrelevant, this approach opens up a plethora of possibilities. To better understand the CQRS paradigm, we will explain each of its building blocks with the help of the diagram below.
+&lt;/p&gt;
+
+&lt;figure&gt;
+	&lt;a href=&quot;/images/cqrs.jpg&quot; class=&quot;image-popup&quot;&gt;
+		&lt;img src=&quot;/images/cqrs.jpg&quot; /&gt;
+	&lt;/a&gt;
+	&lt;figcaption&gt;CQRS building blocks&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;ul&gt;
+	&lt;li&gt;
+		&lt;strong&gt;Commands&lt;/strong&gt; are the objects that encapsulate both the user&#39;s intention as the information necessary to perform the operation. For example, &lt;code&gt;CreateNewUserCommand&lt;/code&gt; would hold a variety of attributes such as username, address, age, etc. Commands are sent to the command bus and later dispatched to its corresponding command handler. The state change in the system is started by executing the command.
+	&lt;/li&gt;
+	&lt;li&gt;
+		&lt;strong&gt;Domain model&lt;/strong&gt;  represents the heart of the system. Because the CQRS is based on its predecessor &lt;strong&gt;DDD&lt;/strong&gt; (Domain Driven Design) the main design approach
+		resides on the rich domain model. What does this mean? In traditional design, the domain objects often play the role of entities that just keep the system state and lack any kind of behavior, and thus is often called as &lt;i&gt;anemic&lt;/i&gt; domain model. This also tends to create ambiguity between the &lt;strong&gt;DTO&lt;/strong&gt; (Data Transfer Objects) and model objects, making the domain model end up having information that must be rendered in the view, and therefore create coupling. The dedicated service layer alters the system state. CQRS promotes a strictly behavior based domain model.
+	&lt;/li&gt;
+	&lt;li&gt;
+		&lt;strong&gt;Repositories&lt;/strong&gt; provide access to domain objects and allow isolating the domain model from persistence mechanism. Repositories just have to be able to recover the aggregate (domain object) from its unique identifier, while any other type of query is performed against read model.
+	&lt;/li&gt;
+	&lt;li&gt;
+		&lt;strong&gt;Events&lt;/strong&gt; are the source of any state changes in the application. As mentioned above, executing commands on aggregate, initiates the state change in the system, which in turn will produce a series of domain events. We don&#39;t need to persist domain objects but the generated domain events. With this we are able to reconstruct the domain object to its last state, just applying the stream of events on it. This pattern is known as &lt;i&gt;event sourcing&lt;/i&gt;. Events are sent to the event bus, and dispatched to any component interested in consuming it.
+	&lt;/li&gt;
+	&lt;li&gt;
+		&lt;strong&gt;Event store&lt;/strong&gt; provides a backing store for domain events. Those are often relational databases and NoSQL databases, but for the proof of concepts they can be implemented as file system stores.
+	&lt;/li&gt;
+	&lt;li&gt;
+		&lt;strong&gt;Queries&lt;/strong&gt; are executed against simple read-only data layer. The information needed to be rendered in the view is reflected in the object which contains the results of the query. We can say that the object is tailored for what view needs to represent.
+	&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Advantages of CQRS&lt;/h3&gt;
+
+&lt;ul&gt;
+	&lt;li&gt;
+		Allows the application to be distributed across multiple physical or virtual machines (horizontal scalability).
+	&lt;/li&gt;
+	&lt;li&gt;
+		High availability at the application level. If one component fails, the rest of the system can still works.
+	&lt;/li&gt;
+	&lt;li&gt;
+		Audit / tracking / tracing of user actions out of the box. This type of audit is not comparable to any infrastructure log, since domain events add additional value to the business. It&#39;s easy to extract and ingest the domain events into machine-learning platforms or correlation engines, for example to predict user actions, detect anomalies, etc. By having the trace of everything that happens in the application, we have a single source of truth. It is also easier to reproduce the software failures.
+	&lt;/li&gt;
+	&lt;li&gt;
+		Instead of binding domain objects with UI components, we have simple DTO that accurately reflect what we want to represent in the view and it can be retrieved directly from the database. Thus, we can obtain all necessary information in a single request to the data source.
+	&lt;/li&gt;
+	&lt;li&gt;
+		CQRS help us to write an expressive domain model. It also puts the models on a &quot;diet&quot; since the models only need to have the attributes relevant for the business decision.
+	&lt;/li&gt;
+	&lt;li&gt;
+		When the command is about to be processed, the repository will get the stream of events related to the object from the event store. The object state is reconstructed from the event stream. Thus, we get the object in its original state and there will not need to provide persistence to the domain model.
+	&lt;/li&gt;
+	&lt;li&gt;
+		Separate data models. These remain consistent, synchronized and decoupled thanks to the domain events. For the read model you can use any technology, from JDBC, ORM systems through NoSQL solutions, since the only purpose is to populate the view with data as quickly as possible. We can have denormalized databases to optimize the reads and avoid complex queries with many unions.
+	&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Disadvantages&lt;/h3&gt;
+
+&lt;p&gt;As there is no silver bullet for every scenario, you should keep in mind these considerations:&lt;/p&gt;
+
+&lt;ul&gt;
+	&lt;li&gt;
+		Use CQRS when the domain model is complex. A simple model is not going to benefit from this pattern.
+	&lt;/li&gt;
+	&lt;li&gt;
+		The learning curve is relatively high and it requires the change of the point of view regarding traditional design.
+	&lt;/li&gt;
+	&lt;li&gt;
+		Higher infrastructure requirements since we have two models (the read model and the write model).
+	&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Conclusion&lt;/h3&gt;
+&lt;p&gt;Perhaps the time has come to change the traditional approach to software development? At the end, it is up to you. The benefits of CQRS are tremendous. It keeps the software maintainable, easily extensible and ready to face new challenges that the future holds. If your next project’s requirements are going to be complex, or you just need high availability and scalability at the application level and you want to grow without losing the agility, don’t hesitate, use CQRS.&lt;/p&gt;
+
+  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/introduction-to-cqrs/&quot;&gt;Introduction to CQRS&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on February 21, 2015.&lt;/p&gt;</content>
+</entry>
+
+
+  
+
+<entry>
+  <title type="html"><![CDATA[Deploying Cloud Foundry on OpenStack Juno and XenServer (Part II)]]></title>
+  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-ii/" />
+  <id>http://rabbitstack.github.io/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-ii</id>
+  <published>2015-02-14T11:48:52+01:00</published>
+  <updated>2015-02-14T11:48:52+01:00</updated>
+  <author>
+    <name>Nedim Šabić</name>
+    <uri>http://rabbitstack.github.io</uri>
+    <email>bhnedo@hotmail.com</email>
+  </author>
+  <content type="html">&lt;p&gt;Let&#39;s move on. We should have our OpenStack instance prepared for Cloud Foundry. The most usual way of deploying Cloud Foundry is through &lt;strong&gt;BOSH&lt;/strong&gt;. For the who still didn&#39;t hear about it, &lt;a href=&quot;http://bosh.io/docs&quot; target=&quot;_blank&quot;&gt;BOSH&lt;/a&gt; is the platform for automation and lifecycle management of software and distributed services. It is also capable of monitoring and failure recovery of processes and virtual machines. There are already a few IT automation platforms in the market like &lt;a href=&quot;https://www.chef.io/&quot; target=&quot;_blank&quot;&gt;Chef&lt;/a&gt; or &lt;a href=&quot;http://puppetlabs.com/&quot; target=&quot;_blank&quot;&gt;Puppet&lt;/a&gt;, so, why to learn / use BOSH then?
+&lt;/p&gt;
+&lt;p&gt;
+One notable difference is that BOSH is able to perform the deployment from the sterile environment, i.e. package source code and dependencies, create the virtual machines (jobs in BOSH terminology) from the so called&lt;i&gt;stemcell&lt;/i&gt; template (VM which has BOSH agent installed and is used to generate the jobs), and finally install, start and monitor the required services and VMs. Visit the official page from the link above to learn more about BOSH.
+&lt;/p&gt;
+&lt;h3&gt;Deploying MicroBOSH&lt;/h3&gt;
+
+&lt;p&gt;MicroBOSH is a single VM which contains all the necessary components to boot BOSH, including the blobstore, nats, director, health manager etc. Once you have an instance of MicroBOSH running, you can deploy BOSH if you wish. Install BOSH CLI gems (Ruby &amp;gt;= 1.9.3 is required).&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;gem install bosh_cli bosh_cli_plugin_micro&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;You will need to create a keypair in OpenStack and configure &lt;code&gt;bosh&lt;/code&gt; security group with the rules shown in the table below. You can do it by accessing the Horizon dashboard or by using &lt;code&gt;nova&lt;/code&gt; CLI.&lt;/p&gt;
+&lt;table rules=&quot;groups&quot;&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;Direction&lt;/th&gt;
+          &lt;th&gt;IP Protocol&lt;/th&gt;
+          &lt;th&gt;Port Range&lt;/th&gt;
+          &lt;th&gt;Remote&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;&lt;td style=&quot;text-align:center&quot;&gt;Ingress&lt;/td&gt;&lt;td style=&quot;text-align:center&quot;&gt;TCP&lt;/td&gt;&lt;td style=&quot;text-align:center&quot;&gt;1-65535&lt;/td&gt;&lt;td style=&quot;text-align:center&quot;&gt;bosh&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td style=&quot;text-align:center&quot;&gt;Ingress&lt;/td&gt;&lt;td style=&quot;text-align:center&quot;&gt;TCP&lt;/td&gt;&lt;td style=&quot;text-align:center&quot;&gt;53 (DNS)&lt;/td&gt;&lt;td style=&quot;text-align:center&quot;&gt;0.0.0.0/0 (CIDR)&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td style=&quot;text-align:center&quot;&gt;Ingress&lt;/td&gt;&lt;td style=&quot;text-align:center&quot;&gt;TCP&lt;/td&gt;&lt;td style=&quot;text-align:center&quot;&gt;4222&lt;/td&gt;&lt;td style=&quot;text-align:center&quot;&gt;0.0.0.0/0 (CIDR)&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td style=&quot;text-align:center&quot;&gt;Ingress&lt;/td&gt;&lt;td style=&quot;text-align:center&quot;&gt;TCP&lt;/td&gt;&lt;td style=&quot;text-align:center&quot;&gt;6868&lt;/td&gt;&lt;td style=&quot;text-align:center&quot;&gt;0.0.0.0/0 (CIDR)&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td style=&quot;text-align:center&quot;&gt;Ingress&lt;/td&gt;&lt;td style=&quot;text-align:center&quot;&gt;TCP&lt;/td&gt;&lt;td style=&quot;text-align:center&quot;&gt;4222&lt;/td&gt;&lt;td style=&quot;text-align:center&quot;&gt;0.0.0.0/0 (CIDR)&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td style=&quot;text-align:center&quot;&gt;Ingress&lt;/td&gt;&lt;td style=&quot;text-align:center&quot;&gt;TCP&lt;/td&gt;&lt;td style=&quot;text-align:center&quot;&gt;25250&lt;/td&gt;&lt;td style=&quot;text-align:center&quot;&gt;0.0.0.0/0 (CIDR)&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td style=&quot;text-align:center&quot;&gt;Ingress&lt;/td&gt;&lt;td style=&quot;text-align:center&quot;&gt;TCP&lt;/td&gt;&lt;td style=&quot;text-align:center&quot;&gt;25555&lt;/td&gt;&lt;td style=&quot;text-align:center&quot;&gt;0.0.0.0/0 (CIDR)&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td style=&quot;text-align:center&quot;&gt;Ingress&lt;/td&gt;&lt;td style=&quot;text-align:center&quot;&gt;TCP&lt;/td&gt;&lt;td style=&quot;text-align:center&quot;&gt;25777&lt;/td&gt;&lt;td style=&quot;text-align:center&quot;&gt;0.0.0.0/0 (CIDR)&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tbody&gt;
+       &lt;tr&gt;&lt;td style=&quot;text-align:center&quot;&gt;Ingress&lt;/td&gt;&lt;td style=&quot;text-align:center&quot;&gt;UDP&lt;/td&gt;&lt;td style=&quot;text-align:center&quot;&gt;53&lt;/td&gt;&lt;td style=&quot;text-align:center&quot;&gt;0.0.0.0/0 (CIDR)&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td style=&quot;text-align:center&quot;&gt;Ingress&lt;/td&gt;&lt;td style=&quot;text-align:center&quot;&gt;UDP&lt;/td&gt;&lt;td style=&quot;text-align:center&quot;&gt;68&lt;/td&gt;&lt;td style=&quot;text-align:center&quot;&gt;0.0.0.0/0 (CIDR)&lt;/td&gt;&lt;/tr&gt;
+  &lt;tbody&gt;
+
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;nova keypair-add microbosh &amp;gt; microbosh.pem
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;chmod &lt;span class=&quot;m&quot;&gt;600&lt;/span&gt; microbosh.pem&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;BOSH uses a variety of artifacts in order to complete the deployment life cycle. We can basically distinguish between stemcell, release and deployment. To deploy MicroBOSH we will only need a stemcell which can be downloaded using the bosh CLI. First get a list of available stemcells and download the &lt;code&gt;bosh-stemcell-2839-openstack-kvm-centos-go_agent-raw.tgz&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bosh public stemcells
++-----------------------------------------------------------------+
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; Name                                                            &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
++-----------------------------------------------------------------+
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2427-aws-xen-ubuntu.tgz                           &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2652-aws-xen-centos.tgz                           &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2839-aws-xen-centos-go_agent.tgz                  &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2427-aws-xen-ubuntu-go_agent.tgz                  &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2710-aws-xen-ubuntu-lucid-go_agent.tgz            &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2652-aws-xen-ubuntu-lucid.tgz                     &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2839-aws-xen-ubuntu-trusty-go_agent.tgz           &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2690.6-aws-xen-ubuntu-trusty-go_agent.tgz         &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2719.1-aws-xen-centos-go_agent.tgz                &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2719.1-aws-xen-ubuntu-trusty-go_agent.tgz         &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2719.2-aws-xen-centos-go_agent.tgz                &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2719.2-aws-xen-ubuntu-trusty-go_agent.tgz         &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2719.3-aws-xen-ubuntu-trusty-go_agent.tgz         &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; light-bosh-stemcell-2427-aws-xen-ubuntu.tgz                     &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; light-bosh-stemcell-2652-aws-xen-centos.tgz                     &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; light-bosh-stemcell-2839-aws-xen-centos-go_agent.tgz            &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; light-bosh-stemcell-2427-aws-xen-ubuntu-go_agent.tgz            &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; light-bosh-stemcell-2710-aws-xen-ubuntu-lucid-go_agent.tgz      &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; light-bosh-stemcell-2652-aws-xen-ubuntu-lucid.tgz               &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; light-bosh-stemcell-2839-aws-xen-ubuntu-trusty-go_agent.tgz     &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; light-bosh-stemcell-2690.6-aws-xen-ubuntu-trusty-go_agent.tgz   &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; light-bosh-stemcell-2719.1-aws-xen-centos-go_agent.tgz          &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; light-bosh-stemcell-2719.1-aws-xen-ubuntu-trusty-go_agent.tgz   &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; light-bosh-stemcell-2719.2-aws-xen-centos-go_agent.tgz          &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; light-bosh-stemcell-2719.2-aws-xen-ubuntu-trusty-go_agent.tgz   &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; light-bosh-stemcell-2719.3-aws-xen-ubuntu-trusty-go_agent.tgz   &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; light-bosh-stemcell-2839-aws-xen-hvm-centos-go_agent.tgz        &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; light-bosh-stemcell-2839-aws-xen-hvm-ubuntu-trusty-go_agent.tgz &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2427-openstack-kvm-ubuntu.tgz                     &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2624-openstack-kvm-centos.tgz                     &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2624-openstack-kvm-ubuntu-lucid.tgz               &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2839-openstack-kvm-centos-go_agent.tgz            &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2839-openstack-kvm-ubuntu-trusty-go_agent.tgz     &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2652-openstack-kvm-ubuntu-lucid-go_agent.tgz      &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2719.1-openstack-kvm-centos-go_agent.tgz          &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2719.1-openstack-kvm-ubuntu-trusty-go_agent.tgz   &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2719.2-openstack-kvm-centos-go_agent.tgz          &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2719.2-openstack-kvm-ubuntu-trusty-go_agent.tgz   &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2719.3-openstack-kvm-ubuntu-trusty-go_agent.tgz   &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2839-openstack-kvm-centos-go_agent-raw.tgz        &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2839-openstack-kvm-ubuntu-trusty-go_agent-raw.tgz &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2427-vcloud-esxi-ubuntu.tgz                       &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2652-vcloud-esxi-ubuntu-lucid.tgz                 &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2839-vcloud-esxi-ubuntu-trusty-go_agent.tgz       &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2690.5-vcloud-esxi-ubuntu-trusty-go_agent.tgz     &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2690.6-vcloud-esxi-ubuntu-trusty-go_agent.tgz     &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2710-vcloud-esxi-ubuntu-lucid-go_agent.tgz        &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2427-vsphere-esxi-ubuntu.tgz                      &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2624-vsphere-esxi-centos.tgz                      &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2839-vsphere-esxi-centos-go_agent.tgz             &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2427-vsphere-esxi-ubuntu-go_agent.tgz             &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2710-vsphere-esxi-ubuntu-lucid-go_agent.tgz       &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2624-vsphere-esxi-ubuntu-lucid.tgz                &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2839-vsphere-esxi-ubuntu-trusty-go_agent.tgz      &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2719.1-vsphere-esxi-centos-go_agent.tgz           &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2719.1-vsphere-esxi-ubuntu-trusty-go_agent.tgz    &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2719.2-vsphere-esxi-ubuntu-trusty-go_agent.tgz    &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2719.2-vsphere-esxi-centos-go_agent.tgz           &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2719.3-vsphere-esxi-ubuntu-trusty-go_agent.tgz    &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-2690.6-vsphere-esxi-ubuntu-trusty-go_agent.tgz    &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-389-warden-boshlite-ubuntu-trusty-go_agent.tgz    &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-53-warden-boshlite-ubuntu.tgz                     &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-389-warden-boshlite-centos-go_agent.tgz           &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bosh-stemcell-64-warden-boshlite-ubuntu-lucid-go_agent.tgz      &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
++-----------------------------------------------------------------+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bosh download public stemcell bosh-stemcell-2839-openstack-kvm-centos-go_agent-raw.tgz
+bosh-stemcell:   4% &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;ooo                              &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;  24.4MB 753.0KB/s ETA:  00:11:43&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Now we are ready to create the MicroBOSH deployment manifest &lt;code&gt;microbosh-openstack.yml&lt;/code&gt; file. You will need to change &lt;code&gt;net_id&lt;/code&gt; with your OpenStack instance network  identifier, &lt;code&gt;ip&lt;/code&gt; with the ip address from the network pool. You can find out that information by executing the following commands.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;nova network-list
++--------------------------------------+----------+----------------+
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; ID                                   &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; Label    &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; Cidr           &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
++--------------------------------------+----------+----------------+
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 3f36d40e-1097-49a0-a023-4606dbf3a1f5 &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; yuna-net &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 192.168.1.0/24 &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
++--------------------------------------+----------+----------------+
+
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;nova network-show 3f36d40e-1097-49a0-a023-4606dbf3a1f5 
++---------------------+--------------------------------------+
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; Property            &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; Value                                &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
++---------------------+--------------------------------------+
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bridge              &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; xenbr0                               &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bridge_interface    &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; eth0                                 &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; broadcast           &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 192.168.1.255                        &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; cidr                &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 192.168.1.0/24                       &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; cidr_v6             &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; -                                    &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; created_at          &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 2014-12-28T17:18:14.000000           &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; deleted             &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; False                                &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; deleted_at          &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; -                                    &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; dhcp_server         &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 192.168.1.50                         &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; dhcp_start          &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 192.168.1.51                         &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; dns1                &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 8.8.4.4                              &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; dns2                &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; -                                    &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; enable_dhcp         &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; True                                 &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; gateway             &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 192.168.1.50                         &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; gateway_v6          &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; -                                    &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; host                &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; -                                    &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; id                  &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 3f36d40e-1097-49a0-a023-4606dbf3a1f5 &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; injected            &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; False                                &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; label               &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; yuna-net                             &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; mtu                 &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; -                                    &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; multi_host          &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; True                                 &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; netmask             &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 255.255.255.0                        &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; netmask_v6          &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; -                                    &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; priority            &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; -                                    &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; project_id          &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; -                                    &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; rxtx_base           &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; -                                    &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; share_address       &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; True                                 &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; updated_at          &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; -                                    &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; vlan                &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; -                                    &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; vpn_private_address &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; -                                    &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; vpn_public_address  &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; -                                    &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; vpn_public_port     &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; -                                    &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
++---------------------+--------------------------------------+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Under the &lt;code&gt;openstack&lt;/code&gt; section change the Identity service endpoint, OpenStack credentials, the private key location, and optionally set the timeout for OpenStack resources.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span class=&quot;nn&quot;&gt;---&lt;/span&gt;
+&lt;span class=&quot;l-Scalar-Plain&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;microbosh-openstack&lt;/span&gt;
+
+&lt;span class=&quot;l-Scalar-Plain&quot;&gt;logging&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;l-Scalar-Plain&quot;&gt;level&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;DEBUG&lt;/span&gt;
+
+&lt;span class=&quot;l-Scalar-Plain&quot;&gt;network&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;l-Scalar-Plain&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;manual&lt;/span&gt;
+  &lt;span class=&quot;l-Scalar-Plain&quot;&gt;ip&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;192.168.1.55&lt;/span&gt;
+  &lt;span class=&quot;l-Scalar-Plain&quot;&gt;cloud_properties&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;l-Scalar-Plain&quot;&gt;net_id&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;3f36d40e-1097-49a0-a023-4606dbf3a1f5&lt;/span&gt;
+
+&lt;span class=&quot;l-Scalar-Plain&quot;&gt;resources&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;l-Scalar-Plain&quot;&gt;persistent_disk&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;16384&lt;/span&gt;
+  &lt;span class=&quot;l-Scalar-Plain&quot;&gt;cloud_properties&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;l-Scalar-Plain&quot;&gt;instance_type&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;m1.medium&lt;/span&gt;
+
+&lt;span class=&quot;l-Scalar-Plain&quot;&gt;cloud&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;l-Scalar-Plain&quot;&gt;plugin&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;openstack&lt;/span&gt;
+  &lt;span class=&quot;l-Scalar-Plain&quot;&gt;properties&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;l-Scalar-Plain&quot;&gt;openstack&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;l-Scalar-Plain&quot;&gt;auth_url&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;http://controller:5000/v2.0&lt;/span&gt;
+      &lt;span class=&quot;l-Scalar-Plain&quot;&gt;username&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;admin&lt;/span&gt;
+      &lt;span class=&quot;l-Scalar-Plain&quot;&gt;api_key&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;admin&lt;/span&gt;
+      &lt;span class=&quot;l-Scalar-Plain&quot;&gt;tenant&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;admin&lt;/span&gt;
+      &lt;span class=&quot;l-Scalar-Plain&quot;&gt;default_security_groups&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p-Indicator&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;bosh&amp;quot;&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;]&lt;/span&gt;
+      &lt;span class=&quot;l-Scalar-Plain&quot;&gt;default_key_name&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;microbosh&lt;/span&gt;
+      &lt;span class=&quot;l-Scalar-Plain&quot;&gt;private_key&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;/root/microbosh.pem&lt;/span&gt;
+      &lt;span class=&quot;l-Scalar-Plain&quot;&gt;state_timeout&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;900&lt;/span&gt;
+
+&lt;span class=&quot;l-Scalar-Plain&quot;&gt;apply_spec&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;l-Scalar-Plain&quot;&gt;properties&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;l-Scalar-Plain&quot;&gt;director&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;l-Scalar-Plain&quot;&gt;max_threads&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;3&lt;/span&gt;
+    &lt;span class=&quot;l-Scalar-Plain&quot;&gt;hm&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;l-Scalar-Plain&quot;&gt;resurrector_enabled&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;true&lt;/span&gt;
+    &lt;span class=&quot;l-Scalar-Plain&quot;&gt;ntp&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;0.europe.pool.ntp.org&lt;/span&gt;
+      &lt;span class=&quot;p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;1.europe.pool.ntp.org&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Finally, set the current deployment manifest file and deploy MicroBOSH.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bosh micro deployment microbosh-openstack.yml
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bosh micro deploy bosh-stemcell-2839-openstack-kvm-centos-go_agent-raw.tgz&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;If everything goes well you should login into the MicroBOSH instance (use &lt;code&gt;admin&lt;/code&gt;, for both username and password).&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span class=&quot;l-Scalar-Plain&quot;&gt;$ bosh target 192.168.1.55&lt;/span&gt;
+&lt;span class=&quot;l-Scalar-Plain&quot;&gt;Target set to &amp;#39;microbosh-openstack&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;l-Scalar-Plain&quot;&gt;Your username&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;admin&lt;/span&gt;
+&lt;span class=&quot;l-Scalar-Plain&quot;&gt;Enter password&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;*****&lt;/span&gt;
+&lt;span class=&quot;l-Scalar-Plain&quot;&gt;Logged in as &amp;#39;admin&amp;#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3&gt;Deploying Cloud Foundry&lt;/h3&gt;
+
+&lt;p&gt;Start by cloning the Cloud Foundry repository. Enter the newly created &lt;code&gt;cf-release&lt;/code&gt; directory and execute the &lt;code&gt;update&lt;/code&gt; script to update all submodules.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git clone https://github.com/cloudfoundry/cf-release.git
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;cf-release
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;./update&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Upload the stemcell to the BOSH Director.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bosh upload stemcell bosh-stemcell-2839-openstack-kvm-centos-go_agent-raw.tgz&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;In BOSH terminology, &lt;strong&gt;release&lt;/strong&gt; is a collection of packages and source code, dependencies, configuration properties, and any other components required to perform a deployment. To create a Cloud Foundry release, use this command from &lt;code&gt;cf-release&lt;/code&gt; directory.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bosh create release&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;This will download the required blobs from the S3 storage service and generate a release tarball. You should end up with the similar directory structures.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ls blobs
+buildpack_cache    git           haproxy         mysql             php-buildpack     rootfs      ruby-buildpack
+cli                go-buildpack  java-buildpack  nginx             postgres          ruby        sqlite
+debian_nfs_server  golang        libyaml         nodejs-buildpack  python-buildpack  ruby-2.1.4  uaa
+
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ls packages
+acceptance-tests        buildpack_python     dea_next             golang     loggregator_trafficcontroller  postgres        warden
+buildpack_cache         buildpack_ruby       debian_nfs_server    golang1.3  login                          rootfs_lucid64
+buildpack_go            cli                  doppler              gorouter   metron_agent                   ruby
+buildpack_java          cloud_controller_ng  etcd                 haproxy    mysqlclient                    ruby-2.1.4
+buildpack_java_offline  collector            etcd_metrics_server  hm9000     nats                           smoke-tests
+buildpack_nodejs        common               git                  libpq      nginx                          sqlite
+buildpack_php           dea_logging_agent    gnatsd               libyaml    nginx_newrelic_plugin          uaa&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Now you can upload the release to the BOSH Director.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bosh upload release&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;The most complex part of Cloud Foundry BOSH deployment is the manifest file where all components are tied together - computing resource specifications, VMs, software releases, and configuration properties. You can use the deployment which worked great on my environment. Don’t forget to create &lt;code&gt;cf.small&lt;/code&gt; and &lt;code&gt;cf.medium&lt;/code&gt; flavors in OpenStack.&lt;/p&gt;
+
+&lt;script src=&quot;https://gist.github.com/bhnedo/3026f62119705d239863.js&quot;&gt; &lt;/script&gt;
+
+&lt;p&gt;Set and initiate the deploy. This process can take a few hours. Relax.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bosh deployment cf-deployment.yml
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bosh deploy&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3&gt;Pushing an application&lt;/h3&gt;
+
+&lt;p&gt;Download the &lt;code&gt;cf&lt;/code&gt; CLI from &lt;a href=&quot;https://github.com/cloudfoundry/cli/releases&quot; target=&quot;_blank&quot;&gt;https://github.com/cloudfoundry/cli/releases&lt;/a&gt;.
+
+Make sure you can access the API endpoint of the Cloud Foundry instance. If so, use &lt;code&gt;cf login&lt;/code&gt; with your username, organization and space.
+&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;curl http://api.192.168.1.249.xip.io/info
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;cf login -a api.192.168.1.249.xip.io -u user -o rabbitstack -s qa&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;To test our instance we are going to push a very simple &lt;code&gt;node.js&lt;/code&gt; app. Create a new directory and place &lt;code&gt;server.js&lt;/code&gt; and the application &lt;code&gt;manifest.yml&lt;/code&gt; file in it.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;http&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;http&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;server&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;createServer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;writeHeader&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;s2&quot;&gt;&amp;quot;Content-Type&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;text/html&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;Bunnies on Cloud Foundry. Port is &amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;process&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;VCAP_APP_PORT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;listen&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;process&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;VCAP_APP_PORT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span class=&quot;nn&quot;&gt;---&lt;/span&gt;
+&lt;span class=&quot;l-Scalar-Plain&quot;&gt;applications&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;
+&lt;span class=&quot;p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;rabbitstack&lt;/span&gt;
+  &lt;span class=&quot;l-Scalar-Plain&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;.&lt;/span&gt;
+  &lt;span class=&quot;l-Scalar-Plain&quot;&gt;memory&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;256M&lt;/span&gt;
+  &lt;span class=&quot;l-Scalar-Plain&quot;&gt;instances&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;1&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;From within the directory run &lt;code&gt;cf push&lt;/code&gt; and access &lt;code&gt;http://rabbitstack.192.168.1.249.xip.io&lt;/code&gt; from the browser. Play with &lt;code&gt;cf scale&lt;/code&gt; and see how port number changes on every request.&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;
+Congratulations! You now have a fully functional private Cloud Foundry.&lt;/p&gt;
+
+  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-ii/&quot;&gt;Deploying Cloud Foundry on OpenStack Juno and XenServer (Part II)&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on February 14, 2015.&lt;/p&gt;</content>
+</entry>
+
+
+  
+
+<entry>
+  <title type="html"><![CDATA[Deploying Cloud Foundry on OpenStack Juno and XenServer (Part I)]]></title>
+  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i/" />
+  <id>http://rabbitstack.github.io/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i</id>
+  <published>2015-01-30T17:03:28+01:00</published>
+  <updated>2015-01-30T17:03:28+01:00</updated>
+  <author>
+    <name>Nedim Šabić</name>
+    <uri>http://rabbitstack.github.io</uri>
+    <email>bhnedo@hotmail.com</email>
+  </author>
+  <content type="html">&lt;p&gt;
+&lt;a href=&quot;http://www.cloudfoundry.org/index.html&quot; target=&quot;_blank&quot;&gt;Cloud Foundry&lt;/a&gt; ecosystem had been blowing my mind for a long time, and I think it really has made an IT disruption letting us focus on applications as the essential unit of business process. There is no need for us to worry about all those painful stuffs like scalability, multi tenancy and application health. Cloud Foundry will do that nasty job for us, and much more. It could be considered as an operating system for the cloud.
+&lt;/p&gt;
+
+&lt;p&gt;
+While I was investigating about Cloud Foundry, I also figured out its agnostic nature which enable it to be easily deployed on AWS, vSphere or &lt;a href=&quot;https://www.openstack.org/&quot; target=&quot;_blank&quot;&gt;OpenStack&lt;/a&gt;. That is how I got motivated to acquire one of those cheap Dell rack servers on eBay and start the experiment. XenServer 6.2 is what I choose as hypervisor to be orchestrated by OpenStack. Unfortunately, the documentation about setting up the OpenStack compute node on XenServer is rather incomplete, deprecated and very hard to follow if you
+are doing it for the first time. So, let&#39;s see how to proceed step by step, and prepare our OpenStack environment for Cloud Foundry instance deployment. I already assume you have successfully installed and configured the controller node.
+&lt;/p&gt;
+
+&lt;h3&gt;Installing paravirtualized XenServer domain&lt;/h3&gt;
+
+&lt;p&gt; OpenStack compute node needs a paravirtualized virtual machine running on each XenServer instance. Paravirtualized VM basically has a recompiled kernel so it can talk directly to the hypervisor API. If Centos is your distribution of choice then the easiest way to set up a PV virtual machine is by using this &lt;a href=&quot;https://gist.githubusercontent.com/bhnedo/4648499f5680207e86ec/raw/4239fd8d0e10f7f2759d600b28b52f1744d9b5ad/kickstart-centos-minimal.cfg&quot; target=&quot;_blank&quot;&gt;kickstart&lt;/a&gt; file.&lt;/p&gt;
+&lt;p&gt;Let’s first create the VM. Please note we have to use Red Hat 6 template, even if we are going to install Centos 7 distribution. For XenServer 6.5 this is not necessary.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;TEMPLATE_UUID&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;xe template-list &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; grep -B1 &lt;span class=&quot;s1&quot;&gt;&amp;#39;name-label.*Red Hat.* 6.*64-bit&amp;#39;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; awk -F: &lt;span class=&quot;s1&quot;&gt;&amp;#39;/uuid/{print $2}&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; tr -d &lt;span class=&quot;s2&quot;&gt;&amp;quot; &amp;quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;VMUUID&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;xe vm-install new-name-label&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;compute&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;template&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TEMPLATE_UUID&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;})&lt;/span&gt;
+xe vm-param-set &lt;span class=&quot;nv&quot;&gt;uuid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$VMUUID&lt;/span&gt; other-config:install-repository&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;http://mirror.centos.org/centos/7/os/x86_64
+xe vm-param-set &lt;span class=&quot;nv&quot;&gt;uuid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$VMUUID&lt;/span&gt; PV-args&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;ks=https://gist.githubusercontent.com/bhnedo/4648499f5680207e86ec/raw/4239fd8d0e10f7f2759d600b28b52f1744d9b5ad/kickstart-centos-minimal.cfg ksdevice=eth0&amp;quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Find out the network UUID for the bridge that has access to the Internet. Note that one Xen bridge is created for every physical network adapter on your machine. Get a list of XenServer networks and store the UUID for the appropriate bridge (in most cases it will be &lt;code&gt;xenbr0&lt;/code&gt;).&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;xe network-list
+&lt;span class=&quot;nv&quot;&gt;NETUUID&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;xe network-list &lt;span class=&quot;nv&quot;&gt;bridge&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;xenbr0 --minimal&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Create a virtual network interface (VIF) and attach it to the virtual machine and network. Start the VM and watch the installation progress from XenCenter.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;xe vif-create vm-uuid&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$VMUUID&lt;/span&gt; network-uuid&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$NETUUID&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;mac&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;random &lt;span class=&quot;nv&quot;&gt;device&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0
+xe vm-start &lt;span class=&quot;nv&quot;&gt;uuid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$VMUUID&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;When installation process is done export the VM so we have the base image to use for the storage node too.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;xe vm-export &lt;span class=&quot;nv&quot;&gt;uuid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$VMUUID&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;filename&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;openstack-juno-centos7.xva&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p class=&quot;notice&quot;&gt;
+&lt;strong&gt;Notice:&lt;/strong&gt; &lt;code&gt;PyGrub&lt;/code&gt; doesn&#39;t support &lt;code&gt;grub2&lt;/code&gt; boot loader. You will need to apply the following &lt;a href=&quot;https://github.com/xenserver/xen-4.3.pg/blob/bf5f09b1a8b5ad4086285ce926a2c2dae68771a1/pygrub-fix-for-rhel7.patch&quot; target=&quot;_blank&quot;&gt;patch&lt;/a&gt; in order to boot the VM properly. This issue has been corrected in XenServer 6.5 release.
+&lt;/p&gt;
+
+&lt;h3&gt;Installing and configuring compute service&lt;/h3&gt;
+
+&lt;p&gt;
+Once you have a running PV guest the next step is to install OpenStack plugins for XenServer Dom0. These will let the compute node to communicate with Xen XAPI in order to provision virtual machines, set up networking, storage, etc. Download the latest Openstack Juno branch, unzip and copy the content of &lt;code&gt;plugins/xenserver/xenapi/etc/xapi.d/plugins&lt;/code&gt; directory to&lt;code&gt;/etc/xapi.d/plugins&lt;/code&gt;. Also ensure that added files are executable.
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /tmp
+wget https://github.com/openstack/nova/archive/master.zip
+unzip master.zip
+cp /tmp/nova-juno-stable/plugins/xenserver/xenapi/etc/xapi.d/plugins/* /etc/xapi.d/plugins
+chmod a+x /etc/xapi.d/plugins/*&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+Log into your newly installed compute node (default password for the &lt;strong&gt;root&lt;/strong&gt; user is &lt;i&gt;changeit&lt;/i&gt;) and run these commands to enable OpenStack Juno repository and upgrade the packages on your host.
+&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;yum install http://rdo.fedorapeople.org/openstack-juno/rdo-release-juno.rpm
+yum upgrade&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;If your kernel is upgraded you will probably need to reboot the machine after upgrade process in order to activate the new kernel. Now install the required packages for the compute hypervisor components and &lt;i&gt;nova-network&lt;/i&gt; legacy networking.
+&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;yum install openstack-nova-compute sysfsutils
+yum install openstack-nova-network openstack-nova-api&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt; Xenapi python package is also required, so install it using &lt;code&gt;pip&lt;/code&gt; package manager.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;easy_install pip
+pip install xenapi&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+I didn&#39;t wanted to setup another network node for &lt;strong&gt;Neutron&lt;/strong&gt;, even legacy networking is deprecated in favor of after-mentioned component. If you need advanced features like VLANs, virtual routing, switching, tenant isolation and so on, follow these &lt;a href=&quot;http://docs.openstack.org/juno/install-guide/install/yum/content/section_neutron-networking.html&quot; target=&quot;_blank&quot;&gt;docs&lt;/a&gt; on how to add Neutron network.
+&lt;/blockquote&gt;
+&lt;p&gt;
+Now we need to edit the &lt;code&gt;/etc/nova/nova.conf&lt;/code&gt; configuration file.
+&lt;/p&gt;
+&lt;ol&gt;
+	&lt;li&gt;
+		&lt;strong&gt;Message broker settings&lt;/strong&gt;
+		&lt;p&gt;Configure RabbitMQ messaging system in the &lt;code&gt;[DEFAULT]&lt;/code&gt; section:&lt;/p&gt;
+			&lt;pre&gt;
+ [DEFAULT]
+ rpc_backend = rabbit 
+ rabbit_host = controller 
+ rabbit_userid = RABBIT_USER 
+ rabbit_password = RABBIT_PASSWORD 
+ 			&lt;/pre&gt;
+			
+	&lt;/li&gt;
+	&lt;li&gt;
+		&lt;strong&gt;Keystone authentication&lt;/strong&gt;
+		&lt;p&gt;Modify &lt;code&gt;[DEFAULT]&lt;/code&gt; and &lt;code&gt;[keystone_authtoken]&lt;/code&gt; sections to configure authentication service access:&lt;/p&gt;
+			&lt;pre&gt;
+ [DEFAULT]
+ auth_strategy = keystone
+
+ [keystone_authtoken] 
+ auth_uri = http://controller:5000/v2.0
+ identity_uri = http://controller:35357
+ admin_tenant_name = service
+ admin_user = nova
+ admin_password = NOVA_PASSWORD
+		  &lt;/pre&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+		&lt;strong&gt;Network configuration&lt;/strong&gt;
+		&lt;p&gt;Before proceeding with network parameters, you will need to create a second VIF and attach it to the compute VM. &lt;/p&gt;
+		&lt;pre&gt;
+ $ xe vif-create vm-uuid=$VMUUID network-uuid=$NETUUID mac=random device=1
+ $ xe vm-start uuid=$VMUUID
+		&lt;/pre&gt;
+		&lt;p&gt; This network interface will be connected to the Linux bridge and at same time will act as default gateway for all VM instances spawned inside OpenStack. The traffic forwarding between tenants is done at L2 level through  this bridge. You should end up with the following interfaces and &lt;code&gt;xenbr0&lt;/code&gt; up after creating the network in OpenStack.
+		&lt;/p&gt;
+		&lt;pre&gt;
+ $ ifconfig
+ eth0: flags=4163&amp;lt;UP,BROADCAST,RUNNING,MULTICAST&amp;gt;  mtu 1500
+        inet 192.168.1.106  netmask 255.255.255.0  broadcast 192.168.1.255
+        inet6 fe80::90b3:8fff:fe2c:1d09  prefixlen 64  scopeid 0x20&lt;link /&gt;
+        ether 92:b3:8f:2c:1d:09  txqueuelen 1000  (Ethernet)
+        RX packets 3016  bytes 1189159 (1.1 MiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 2812  bytes 636656 (621.7 KiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+ eth1: flags=4163&amp;lt;UP,BROADCAST,RUNNING,MULTICAST&amp;gt;  mtu 1500
+        inet6 fe80::44ab:daff:fe21:46d4  prefixlen 64  scopeid 0x20&lt;link /&gt;
+        ether 46:ab:da:21:46:d4  txqueuelen 1000  (Ethernet)
+        RX packets 611  bytes 111213 (108.6 KiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 38  bytes 4943 (4.8 KiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+ xenbr0: flags=4163&amp;lt;UP,BROADCAST,RUNNING,MULTICAST&amp;gt;  mtu 1500
+        inet 192.168.1.50  netmask 255.255.255.0  broadcast 192.168.1.255
+        inet6 fe80::4034:39ff:fecd:b9b3  prefixlen 64  scopeid 0x20&lt;link /&gt;
+        ether 46:ab:da:21:46:d4  txqueuelen 0  (Ethernet)
+        RX packets 89  bytes 11222 (10.9 KiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 28  bytes 3967 (3.8 KiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+ $ brctl show
+ bridge name     bridge id               STP enabled                  interfaces
+ xenbr0          8000.46abda2146d4          no                         eth1
+		&lt;/pre&gt;
+		 &lt;p&gt;In the&lt;code&gt;[DEFAULT]&lt;/code&gt; section you will need to put these properties:&lt;/p&gt;
+			&lt;pre&gt;
+ [DEFAULT]
+ network_api_class = nova.network.api.API
+ security_group_api = nova
+ network_manager = nova.network.manager.FlatDHCPManager
+ allow_same_net_traffic = True
+ multi_host = True
+ send_arp_for_ha = True
+ share_dhcp_address = True
+ force_dhcp_release = True
+ flat_network_bridge = xenbr0
+ flat_interface = eth1
+ public_interface = eth0
+
+ my_ip = MANAGEMENT_INTERFACE_IP
+ firewall_driver = nova.virt.xenapi.firewall.Dom0IptablesFirewallDriver
+			&lt;/pre&gt;
+			
+	&lt;/li&gt;
+	&lt;li&gt;
+		&lt;strong&gt;Hypervisor settings&lt;/strong&gt;
+		&lt;p&gt;Enable Xen compute driver in the &lt;code&gt;[DEFAULT]&lt;/code&gt; section, XAPI endpoint and credentials in the &lt;code&gt;[xenserver]&lt;/code&gt; section:&lt;/p&gt;
+		&lt;pre&gt;
+ [DEFAULT]
+ compute_driver = xenapi.XenAPIDriver
+
+ [xenserver]
+ connection_url = http://XENSERVER_MANAGEMENT_IP
+ connection_username = XENSERVER_USERNAME
+ connection_password = XENSERVER_PASSWORD
+ 		&lt;/pre&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+		&lt;strong&gt;Image service and VNC access&lt;/strong&gt;
+		&lt;p&gt;We are almost done. In the &lt;code&gt;[glance]&lt;/code&gt; section configure the location of the Image Service. In the &lt;code&gt;[DEFAULT]&lt;/code&gt; section enable remote console access. When deploying OpenStack services for the first time, it&#39;s a good idea to enable verbose logging too.&lt;/p&gt;
+				&lt;pre&gt;
+ [glance]
+ host = controller
+ 
+ [DEFAULT]
+ vnc_enabled = True
+ vncserver_listen = 0.0.0.0
+ vncserver_proxyclient_address = MANAGEMENT_INTERFACE_IP
+ novncproxy_base_url = http://controller:6080/vnc_auto.html
+
+ verbose = true
+ 		&lt;/pre&gt;
+	&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Start the Compute and Network services and configure them to be automatically started at boot time.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;systemctl &lt;span class=&quot;nb&quot;&gt;enable &lt;/span&gt;openstack-nova-compute.service openstack-nova-network.service openstack-nova-metadata-api.service
+systemctl start openstack-nova-compute.service openstack-nova-network.service openstack-nova-metadata-api.service&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Make sure the &lt;code&gt;nova-compute&lt;/code&gt; and &lt;code&gt;nova-network&lt;/code&gt; are up and running by executing this command on the controller node:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;nova service-list
++----+------------------+---------+----------+---------+-------+----------------------------+
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; Id &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; Binary           &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; Host    &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; Zone     &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; Status  &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; State &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; Updated_at                 &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
++----+------------------+---------+----------+---------+-------+----------------------------+
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;  &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; nova-consoleauth &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; hydra   &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; internal &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; enabled &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; up    &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 2015-01-31T17:57:06.000000 &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;  &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; nova-cert        &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; hydra   &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; internal &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; enabled &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; up    &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 2015-01-31T17:57:06.000000 &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;  &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; nova-scheduler   &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; hydra   &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; internal &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; enabled &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; up    &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 2015-01-31T17:57:06.000000 &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;4&lt;/span&gt;  &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; nova-conductor   &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; hydra   &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; internal &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; enabled &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; up    &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 2015-01-31T17:57:06.000000 &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;5&lt;/span&gt;  &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; nova-compute     &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; compute &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; nova     &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; enabled &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; up    &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 2015-01-31T17:57:07.000000 &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;6&lt;/span&gt;  &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; nova-network     &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; compute &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; internal &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; enabled &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; up    &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 2015-01-31T17:57:00.000000 &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 
++----+------------------+---------+----------+---------+-------+----------------------------+-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3&gt;Installing and configuring storage node&lt;/h3&gt;
+
+&lt;p&gt;We can start by creating the storage node VM from the base template image we had exported. Run these commands in the XenServer console:
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;SRUUID&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;xe sr-list name-label&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;Local storage&amp;quot;&lt;/span&gt; --minimal&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;
+xe vm-import &lt;span class=&quot;nv&quot;&gt;filename&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;openstack-juno-centos7.xva &lt;span class=&quot;nv&quot;&gt;force&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;true &lt;/span&gt;sr-uuid&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$SRUUID&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;preserve&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+You will need to create and attach the VDI where &lt;i&gt;cinder&lt;/i&gt; volumes will be stored. Get the UUID of your newly imported VM, and then run
+these commands.
+&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;VDIUUID&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;xe vdi-create sr-uuid&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$SRUUID&lt;/span&gt; name-label&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;cinder&amp;quot;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;user virtual-size&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;250GiB&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;VBDUUID&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;xe vbd-create vm-uuid&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$VMUUID&lt;/span&gt; vdi-uuid&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$VDIUUID&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;device&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;
+xe vbd-plug &lt;span class=&quot;nv&quot;&gt;uuid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$VBDUUID&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+Install the required dependencies and start the LVM metadata service.
+&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;yum install lvm2
+systemctl &lt;span class=&quot;nb&quot;&gt;enable &lt;/span&gt;lvm2-lvmetad.service
+systemctl start lvm2-lvmetad.service&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+Partition the disk in order to create the LVM physical volume and the volume group labeled as &lt;code&gt; cinder-volumes &lt;/code&gt;. Change &lt;code&gt;/dev/xvdb1&lt;/code&gt; with your partition.
+&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;pvcreate /dev/xvdb1
+vgcreate cinder-volumes /dev/xvdb1&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+It is also necessary to instruct the LVM which block storage devices should be scanned. Edit the &lt;code&gt;/etc/lvm/lvm.conf&lt;/code&gt; file and modify the &lt;code&gt;filter&lt;/code&gt; section to include the created volume group.
+&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;devices &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  ...
+  &lt;span class=&quot;nv&quot;&gt;filter&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;a/xvda/&amp;quot;&lt;/span&gt;, &lt;span class=&quot;s2&quot;&gt;&amp;quot;a/xvdb/&amp;quot;&lt;/span&gt;, &lt;span class=&quot;s2&quot;&gt;&amp;quot;r/.*/&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+  ...
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+We are now ready to install and configure Block Storage components and dependencies. I wasn&#39;t able to get iSCSI LUNs to work using &lt;code&gt;targetcli&lt;/code&gt;, probably because XenServer relies on SCSI initiator utilities. The solution was to use &lt;code&gt;scsi-target-utils&lt;/code&gt; instead of it.
+&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;yum install scsi-target-utils
+yum install openstack-cinder python-oslo-db MySQL-python&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+Edit the &lt;code&gt;/etc/cinder/cinder.conf&lt;/code&gt; configuration file.
+&lt;/p&gt;
+&lt;ol&gt;
+	&lt;li&gt;
+		&lt;strong&gt;Message broker settings&lt;/strong&gt;
+		&lt;p&gt;Configure RabbitMQ messaging system in the &lt;code&gt;[DEFAULT]&lt;/code&gt; section:&lt;/p&gt;
+			&lt;pre&gt;
+ [DEFAULT]
+ rpc_backend = rabbit 
+ rabbit_host = controller 
+ rabbit_userid = RABBIT_USER 
+ rabbit_password = RABBIT_PASSWORD 
+ 			&lt;/pre&gt;
+			
+	&lt;/li&gt;
+	&lt;li&gt;
+		&lt;strong&gt;Keystone authentication&lt;/strong&gt;
+		&lt;p&gt;Modify &lt;code&gt;[DEFAULT]&lt;/code&gt; and &lt;code&gt;[keystone_authtoken]&lt;/code&gt; sections to configure authentication service access:&lt;/p&gt;
+			&lt;pre&gt;
+ [DEFAULT]
+ auth_strategy = keystone
+
+ [keystone_authtoken] 
+ auth_uri = http://controller:5000/v2.0
+ identity_uri = http://controller:35357
+ admin_tenant_name = service
+ admin_user = cinder
+ admin_password = CINDER_PASSWORD
+		  &lt;/pre&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+		&lt;strong&gt;Database connection&lt;/strong&gt;
+		&lt;p&gt;In the &lt;code&gt;[database]&lt;/code&gt; section change the MySQL connection string:&lt;/p&gt;
+		&lt;pre&gt;
+ [database]
+ connection = mysql://cinder:CINDER_DB_PASSWORD@controller/cinder
+ 		&lt;/pre&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+		&lt;strong&gt;Image service and management IP address&lt;/strong&gt;
+		&lt;p&gt;In the &lt;code&gt;[DEFAULT]&lt;/code&gt; section configure the location of the Image Service. Modify management interface address to match your storage node IP. Enable verbose logging.
+				&lt;pre&gt;
+ [DEFAULT]
+ host = controller
+ my_ip = MANAGEMENT_INTERFACE_IP
+ 
+ verbose = true
+ 		&lt;/pre&gt;
+	
+	&lt;li&gt;
+		&lt;strong&gt;Target administartion service&lt;/strong&gt;
+		&lt;p&gt;In the &lt;code&gt;[DEFAULT]&lt;/code&gt; configure Cinder to use &lt;code&gt;tgtadm&lt;/code&gt; service for iSCSI storage management:&lt;/p&gt;
+				&lt;pre&gt;
+ [DEFAULT]
+ iscsi_helper = tgtadm
+				&lt;/pre&gt;
+		&lt;p&gt; Edit the &lt;code&gt;/etc/tgt/targets.conf&lt;/code&gt; to include the cinder volumes. This will hold information about volume&#39;s location, CHAP credentials, IQNs, etc. &lt;/p&gt;
+		&lt;pre&gt;
+ include /etc/cinder/volumes/*
+		&lt;/pre&gt; 
+	&lt;/li&gt;
+
+
+&lt;p&gt;Start the Block Storage and target service and configure them to be automatically started at boot time.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;systemctl &lt;span class=&quot;nb&quot;&gt;enable &lt;/span&gt;openstack-cinder-volume.service tgtd.service
+systemctl start openstack-cinder-volume.service tgtd.service&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt; Run this command on the controller node to ensure the Storage service is up and running. &lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;cinder service-list
++------------------+--------+------+---------+-------+----------------------------+
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;      Binary      &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;  Host  &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; Zone &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;  Status &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; State &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;         Updated_at         &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
++------------------+--------+------+---------+-------+----------------------------+
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; cinder-scheduler &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; hydra  &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; nova &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; enabled &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;   up  &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 2015-01-31T17:57:44.000000 &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;  cinder-volume   &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; cinder &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; nova &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; enabled &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;   up  &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 2015-01-31T17:57:55.000000 &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
++------------------+--------+------+---------+-------+----------------------------+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+	
+
+&lt;p class=&quot;notice&quot;&gt;
+&lt;strong&gt;Tip:&lt;/strong&gt; If you are able to attach cinder volumes from OpenStack, but the file system creation is taking too long or got stuck, try to disable the checksumming of your storage node VIF. Use &lt;code&gt; ethtool -K vifz.0 tx off &lt;/code&gt; where &lt;code&gt;z&lt;/code&gt; is the domain identifier of the storage VM.
+&lt;/p&gt;
+
+&lt;h3&gt;Validate the OpenStack instance&lt;/h3&gt;
+
+&lt;p&gt; You should go through &lt;a href=&quot;http://docs.cloudfoundry.org/deploying/openstack/validate_openstack.html&quot; target=&quot;_blank&quot;&gt;this&lt;/a&gt; steps to validate your OpenStack environment. In the second part we will see how to deploy Cloud Foundry using &lt;strong&gt;BOSH&lt;/strong&gt; and push our first application. 
+&lt;/p&gt;
+&lt;br /&gt;
+&lt;/p&gt;&lt;/li&gt;&lt;/ol&gt;
+
+  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i/&quot;&gt;Deploying Cloud Foundry on OpenStack Juno and XenServer (Part I)&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on January 30, 2015.&lt;/p&gt;</content>
+</entry>
+
+
+  
+
+<entry>
+  <title type="html"><![CDATA[Origins]]></title>
+  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/origins/" />
+  <id>http://rabbitstack.github.io/origins</id>
+  <published>2015-01-29T17:53:53+01:00</published>
+  <updated>2015-01-29T17:53:53+01:00</updated>
+  <author>
+    <name>Nedim Šabić</name>
+    <uri>http://rabbitstack.github.io</uri>
+    <email>bhnedo@hotmail.com</email>
+  </author>
+  <content type="html">&lt;p&gt;
+I finally decided to go digital with what I called &lt;strong&gt;Rabbit Stack&lt;/strong&gt;. It will be a place where I&#39;ll be writing mostly about programming, devops, virtualization and similar IT freaky stuffs. Sometimes I will also write about album reviews, new bands I have discovered or some totally random stuff which would anyway be lost in the limbo of my mind. The blog is still under heavy development, but I&#39;ll try to work hard on it, so stay tuned...
+&lt;/p&gt;
+
+  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/origins/&quot;&gt;Origins&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on January 29, 2015.&lt;/p&gt;</content>
+</entry>
+
+</feed>
