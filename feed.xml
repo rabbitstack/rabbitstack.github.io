@@ -2,13 +2,13 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
 <title type="text">Rabbit Stack</title>
 <generator uri="https://github.com/jekyll/jekyll">Jekyll</generator>
-<link rel="self" type="application/atom+xml" href="http://rabbitstack.github.io/feed.xml" />
-<link rel="alternate" type="text/html" href="http://rabbitstack.github.io" />
-<updated>2015-02-24T20:13:57+01:00</updated>
-<id>http://rabbitstack.github.io/</id>
+<link rel="self" type="application/atom+xml" href="http://127.0.0.1:4000/feed.xml" />
+<link rel="alternate" type="text/html" href="http://127.0.0.1:4000" />
+<updated>2015-03-22T13:31:22+01:00</updated>
+<id>http://127.0.0.1:4000/</id>
 <author>
   <name>Nedim Šabić</name>
-  <uri>http://rabbitstack.github.io/</uri>
+  <uri>http://127.0.0.1:4000/</uri>
   <email>bhnedo@hotmail.com</email>
 </author>
 
@@ -16,14 +16,450 @@
   
 
 <entry>
+  <title type="html"><![CDATA[Running a Storm cluster on SmartOS]]></title>
+  <link rel="alternate" type="text/html" href="http://127.0.0.1:4000/running-a-storm-cluster-on-smartos/" />
+  <id>http://127.0.0.1:4000/running-a-storm-cluster-on-smartos</id>
+  <published>2015-03-21T21:35:37+01:00</published>
+  <updated>2015-03-21T21:35:37+01:00</updated>
+  <author>
+    <name>Nedim Šabić</name>
+    <uri>http://127.0.0.1:4000</uri>
+    <email>bhnedo@hotmail.com</email>
+  </author>
+  <content type="html">&lt;p&gt;In a time when Storm was still developed and maintained by Twitter, I was working on small experiments in local cluster mode by processing social data from Facebook. It rained a lot since then, and Storm is now an active project under Apache umbrella. The curiosity of mine was eager to see how would the Storm operate in multi node deployment, so I decided to build a cluster on SmartOS hypervisor. I really adore SmartOS. It is so lightweight and it loads from the USB media. While the other hypervisors I&#39;ve tried (XenServer, ESX) reserved the &quot;huge&quot; amount of RAM (on my 24 GB server XenServer was taking almost 4GB for the Dom0), SmartOS needs 200-300 MB of RAM. The provisioning of new virtual machines is really fast. You can run an OS level virtualization units called zones, or the KVM based virtual machines to run almost any legacy operating system (Linux, Windows, FreeBSD). You can learn more about SmartOS &lt;a href=&quot;https://wiki.smartos.org/display/DOC/Home&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;. &lt;/p&gt;
+&lt;p class=&quot;image-pull-right&quot;&gt;
+	&lt;img src=&quot;/images/smartos+storm.png&quot; /&gt;
+&lt;/p&gt;
+&lt;blockquote&gt;
+Are you new to Storm and you don&#39;t know what this is all about? Well apart from being a meteorological phenomenon, Storm is a distributed fault tolerant and realtime data stream processing platform. What Hadoop is for batch processing, Storm is for realtime data processing. There are two different type of nodes in Storm. The master node, also called as &lt;code&gt;nimbus&lt;/code&gt; is responsible for assigning, monitoring and distributing tasks to worker or &lt;code&gt;supervisor&lt;/code&gt; nodes in Storm terminology. In between there is a &lt;code&gt;ZooKeeper&lt;/code&gt; node which is responsible for coordination and auto discovery of the nodes. The computation workflow is encapsulated into the unit called topology. It is basically a graph of &lt;code&gt;spouts&lt;/code&gt;, components that represent the source of data streams and &lt;code&gt;bolts&lt;/code&gt; which do some sort of processing on input streams and often generate new streams. For example we could have a spout which consumes Apache log messages from RabbitMQ queue, and one or more bolts which apply some kind of transformation, aggregation, or filtering logic. As our business demand increases, we also want to process a ton of logs from Tomcat and Nginx and one worker node won&#39;t deal well with it. No problem! Just spawn a desired number of worker nodes to scale horizontally, and Storm will make sure data processing is balanced and distributed accross the nodes. And what if one of the worker node fails? Don&#39;t panic! Storm is able to reschedule and assign the task to one of the healthy nodes ensuring fault-tolerant exactly-once messaging semantics processing. The image below shows the components of a Storm cluster.
+&lt;/blockquote&gt;
+
+&lt;figure&gt;
+  &lt;a href=&quot;/images/storm.jpg&quot; class=&quot;image-popup&quot;&gt;
+    &lt;img src=&quot;/images/storm.jpg&quot; /&gt;
+  &lt;/a&gt;
+  &lt;figcaption&gt;Storm cluster&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;h3&gt;Preparing SmartOS VMs&lt;/h3&gt;
+
+&lt;p&gt;Let’s first prepare the specifications for our SmartOS KVM virtual machines. I’ll use the Centos7 dataset to spawn Storm nodes. Find and import the image that corresponds to &lt;code&gt;centos-7&lt;/code&gt; dataset.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;imgadm avail
+...
+c8c59f3c-a343-11e4-8e39-9360169bcaae  steelapp-developer      14.3.0      smartos  2015-01-23T21:07:03Z
+02dbab66-a70a-11e4-819b-b3dc41b361d6  centos-7                &lt;span class=&quot;m&quot;&gt;20150128&lt;/span&gt;    linux    2015-01-28T16:23:36Z
+5becfd74-a70d-11e4-93a6-470507be237c  centos-6                &lt;span class=&quot;m&quot;&gt;20150128&lt;/span&gt;    linux    2015-01-28T16:47:34Z
+5f41692e-a70d-11e4-8c2d-afc6735144dc  debian-7                &lt;span class=&quot;m&quot;&gt;20150128&lt;/span&gt;    linux    2015-01-28T16:47:40Z
+...
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;imgadm import 02dbab66-a70a-11e4-819b-b3dc41b361d6&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;The cluster will consist of these nodes:&lt;/p&gt;
+&lt;ul&gt;
+	&lt;li&gt;1 &lt;strong&gt;ZooKeeper&lt;/strong&gt; node with 1024 MB RAM and 1 VCPUs&lt;/li&gt;
+	&lt;li&gt;1 &lt;strong&gt;Nimbus&lt;/strong&gt; node with 3048 MB RAM and 2 VCPUs&lt;/li&gt;	
+	&lt;li&gt;3 &lt;strong&gt;Supervisor&lt;/strong&gt; nodes with 4096 MB RAM and 3 VCPUs&lt;/li&gt;	
+&lt;/ul&gt;
+
+&lt;p&gt;Here is a specification file for ZooKeeper node (you will need to change the network settings to match your environment). Save it as &lt;code&gt;centos7-zookeeper.json&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-json&quot; data-lang=&quot;json&quot;&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;quot;brand&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;kvm&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;quot;resolvers&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&amp;quot;8.8.4.4&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;quot;ram&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;1024&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;quot;vcpus&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;1&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;quot;alias&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;zookeeper/0&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;quot;nics&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;nic_tag&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;admin&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;ip&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;192.168.1.11&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;netmask&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;255.255.255.0&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;gateway&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;192.168.1.1&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;model&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;virtio&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;primary&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;quot;disks&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;image_uuid&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;02dbab66-a70a-11e4-819b-b3dc41b361d6&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;boot&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;model&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;virtio&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;size&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10000&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;The specifications for the Nimbus node is as follow. For the supervisor nodes we will basically use the same spec with some minor modifications.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-json&quot; data-lang=&quot;json&quot;&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;quot;brand&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;kvm&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;quot;resolvers&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&amp;quot;8.8.4.4&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;quot;ram&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;3048&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;quot;alias&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;nimbus/0&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;quot;vcpus&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;2&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;quot;nics&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;nic_tag&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;admin&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;ip&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;192.168.1.12&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;netmask&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;255.255.255.0&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;gateway&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;192.168.1.1&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;model&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;virtio&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;primary&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;quot;disks&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;image_uuid&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;02dbab66-a70a-11e4-819b-b3dc41b361d6&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;boot&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;model&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;virtio&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;size&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;30000&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3&gt;Installing ZooKeeper node&lt;/h3&gt;
+
+&lt;p&gt;Create a ZooKeeper VM from the spec file.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;vmadm create -f centos7-zookeeper.json&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Make sure you can login into your newly created VM. Now we will install the required dependencies. First, download and install JDK 7.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /tmp
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;wget --no-check-certificate --no-cookies --header &lt;span class=&quot;s2&quot;&gt;&amp;quot;Cookie: oraclelicense=accept-securebackup-cookie&amp;quot;&lt;/span&gt; http://download.oracle.com/otn-pub/java/jdk/7u75-b13/jdk-7u75-linux-x64.tar.gz
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;tar -xvf jdk-7u75-linux-x64.tar.gz
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mv /usr/lib/jvm/java-7-oracle
+
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;vi /etc/profile
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;JAVA_HOME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/usr/lib/jvm/java-7-oracle
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$PATH&lt;/span&gt;:/usr/lib/jvm/java-7-oracle/bin
+
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt; /etc/profile&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Next, install ZooKeeper packages from the Cloudera repository.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;vi /etc/yum.repos.d/Cloudera.repo
+
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;cloudera-cdh4&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;cloudera-cdh4
+&lt;span class=&quot;nv&quot;&gt;baseurl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;http://archive.cloudera.com/cdh4/redhat/6/x86_64/cdh/4/
+&lt;span class=&quot;nv&quot;&gt;gpgkey&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; http://archive.cloudera.com/cdh4/redhat/6/x86_64/cdh/RPM-GPG-KEY-cloudera
+&lt;span class=&quot;nv&quot;&gt;gpgcheck&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 1
+
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;yum install zookeeper zookeeper-server&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;If the installation went successful we are ready to configure ZooKeeper. It is important to enable the regular purging of old data and transaction logs, otherwise ZooKeeper will eat all of your disk space. Edit the configuration file.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;vi /etc/zookeeper/conf/zoo.cfg
+
+autopurge.purgeInterval&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;12
+autopurge.snapRetainCount&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;5&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Update the &lt;code&gt;/etc/hosts&lt;/code&gt; file to include ZooKeeper’s hostname.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;vi /etc/hosts
+192.168.1.11 zookeeper0&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Finally we can start the ZooKeeper and verify it’s working as expected. Run these commands.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;/usr/lib/zookeeper/bin/zkServer.sh start
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;ruok &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; nc zookeeper0 2181
+imok&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;It is of crucial importance to run ZooKeeper under supervision, since ZooKeeper will terminate if it encounters any error. To achieve it you can use a number of process monitoring tools like &lt;a href=&quot;http://mmonit.com/monit/&quot; target=&quot;_blank&quot;&gt;monit&lt;/a&gt;, &lt;a href=&quot;http://supervisord.org/&quot; target=&quot;_blank&quot;&gt;supervisord&lt;/a&gt;, or &lt;a href=&quot;http://godrb.com/&quot; target=&quot;_blank&quot;&gt;god&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Deploying Nimbus node&lt;/h3&gt;
+
+&lt;p&gt;First, provision a new virtual machine for the Nimbus node.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;vmadm create -f centos7-nimbus.json&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;The following steps apply for both, the Nimbus and the Supervisor nodes, so once we had the required dependencies installed, we will create the snapshot that later on can be used to provision the Supervisor nodes. Note that here is also important to run Nimbus and Supervisor daemons under supervision.&lt;/p&gt;
+
+&lt;h4&gt;Download and install JDK 7&lt;/h4&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /tmp
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;wget --no-check-certificate --no-cookies --header &lt;span class=&quot;s2&quot;&gt;&amp;quot;Cookie: oraclelicense=accept-securebackup-cookie&amp;quot;&lt;/span&gt; http://download.oracle.com/otn-pub/java/jdk/7u75-b13/jdk-7u75-linux-x64.tar.gz
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;tar -xvf jdk-7u75-linux-x64.tar.gz
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mv /usr/lib/jvm/java-7-oracle
+
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;vi /etc/profile
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;JAVA_HOME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/usr/lib/jvm/java-7-oracle
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$PATH&lt;/span&gt;:/usr/lib/jvm/java-7-oracle/bin
+
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt; /etc/profile&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h4&gt;Install ZeroMQ&lt;/h4&gt;
+
+&lt;p&gt; Add the following repository to install the ZeroMQ package. &lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;vi /etc/yum.repos.d/ZeroMQ.repo
+
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;home_fengshuo_zeromq&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;The latest stable of zeromq builds &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;CentOS_CentOS-6&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;rpm-md
+&lt;span class=&quot;nv&quot;&gt;baseurl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;http://download.opensuse.org/repositories/home:/fengshuo:/zeromq/CentOS_CentOS-6/
+&lt;span class=&quot;nv&quot;&gt;gpgcheck&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1
+&lt;span class=&quot;nv&quot;&gt;gpgkey&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;http://download.opensuse.org/repositories/home:/fengshuo:/zeromq/CentOS_CentOS-6/repodata/repomd.xml.key
+&lt;span class=&quot;nv&quot;&gt;enabled&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1
+
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;yum install zeromq zeromq-devel&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h4&gt;Install JZMQ&lt;/h4&gt;
+
+&lt;p&gt;JZMQ are the Java bindings for the ZeroMQ messaging framework. As we are going to compile and build JZMQ from sources, some dependencies are needed. Install them first.
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;yum install libtool gcc autoconf automake gcc-c++&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now we can download and install JZMQ.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /tmp
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;wget https://github.com/zeromq/jzmq/archive/master.zip
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;jzmq-master
+
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;./autogen.sh
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;./configure
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;make
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;make install&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Create Storm system user and group&lt;/h4&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;groupadd -g &lt;span class=&quot;m&quot;&gt;53001&lt;/span&gt; storm
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mkdir /var/lib/storm
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;useradd -u &lt;span class=&quot;m&quot;&gt;53001&lt;/span&gt; -g &lt;span class=&quot;m&quot;&gt;53001&lt;/span&gt; -d /var/lib/storm/ -s /bin/bash storm -c &lt;span class=&quot;s2&quot;&gt;&amp;quot;Storm user&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;chown -R storm:storm /var/lib/storm/
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;chmod &lt;span class=&quot;m&quot;&gt;750&lt;/span&gt; /var/lib/storm&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Download and install Apache Storm&lt;/h4&gt;
+
+&lt;p&gt;Download the latest version of Storm - &lt;strong&gt;0.9.3&lt;/strong&gt; at the time of writing. Decompress the tarball and move it to the &lt;code&gt;/usr/local&lt;/code&gt; directory.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;wget http://ftp.cixug.es/apache/storm/apache-storm-0.9.3/apache-storm-0.9.3.tar.gz
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;tar -xvf apache-storm-0.9.3.tar.gz
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mv apache-storm-0.9.3 /usr/local/
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /usr/local
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mv apache-storm-0.9.3 storm
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;chown -R storm:storm /usr/local/storm/&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Configure Storm&lt;/h4&gt;
+
+&lt;p&gt;Add ZooKeeper and Nimbus nodes to the &lt;code&gt;hosts&lt;/code&gt; file.&lt;/p&gt;
+
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;vi /etc/hosts
+192.168.1.11 zookeeper0
+192.168.1.12 nimbus/0&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Now edit the Storm configuration file. You need to add the ZooKeeper server/s, the Nimbus node, and change the path where Storm will store a small amount of state data.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;vi /usr/local/storm/conf/storm.yaml
+
+storm.zookeeper.servers:
+      - &lt;span class=&quot;s2&quot;&gt;&amp;quot;zookeeper0&amp;quot;&lt;/span&gt;
+
+nimbus.host: &lt;span class=&quot;s2&quot;&gt;&amp;quot;nimbus/0&amp;quot;&lt;/span&gt;
+
+nimbus.childopts: &lt;span class=&quot;s2&quot;&gt;&amp;quot;-Xmx1024m -Djava.net.preferIPv4Stack=true&amp;quot;&lt;/span&gt;
+ui.childopts: &lt;span class=&quot;s2&quot;&gt;&amp;quot;-Xmx768m -Djava.net.preferIPv4Stack=true&amp;quot;&lt;/span&gt;
+supervisor.childopts: &lt;span class=&quot;s2&quot;&gt;&amp;quot;-Djava.net.preferIPv4Stack=true&amp;quot;&lt;/span&gt;
+worker.childopts: &lt;span class=&quot;s2&quot;&gt;&amp;quot;-Xmx768m -Djava.net.preferIPv4Stack=true&amp;quot;&lt;/span&gt;
+
+storm.local.dir: &lt;span class=&quot;s2&quot;&gt;&amp;quot;/var/lib/storm&amp;quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Build the snapshot&lt;/h4&gt;
+
+&lt;p&gt;Before we proceed with snapshotting, halt the Nimbus virtual machine.&lt;/p&gt;
+
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;vmadm stop ab09289c-c05a-4c41-92ec-025b367bc860&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now make the snapshot of disk0 &lt;i&gt;zvol&lt;/i&gt; which pertains to Nimbus dataset. Dump and compress the dataset.&lt;/p&gt;
+
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;zfs snapshot zones/ab09289c-c05a-4c41-92ec-025b367bc860-disk0@image
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;zfs send zones/ab09289c-c05a-4c41-92ec-025b367bc860-disk0@image &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; gzip &amp;gt; supervisor.zvol.gz&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;To import the dataset that can be used as the template for the Supervisor node provisioning it is necessary to build the image manifest. Generate a random UUID and get the SHA1 hash of the supervisor dataset by running these commands.&lt;/p&gt;
+
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;uuid
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;digest -v -a sha1 supervisor.zvol.gz&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;We will also need the size of the dataset expressed in bytes.&lt;/p&gt;
+
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ls -ltr &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; grep supervisor.zvol.gz &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; awk &lt;span class=&quot;s1&quot;&gt;&amp;#39;{print $5}&amp;#39;&lt;/span&gt;
+859618398&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;With that information in hand we can create an image manifest file and import the dataset.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;vi /var/manifests/supervisor.dsmanifest&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-json&quot; data-lang=&quot;json&quot;&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;quot;uuid&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;1d94a2ec-cfe0-11e4-a9be-9b1c2d718bba&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;quot;name&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;centos7-supervisor&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;quot;version&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;1.0.0&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;quot;description&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;Base template to provision Storm supervisor nodes&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;quot;v&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+
+    &lt;span class=&quot;nt&quot;&gt;&amp;quot;os&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;linux&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;quot;type&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;zvol&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;quot;platform_type&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;smartos&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+
+    &lt;span class=&quot;nt&quot;&gt;&amp;quot;created_at&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;2015-03-21T09:09Z&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;quot;updated_at&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;2015-03-21T09:09Z&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;quot;published_at&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;2015-03-21T09:09Z&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;quot;files&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;quot;path&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;/var/supervisor.zvol.gz&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;quot;sha1&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;12b6ae88372eab0697f0bba3038a4c9fc0a94a7f&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;quot;size&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;859618398&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;quot;compression&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;gzip&amp;quot;&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;quot;disk_driver&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;virtio&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;quot;image_size&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;10240&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;imgadm install -m /var/manifests/supervisor.dsmanifest -f /var/supervisor.zvol.gz
+Installing image 1d94a2ec-cfe0-11e4-a9be-9b1c2d718bba &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;centos7-supervisor@1.0.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;[=======================================================&lt;/span&gt;&amp;gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; 100% 819.80MB  31.36MB/s    26s
+Installed image 1d94a2ec-cfe0-11e4-a9be-9b1c2d718bba &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;centos7-supervisor@1.0.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Provisioning Supervisor nodes&lt;/h3&gt;
+
+&lt;p&gt;With the dataset imported we can start provisioning the Supervisor nodes using the slightly modified version of the Nimbus node specification file.&lt;/p&gt;
+
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-json&quot; data-lang=&quot;json&quot;&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;quot;brand&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;kvm&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;quot;resolvers&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&amp;quot;8.8.4.4&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;quot;ram&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;4096&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;quot;alias&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;supervisor/0&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;quot;vcpus&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;3&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;quot;nics&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;nic_tag&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;admin&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;ip&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;192.168.1.14&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;netmask&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;255.255.255.0&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;gateway&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;192.168.1.1&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;model&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;virtio&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;primary&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;quot;disks&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;image_uuid&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;1d94a2ec-cfe0-11e4-a9be-9b1c2d718bba&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;boot&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;model&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;virtio&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;size&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;50000&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Note that we have changed the &lt;code&gt;image_uuid&lt;/code&gt; to point to our imported dataset, and we have assigned the Supervisor node more memory, disk and one additional CPU. Now we can easily deploy and scale the worker nodes.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;vmadm create -f centos7-supervisor.json&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This is the output of &lt;code&gt;vmadm list&lt;/code&gt; on my SmartOS instance.&lt;/p&gt;
+
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;vmadm list
+
+UUID                                  TYPE  RAM      STATE             ALIAS
+05af15b2-f8ae-4918-807c-ed9a3a57d522  KVM   &lt;span class=&quot;m&quot;&gt;1024&lt;/span&gt;     running           zookeeper/0
+8d8bb235-3826-46bb-88e4-f96cdc182faa  KVM   &lt;span class=&quot;m&quot;&gt;3048&lt;/span&gt;     running           nimbus/0
+8b4dce58-4fdc-45f5-8439-389e7b095b45  KVM   &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt;     running           supervisor/1
+ab09289c-c05a-4c41-92ec-025b367bc860  KVM   &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt;     running           supervisor/0
+eb5c80fd-1174-4c40-8818-38565fc09d5a  KVM   &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt;     running           supervisor/2&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Submitting the topology&lt;/h3&gt;
+
+&lt;p&gt;I assume you&#39;ve run &lt;code&gt;/usr/local/storm/bin/storm nimbus&lt;/code&gt; and &lt;code&gt;/usr/local/storm/bin/storm supervisor&lt;/code&gt; daemons under supervision. To test the cluster, we are going to deploy a simple topology from the &lt;code&gt;storm-starter&lt;/code&gt; project. Run these commands on the Nimbus node. Start by cloning the Storm repository.&lt;/p&gt;
+
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /root
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git clone git://github.com/apache/storm.git&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Go to &lt;code&gt;storm/examples/storm-starter&lt;/code&gt; directory and build the topology jar using Maven.&lt;/p&gt;
+
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;storm/examples/storm-starter
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mvn clean install -DskipTests&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Finally, submit the topology to the Storm cluster.&lt;/p&gt;
+
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;target
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;/usr/local/storm/bin/storm jar storm-starter-0.10.0-SNAPSHOT.jar storm.starter.ExclamationTopology exclamation-topology
+
+Running: /usr/lib/jvm/java-7-oracle/bin/java -client -Dstorm.options&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; -Dstorm.home&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/usr/local/storm -Dstorm.log.dir&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/usr/local/storm/logs
+...
+&lt;span class=&quot;m&quot;&gt;2539&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;main&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; INFO  backtype.storm.StormSubmitter - Jar not uploaded to master yet. Submitting jar...
+&lt;span class=&quot;m&quot;&gt;2553&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;main&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; INFO  backtype.storm.StormSubmitter - Uploading topology jar storm-starter-0.10.0-SNAPSHOT.jar to assigned location: /var/lib/storm/nimbus/inbox/stormjar-30afcd84-fd2e-4463-8275-8ff0133eff15.jar
+Start uploading file &lt;span class=&quot;s1&quot;&gt;&amp;#39;storm-starter-0.10.0-SNAPSHOT.jar&amp;#39;&lt;/span&gt; to &lt;span class=&quot;s1&quot;&gt;&amp;#39;/var/lib/storm/nimbus/inbox/stormjar-30afcd84-fd2e-4463-8275-8ff0133eff15.jar&amp;#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;152705&lt;/span&gt; bytes&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;[==================================================]&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;152705&lt;/span&gt; / 152705
+File &lt;span class=&quot;s1&quot;&gt;&amp;#39;storm-starter-0.10.0-SNAPSHOT.jar&amp;#39;&lt;/span&gt; uploaded to &lt;span class=&quot;s1&quot;&gt;&amp;#39;/var/lib/storm/nimbus/inbox/stormjar-30afcd84-fd2e-4463-8275-8ff0133eff15.jar&amp;#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;152705&lt;/span&gt; bytes&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;m&quot;&gt;2576&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;main&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; INFO  backtype.storm.StormSubmitter - Successfully uploaded topology jar to assigned location: /var/lib/storm/nimbus/inbox/stormjar-30afcd84-fd2e-4463-8275-8ff0133eff15.jar
+&lt;span class=&quot;m&quot;&gt;2576&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;main&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; INFO  backtype.storm.StormSubmitter - Submitting topology exclamation-topology in distributed mode with conf &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;topology.workers&amp;quot;&lt;/span&gt;:3,&lt;span class=&quot;s2&quot;&gt;&amp;quot;topology.debug&amp;quot;&lt;/span&gt;:true&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;m&quot;&gt;2716&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;main&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; INFO  backtype.storm.StormSubmitter - Finished submitting topology: exclamation-topology&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt; You can get detailed stats about the cluster infrastructure, configuration, topology execution, etc. from the Storm UI. Start the server.&lt;/p&gt;
+
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;/usr/local/storm/bin/storm ui&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Direct your browser to &lt;code&gt;http://numbus_node_ip:8080&lt;/code&gt;.&lt;/p&gt;
+
+&lt;figure&gt;
+  &lt;a href=&quot;/images/storm-ui.jpg&quot; class=&quot;image-popup&quot;&gt;
+    &lt;img src=&quot;/images/storm-ui.jpg&quot; /&gt;
+  &lt;/a&gt;
+  &lt;figcaption&gt;Storm UI&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+
+  &lt;p&gt;&lt;a href=&quot;http://127.0.0.1:4000/running-a-storm-cluster-on-smartos/&quot;&gt;Running a Storm cluster on SmartOS&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://127.0.0.1:4000&quot;&gt;Rabbit Stack&lt;/a&gt; on March 21, 2015.&lt;/p&gt;</content>
+</entry>
+
+
+  
+
+<entry>
   <title type="html"><![CDATA[Introduction to CQRS]]></title>
-  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/introduction-to-cqrs/" />
-  <id>http://rabbitstack.github.io/introduction-to-cqrs</id>
+  <link rel="alternate" type="text/html" href="http://127.0.0.1:4000/introduction-to-cqrs/" />
+  <id>http://127.0.0.1:4000/introduction-to-cqrs</id>
   <published>2015-02-21T19:11:46+01:00</published>
   <updated>2015-02-21T19:11:46+01:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://rabbitstack.github.io</uri>
+    <uri>http://127.0.0.1:4000</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;
@@ -108,7 +544,7 @@ It is where &lt;strong&gt;CQRS&lt;/strong&gt; comes to the rescue. CQRS stands f
 &lt;h3&gt;Conclusion&lt;/h3&gt;
 &lt;p&gt;Perhaps the time has come to change the traditional approach to software development? At the end, it is up to you. The benefits of CQRS are tremendous. It keeps the software maintainable, easily extensible and ready to face new challenges that the future holds. If your next project’s requirements are going to be complex, or you just need high availability and scalability at the application level and you want to grow without losing the agility, don’t hesitate, use CQRS.&lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/introduction-to-cqrs/&quot;&gt;Introduction to CQRS&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on February 21, 2015.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;http://127.0.0.1:4000/introduction-to-cqrs/&quot;&gt;Introduction to CQRS&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://127.0.0.1:4000&quot;&gt;Rabbit Stack&lt;/a&gt; on February 21, 2015.&lt;/p&gt;</content>
 </entry>
 
 
@@ -116,13 +552,13 @@ It is where &lt;strong&gt;CQRS&lt;/strong&gt; comes to the rescue. CQRS stands f
 
 <entry>
   <title type="html"><![CDATA[Deploying Cloud Foundry on OpenStack Juno and XenServer (Part II)]]></title>
-  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-ii/" />
-  <id>http://rabbitstack.github.io/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-ii</id>
+  <link rel="alternate" type="text/html" href="http://127.0.0.1:4000/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-ii/" />
+  <id>http://127.0.0.1:4000/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-ii</id>
   <published>2015-02-14T11:48:52+01:00</published>
   <updated>2015-02-14T11:48:52+01:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://rabbitstack.github.io</uri>
+    <uri>http://127.0.0.1:4000</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;Let&#39;s move on. We should have our OpenStack instance prepared for Cloud Foundry. The most usual way of deploying Cloud Foundry is through &lt;strong&gt;BOSH&lt;/strong&gt;. For the who still didn&#39;t hear about it, &lt;a href=&quot;http://bosh.io/docs&quot; target=&quot;_blank&quot;&gt;BOSH&lt;/a&gt; is the platform for automation and lifecycle management of software and distributed services. It is also capable of monitoring and failure recovery of processes and virtual machines. There are already a few IT automation platforms in the market like &lt;a href=&quot;https://www.chef.io/&quot; target=&quot;_blank&quot;&gt;Chef&lt;/a&gt; or &lt;a href=&quot;http://puppetlabs.com/&quot; target=&quot;_blank&quot;&gt;Puppet&lt;/a&gt;, so, why to learn / use BOSH then?
@@ -420,7 +856,7 @@ Make sure you can access the API endpoint of the Cloud Foundry instance. If so, 
 &lt;p&gt;&lt;br /&gt;
 Congratulations! You now have a fully functional private Cloud Foundry.&lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-ii/&quot;&gt;Deploying Cloud Foundry on OpenStack Juno and XenServer (Part II)&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on February 14, 2015.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;http://127.0.0.1:4000/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-ii/&quot;&gt;Deploying Cloud Foundry on OpenStack Juno and XenServer (Part II)&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://127.0.0.1:4000&quot;&gt;Rabbit Stack&lt;/a&gt; on February 14, 2015.&lt;/p&gt;</content>
 </entry>
 
 
@@ -428,13 +864,13 @@ Congratulations! You now have a fully functional private Cloud Foundry.&lt;/p&gt
 
 <entry>
   <title type="html"><![CDATA[Deploying Cloud Foundry on OpenStack Juno and XenServer (Part I)]]></title>
-  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i/" />
-  <id>http://rabbitstack.github.io/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i</id>
+  <link rel="alternate" type="text/html" href="http://127.0.0.1:4000/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i/" />
+  <id>http://127.0.0.1:4000/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i</id>
   <published>2015-01-30T17:03:28+01:00</published>
   <updated>2015-01-30T17:03:28+01:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://rabbitstack.github.io</uri>
+    <uri>http://127.0.0.1:4000</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;
@@ -787,7 +1223,7 @@ systemctl start openstack-cinder-volume.service tgtd.service&lt;/code&gt;&lt;/pr
 &lt;br /&gt;
 &lt;/p&gt;&lt;/li&gt;&lt;/ol&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i/&quot;&gt;Deploying Cloud Foundry on OpenStack Juno and XenServer (Part I)&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on January 30, 2015.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;http://127.0.0.1:4000/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i/&quot;&gt;Deploying Cloud Foundry on OpenStack Juno and XenServer (Part I)&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://127.0.0.1:4000&quot;&gt;Rabbit Stack&lt;/a&gt; on January 30, 2015.&lt;/p&gt;</content>
 </entry>
 
 
@@ -795,20 +1231,20 @@ systemctl start openstack-cinder-volume.service tgtd.service&lt;/code&gt;&lt;/pr
 
 <entry>
   <title type="html"><![CDATA[Origins]]></title>
-  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/origins/" />
-  <id>http://rabbitstack.github.io/origins</id>
+  <link rel="alternate" type="text/html" href="http://127.0.0.1:4000/origins/" />
+  <id>http://127.0.0.1:4000/origins</id>
   <published>2015-01-29T17:53:53+01:00</published>
   <updated>2015-01-29T17:53:53+01:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://rabbitstack.github.io</uri>
+    <uri>http://127.0.0.1:4000</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;
 I finally decided to go digital with what I called &lt;strong&gt;Rabbit Stack&lt;/strong&gt;. It will be a place where I&#39;ll be writing mostly about programming, devops, virtualization and similar IT freaky stuffs. Sometimes I will also write about album reviews, new bands I have discovered or some totally random stuff which would anyway be lost in the limbo of my mind. The blog is still under heavy development, but I&#39;ll try to work hard on it, so stay tuned...
 &lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/origins/&quot;&gt;Origins&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on January 29, 2015.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;http://127.0.0.1:4000/origins/&quot;&gt;Origins&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://127.0.0.1:4000&quot;&gt;Rabbit Stack&lt;/a&gt; on January 29, 2015.&lt;/p&gt;</content>
 </entry>
 
 </feed>
