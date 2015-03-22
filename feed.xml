@@ -2,13 +2,13 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
 <title type="text">Rabbit Stack</title>
 <generator uri="https://github.com/jekyll/jekyll">Jekyll</generator>
-<link rel="self" type="application/atom+xml" href="http://127.0.0.1:4000/feed.xml" />
-<link rel="alternate" type="text/html" href="http://127.0.0.1:4000" />
-<updated>2015-03-22T13:31:22+01:00</updated>
-<id>http://127.0.0.1:4000/</id>
+<link rel="self" type="application/atom+xml" href="http://rabbitstack.github.io/feed.xml" />
+<link rel="alternate" type="text/html" href="http://rabbitstack.github.io" />
+<updated>2015-03-22T13:37:44+01:00</updated>
+<id>http://rabbitstack.github.io/</id>
 <author>
   <name>Nedim Šabić</name>
-  <uri>http://127.0.0.1:4000/</uri>
+  <uri>http://rabbitstack.github.io/</uri>
   <email>bhnedo@hotmail.com</email>
 </author>
 
@@ -17,13 +17,13 @@
 
 <entry>
   <title type="html"><![CDATA[Running a Storm cluster on SmartOS]]></title>
-  <link rel="alternate" type="text/html" href="http://127.0.0.1:4000/running-a-storm-cluster-on-smartos/" />
-  <id>http://127.0.0.1:4000/running-a-storm-cluster-on-smartos</id>
+  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/running-a-storm-cluster-on-smartos/" />
+  <id>http://rabbitstack.github.io/running-a-storm-cluster-on-smartos</id>
   <published>2015-03-21T21:35:37+01:00</published>
   <updated>2015-03-21T21:35:37+01:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://127.0.0.1:4000</uri>
+    <uri>http://rabbitstack.github.io</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;In a time when Storm was still developed and maintained by Twitter, I was working on small experiments in local cluster mode by processing social data from Facebook. It rained a lot since then, and Storm is now an active project under Apache umbrella. The curiosity of mine was eager to see how would the Storm operate in multi node deployment, so I decided to build a cluster on SmartOS hypervisor. I really adore SmartOS. It is so lightweight and it loads from the USB media. While the other hypervisors I&#39;ve tried (XenServer, ESX) reserved the &quot;huge&quot; amount of RAM (on my 24 GB server XenServer was taking almost 4GB for the Dom0), SmartOS needs 200-300 MB of RAM. The provisioning of new virtual machines is really fast. You can run an OS level virtualization units called zones, or the KVM based virtual machines to run almost any legacy operating system (Linux, Windows, FreeBSD). You can learn more about SmartOS &lt;a href=&quot;https://wiki.smartos.org/display/DOC/Home&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;. &lt;/p&gt;
@@ -445,7 +445,7 @@ File &lt;span class=&quot;s1&quot;&gt;&amp;#39;storm-starter-0.10.0-SNAPSHOT.jar
 &lt;/figure&gt;
 &lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://127.0.0.1:4000/running-a-storm-cluster-on-smartos/&quot;&gt;Running a Storm cluster on SmartOS&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://127.0.0.1:4000&quot;&gt;Rabbit Stack&lt;/a&gt; on March 21, 2015.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/running-a-storm-cluster-on-smartos/&quot;&gt;Running a Storm cluster on SmartOS&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on March 21, 2015.&lt;/p&gt;</content>
 </entry>
 
 
@@ -453,13 +453,13 @@ File &lt;span class=&quot;s1&quot;&gt;&amp;#39;storm-starter-0.10.0-SNAPSHOT.jar
 
 <entry>
   <title type="html"><![CDATA[Introduction to CQRS]]></title>
-  <link rel="alternate" type="text/html" href="http://127.0.0.1:4000/introduction-to-cqrs/" />
-  <id>http://127.0.0.1:4000/introduction-to-cqrs</id>
+  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/introduction-to-cqrs/" />
+  <id>http://rabbitstack.github.io/introduction-to-cqrs</id>
   <published>2015-02-21T19:11:46+01:00</published>
   <updated>2015-02-21T19:11:46+01:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://127.0.0.1:4000</uri>
+    <uri>http://rabbitstack.github.io</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;
@@ -544,7 +544,7 @@ It is where &lt;strong&gt;CQRS&lt;/strong&gt; comes to the rescue. CQRS stands f
 &lt;h3&gt;Conclusion&lt;/h3&gt;
 &lt;p&gt;Perhaps the time has come to change the traditional approach to software development? At the end, it is up to you. The benefits of CQRS are tremendous. It keeps the software maintainable, easily extensible and ready to face new challenges that the future holds. If your next project’s requirements are going to be complex, or you just need high availability and scalability at the application level and you want to grow without losing the agility, don’t hesitate, use CQRS.&lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://127.0.0.1:4000/introduction-to-cqrs/&quot;&gt;Introduction to CQRS&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://127.0.0.1:4000&quot;&gt;Rabbit Stack&lt;/a&gt; on February 21, 2015.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/introduction-to-cqrs/&quot;&gt;Introduction to CQRS&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on February 21, 2015.&lt;/p&gt;</content>
 </entry>
 
 
@@ -552,13 +552,13 @@ It is where &lt;strong&gt;CQRS&lt;/strong&gt; comes to the rescue. CQRS stands f
 
 <entry>
   <title type="html"><![CDATA[Deploying Cloud Foundry on OpenStack Juno and XenServer (Part II)]]></title>
-  <link rel="alternate" type="text/html" href="http://127.0.0.1:4000/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-ii/" />
-  <id>http://127.0.0.1:4000/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-ii</id>
+  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-ii/" />
+  <id>http://rabbitstack.github.io/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-ii</id>
   <published>2015-02-14T11:48:52+01:00</published>
   <updated>2015-02-14T11:48:52+01:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://127.0.0.1:4000</uri>
+    <uri>http://rabbitstack.github.io</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;Let&#39;s move on. We should have our OpenStack instance prepared for Cloud Foundry. The most usual way of deploying Cloud Foundry is through &lt;strong&gt;BOSH&lt;/strong&gt;. For the who still didn&#39;t hear about it, &lt;a href=&quot;http://bosh.io/docs&quot; target=&quot;_blank&quot;&gt;BOSH&lt;/a&gt; is the platform for automation and lifecycle management of software and distributed services. It is also capable of monitoring and failure recovery of processes and virtual machines. There are already a few IT automation platforms in the market like &lt;a href=&quot;https://www.chef.io/&quot; target=&quot;_blank&quot;&gt;Chef&lt;/a&gt; or &lt;a href=&quot;http://puppetlabs.com/&quot; target=&quot;_blank&quot;&gt;Puppet&lt;/a&gt;, so, why to learn / use BOSH then?
@@ -856,7 +856,7 @@ Make sure you can access the API endpoint of the Cloud Foundry instance. If so, 
 &lt;p&gt;&lt;br /&gt;
 Congratulations! You now have a fully functional private Cloud Foundry.&lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://127.0.0.1:4000/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-ii/&quot;&gt;Deploying Cloud Foundry on OpenStack Juno and XenServer (Part II)&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://127.0.0.1:4000&quot;&gt;Rabbit Stack&lt;/a&gt; on February 14, 2015.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-ii/&quot;&gt;Deploying Cloud Foundry on OpenStack Juno and XenServer (Part II)&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on February 14, 2015.&lt;/p&gt;</content>
 </entry>
 
 
@@ -864,13 +864,13 @@ Congratulations! You now have a fully functional private Cloud Foundry.&lt;/p&gt
 
 <entry>
   <title type="html"><![CDATA[Deploying Cloud Foundry on OpenStack Juno and XenServer (Part I)]]></title>
-  <link rel="alternate" type="text/html" href="http://127.0.0.1:4000/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i/" />
-  <id>http://127.0.0.1:4000/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i</id>
+  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i/" />
+  <id>http://rabbitstack.github.io/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i</id>
   <published>2015-01-30T17:03:28+01:00</published>
   <updated>2015-01-30T17:03:28+01:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://127.0.0.1:4000</uri>
+    <uri>http://rabbitstack.github.io</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;
@@ -1223,7 +1223,7 @@ systemctl start openstack-cinder-volume.service tgtd.service&lt;/code&gt;&lt;/pr
 &lt;br /&gt;
 &lt;/p&gt;&lt;/li&gt;&lt;/ol&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://127.0.0.1:4000/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i/&quot;&gt;Deploying Cloud Foundry on OpenStack Juno and XenServer (Part I)&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://127.0.0.1:4000&quot;&gt;Rabbit Stack&lt;/a&gt; on January 30, 2015.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i/&quot;&gt;Deploying Cloud Foundry on OpenStack Juno and XenServer (Part I)&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on January 30, 2015.&lt;/p&gt;</content>
 </entry>
 
 
@@ -1231,20 +1231,20 @@ systemctl start openstack-cinder-volume.service tgtd.service&lt;/code&gt;&lt;/pr
 
 <entry>
   <title type="html"><![CDATA[Origins]]></title>
-  <link rel="alternate" type="text/html" href="http://127.0.0.1:4000/origins/" />
-  <id>http://127.0.0.1:4000/origins</id>
+  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/origins/" />
+  <id>http://rabbitstack.github.io/origins</id>
   <published>2015-01-29T17:53:53+01:00</published>
   <updated>2015-01-29T17:53:53+01:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://127.0.0.1:4000</uri>
+    <uri>http://rabbitstack.github.io</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;
 I finally decided to go digital with what I called &lt;strong&gt;Rabbit Stack&lt;/strong&gt;. It will be a place where I&#39;ll be writing mostly about programming, devops, virtualization and similar IT freaky stuffs. Sometimes I will also write about album reviews, new bands I have discovered or some totally random stuff which would anyway be lost in the limbo of my mind. The blog is still under heavy development, but I&#39;ll try to work hard on it, so stay tuned...
 &lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://127.0.0.1:4000/origins/&quot;&gt;Origins&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://127.0.0.1:4000&quot;&gt;Rabbit Stack&lt;/a&gt; on January 29, 2015.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/origins/&quot;&gt;Origins&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on January 29, 2015.&lt;/p&gt;</content>
 </entry>
 
 </feed>
