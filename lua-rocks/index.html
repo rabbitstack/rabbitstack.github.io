@@ -1,0 +1,298 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<title>Lua Rocks! &#8211; Rabbit Stack</title>
+<meta name="description" content="This won't be a huge post as the ones I used to write. This time it will be a very short post about a thing that recently called my attention and I want to share it with you. After I had discovered...">
+<meta name="keywords" content="lua, luajit, programming, lua rocks, jit">
+
+
+
+<!-- Twitter Cards -->
+<meta name="twitter:title" content="Lua Rocks!">
+<meta name="twitter:description" content="This won't be a huge post as the ones I used to write. This time it will be a very short post about a thing that recently called my attention and I want to share it with you. After I had discovered...">
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://rabbitstack.github.io/images/rabbit-bkgd.jpg">
+
+<!-- Open Graph -->
+<meta property="og:locale" content="en_US">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Lua Rocks!">
+<meta property="og:description" content="This won't be a huge post as the ones I used to write. This time it will be a very short post about a thing that recently called my attention and I want to share it with you. After I had discovered...">
+<meta property="og:url" content="http://rabbitstack.github.io/lua-rocks/">
+<meta property="og:site_name" content="Rabbit Stack">
+
+
+
+
+
+<link rel="canonical" href="http://rabbitstack.github.io/lua-rocks/">
+<link href="http://rabbitstack.github.io/feed.xml" type="application/atom+xml" rel="alternate" title="Rabbit Stack Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://rabbitstack.github.io/assets/css/main.css">
+
+<meta http-equiv="cleartype" content="on">
+
+<!-- HTML5 Shiv and Media Query Support -->
+<!--[if lt IE 9]>
+	<script src="http://rabbitstack.github.io/assets/js/vendor/html5shiv.min.js"></script>
+	<script src="http://rabbitstack.github.io/assets/js/vendor/respond.min.js"></script>
+<![endif]-->
+
+<!-- Modernizr -->
+<script src="http://rabbitstack.github.io/assets/js/vendor/modernizr-2.7.1.custom.min.js"></script>
+
+<link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'>
+
+<!-- Icons -->
+<!-- 16x16 -->
+<link rel="shortcut icon" href="http://rabbitstack.github.io/favicon.ico">
+<!-- 32x32 -->
+<link rel="shortcut icon" href="http://rabbitstack.github.io/favicon.png">
+<!-- 57x57 (precomposed) for iPhone 3GS, pre-2011 iPod Touch and older Android devices -->
+<link rel="apple-touch-icon-precomposed" href="http://rabbitstack.github.io/images/apple-touch-icon-precomposed.png">
+<!-- 72x72 (precomposed) for 1st generation iPad, iPad 2 and iPad mini -->
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="http://rabbitstack.github.io/images/apple-touch-icon-72x72-precomposed.png">
+<!-- 114x114 (precomposed) for iPhone 4, 4S, 5 and post-2011 iPod Touch -->
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="http://rabbitstack.github.io/images/apple-touch-icon-114x114-precomposed.png">
+<!-- 144x144 (precomposed) for iPad 3rd and 4th generation -->
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://rabbitstack.github.io/images/apple-touch-icon-144x144-precomposed.png">
+
+</head>
+
+<body class="post">
+
+<!--[if lt IE 9]><div class="browser-upgrade alert alert-info">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div><![endif]-->
+
+<div class="navigation-wrapper">
+		<div class="site-name">
+			<img src="/images/rabbit-small.jpg" alt="Rabbit Stack logo" class="logo" />
+			<!-- <a href="http://rabbitstack.github.io/">Rabbit Stack</a> -->
+			<a href="http://rabbitstack.github.io/"><span class="site-name-segment">Rabbit</span> Stack</a>
+
+		</div><!-- /.site-name -->
+
+	
+	
+	<div class="top-navigation">
+		<nav role="navigation" id="site-nav" class="nav">
+		    <ul>
+		        
+				    
+				        
+				    
+				    <li><a href="http://rabbitstack.github.io/posts/" >Archive</a></li>
+				
+				    
+				        
+				    
+				    <li><a href="http://rabbitstack.github.io/about/" >About</a></li>
+				
+		    </ul>
+		</nav>
+	</div><!-- /.top-navigation -->
+</div><!-- /.navigation-wrapper -->
+
+
+  <div class="image-wrap">
+  <img src=
+    
+      "http://rabbitstack.github.io/images/rabbit-bkgd.jpg"
+    
+  alt="Lua Rocks! feature image">
+  
+       <div class="headline-wrap">
+          <h1> The place where bunnies dwell </h1>
+          <h2> And bits become colossal </h2>
+      </div>
+  </div><!-- /.image-wrap -->
+
+
+<div id="main" role="main">
+  <div class="article-author-side">
+    
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+
+	<img src="http://rabbitstack.github.io/images/nedo.jpg" class="bio-photo" alt="Nedim Šabić bio photo">
+
+
+  <h3 itemprop="name">Nedim Šabić</h3>
+  <p>Senior software engineer, devops enthusiast and platform architect who is also very curious about OS design, internals and implementation. Falling in love with Go language and idiomatic sugars of Ruby, although he is more experienced in Python, J2EE platform and Spring framework ecosystem for development of distributed and event processing solutions. He never stops learning, and at the moment he is reading a lot about Big data, virtualization and cloud technologies. He hates rainy days.</p>
+  <a href="mailto:bhnedo@hotmail.com" class="author-social" target="_blank"><i class="fa fa-fw fa-envelope-square"></i>Email</a>
+  
+  <a href="http://facebook.com/nedim.sabic.39" class="author-social" target="_blank"><i class="fa fa-fw fa-facebook-square"></i> Facebook</a>
+  
+  
+  
+  
+  <a href="http://github.com/bhnedo" class="author-social" target="_blank"><i class="fa fa-fw fa-github"></i> Github</a>
+  <a href="http://stackoverflow.com/users/1027467/nedo" class="author-social" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i> Stackoverflow</a>
+  
+  
+  
+  
+  
+  
+  <a href="http://soundcloud.com/nedim-abi" class="author-social" target="_blank"><i class="fa fa-fw fa-soundcloud"></i> Soundcloud</a>
+  
+  
+</div>
+  </div>
+  <article class="post">
+    <div class="headline-wrap">
+      
+        <h1><a href="http://rabbitstack.github.io/lua-rocks/" rel="bookmark" title="Lua Rocks!">Lua Rocks!</a></h1>
+      
+    </div><!--/ .headline-wrap -->
+    <div class="article-wrap">
+      <p>For the ones used to read my large posts, I am sorry to disappoint you. This time it will be a very short post about a thing that recently called my attention and I want to share it with you. After I had discovered <a href="http://luajit.org/luajit.html" target="_blank">LuaJIT</a>, I am thinking seriously about embracing the Lua language and incorporating it into my arsenal of programming languages. LuaJIT is a high performance <i>Just-In-Time</i> compiler for the Lua programming language which is compatible with all major desktop and mobile operating systems, processor's architectures, gaming consoles, and more. It makes it a perfect fit for the IoT. As far as the interpreter is written in <strong>assembly</strong> language, it beats other dynamic languages in most benchmarks. As a language itself, Lua is very flexible and lightweight, and syntactically it reminds me of Ruby (at least the control flow structures). One of the things I missed at first was the absence of classes, as long as Lua is not really an object-oriented programming language, but it is quite easily to build your own abstraction using tables and metatables.
+</p>
+<p class="image-pull-right">
+	<img src="/images/lua.png" />
+</p>
+<p>
+I have started using Lua for the operating system statistics aggregation and centralization which are provided by <a href="https://github.com/draios/sysdig" target="_blank">Sysdig</a> tool. At the very top of Sysdig there is a nice layer which enable us to write small Lua scripts called <i>chisels</i>. As a new instance of sysdig is required to run every chisel and  as I couldn't find an elegant way to collect the stats from the chisel's output, I decided to build a seperate component that aggregates the necessary stats in JSON format and stream them over <a href="http://zeromq.org/" target="_blank">ZeroMQ</a>. This way, a single instance of sysdig can be used to obtain all stats and they can be be easily consumed from any programming language (which has bindings for ZeroMQ). 
+</p>
+<p>
+Lua also has it's own package manager, <a href="https://rocks.moonscript.org/" target="_blank">luarocks</a>.
+</p>
+
+      <hr />
+      <footer role="contentinfo">
+        <div class="social-share">
+  <h4>Share on</h4>
+  <ul>
+    <li>
+      <a href="https://twitter.com/intent/tweet?text=http://rabbitstack.github.io/lua-rocks/" class="twitter" title="Share on Twitter"><i class="fa fa-twitter"></i><span> Twitter</span></a>
+    </li>
+    <li>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=http://rabbitstack.github.io/lua-rocks/" class="facebook" title="Share on Facebook"><i class="fa fa-facebook"></i><span> Facebook</span></a>
+    </li>
+    <li>
+      <a href="https://plus.google.com/share?url=http://rabbitstack.github.io/lua-rocks/" class="google-plus" title="Share on Google Plus"><i class="fa fa-google-plus"></i><span> Google+</span></a>
+    </li>
+  </ul>
+</div><!-- /.social-share -->
+        <p class="byline"><strong>Lua Rocks!</strong> was published on <time datetime="2015-08-05T00:21:29+02:00">August 05, 2015</time>.</p>
+      </footer>
+    </div><!-- /.article-wrap -->
+  
+    <section id="disqus_thread">
+        
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'rabbitstack'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+    </section><!-- /#disqus_thread -->
+  
+  </article>
+</div><!-- /#main -->
+ 
+<div class="footer-wrap">
+  <div class="related-articles">
+  <h4>You might also enjoy <small class="pull-right">(<a href="http://rabbitstack.github.io/posts/">View all posts</a>)</small></h4>
+    <ul>
+    
+      <li><a href="http://rabbitstack.github.io/running-a-storm-cluster-on-smartos/" title="Running a Storm cluster on SmartOS">Running a Storm cluster on SmartOS</a></li>
+    
+      <li><a href="http://rabbitstack.github.io/introduction-to-cqrs/" title="Introduction to CQRS">Introduction to CQRS</a></li>
+    
+      <li><a href="http://rabbitstack.github.io/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-ii/" title="Deploying Cloud Foundry on OpenStack Juno and XenServer (Part II)">Deploying Cloud Foundry on OpenStack Juno and XenServer (Part II)</a></li>
+    
+    </ul>
+    <hr />
+  </div><!-- /.related-articles -->
+  
+  <footer>
+    
+
+<span>&copy; 2015 Nedim Šabić. Rabbit Stack blog is powered by Jekyll. Bunny icon is courtesy of <a href="http://www.freepik.com" title="Freepik">Freepik.</a>
+
+  </footer>
+</div><!-- /.footer-wrap -->
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="http://rabbitstack.github.io/assets/js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+<script src="http://rabbitstack.github.io/assets/js/plugins/jquery.magnific-popup.js"></script>
+<script src="http://rabbitstack.github.io/assets/js/scripts.min.js"></script>
+
+<!-- Asynchronous Google Analytics snippet -->
+<script>
+  var _gaq = _gaq || [];
+  var pluginUrl = 
+ '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'bhnedo']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+  $(document).ready(function() {
+     $('.image-popup').magnificPopup({type:'image'});
+  });
+</script>
+
+
+  
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'rabbitstack'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+	        
+
+</body>
+</html>
