@@ -168,7 +168,7 @@
 	<img src="/images/lua.png" />
 </p>
 <p>
-I have started using Lua for the operating system statistics aggregation and centralization which are provided by <a href="https://github.com/draios/sysdig" target="_blank">Sysdig</a> tool. At the very top of Sysdig there is a nice layer which enable us to write small Lua scripts called <i>chisels</i>. As a new instance of sysdig is required to run every chisel and  as I couldn't find an elegant way to collect the stats from the chisel's output, I decided to build a seperate component that aggregates the necessary stats in JSON format and stream them over <a href="http://zeromq.org/" target="_blank">ZeroMQ</a>. This way, a single instance of sysdig can be used to obtain all stats and they can be easily consumed from any programming language (which has bindings for ZeroMQ). 
+I have started using Lua for the operating system statistics aggregation and centralization which are provided by <a href="https://github.com/draios/sysdig" target="_blank">Sysdig</a> tool. At the very top of Sysdig there is a nice layer which enables us to write small Lua scripts called <i>chisels</i>. As a new instance of sysdig is required to run every chisel and  as I couldn't find an elegant way to collect the stats from the chisel's output, I decided to build a seperate component that aggregates the necessary stats in JSON format and stream them over <a href="http://zeromq.org/" target="_blank">ZeroMQ</a>. This way, a single instance of sysdig can be used to obtain all stats and they can be easily consumed from any programming language (which has bindings for ZeroMQ). 
 </p>
 <p>
 Lua also has it's own package manager, <a href="https://rocks.moonscript.org/" target="_blank">luarocks</a>.
