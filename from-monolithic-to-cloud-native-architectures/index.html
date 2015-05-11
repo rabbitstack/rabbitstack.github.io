@@ -182,7 +182,7 @@ To establish an analogy, think about the following quote I have borrowed from <a
 
 <h2>Distributed patterns</h2>
 
-<p>The migration to the cloud-native architectures comes at the cost of complexity involved in coordinating the distributed ecosystem. As you will see some new infrastructure blocks must be build as trade off to adoption of cloud-native principles. The series of the well known distributed patterns will make ascending to the cloud less painful..</p>
+<p>The migration to the cloud-native architectures comes at the cost of complexity involved in coordinating the distributed ecosystem. As you will see some new infrastructure blocks must be build as trade off to adoption of cloud-native principles. The series of the well known distributed patterns will make ascending to the cloud less painful.</p>
 
 <h3>API Gateway</h3>
 
@@ -220,7 +220,7 @@ To establish an analogy, think about the following quote I have borrowed from <a
 
 <h3>Circuit breaker</h3>
 <p>In a cloud-native architectures it is essential to guarantee the fault tolerance and prevent cascading failures when one of the microservices comes out of control. As we already mentioned, packaging and partitioning the microservices into Linux containers will prevent a nasty microservice to consume an entire machine's resources or affect another container. That is a wise doze of defense at infrastructure level. But what's about the application level protection? The circuit breaker pattern is based on the premise that unhealthy microservices wouldn't have to cause the interruption of other services. Every RPC call that is being routed to an unhealthy microservice shouldn't continuously punch the service making it impossible to recover. The circuit breaker behavior can be compared to our home circuit breaker that prevents the current from damaging devices when it exceeds the certain threshold.</p>
-<p>Similarly, the circuit breaker pattern counts the number of failed calls, and when the number is above the specified threshold, it transitions into the open state and make the call to fail immediately. Once when service has recovered, the circuit breaker can be closed and the calls can be executed successfully.</p>
+<p>Similarly, the circuit breaker pattern counts the number of failed calls, and when the number is above the specified threshold, it transitions into the open state and it makes the call to fail immediately. Once when service has recovered, the circuit breaker can be closed and the calls can be executed successfully.</p>
 
       <hr />
       <footer role="contentinfo">
