@@ -4,7 +4,7 @@
 <generator uri="https://github.com/jekyll/jekyll">Jekyll</generator>
 <link rel="self" type="application/atom+xml" href="http://rabbitstack.github.io/feed.xml" />
 <link rel="alternate" type="text/html" href="http://rabbitstack.github.io" />
-<updated>2015-05-10T23:59:36+02:00</updated>
+<updated>2015-05-16T16:12:46+02:00</updated>
 <id>http://rabbitstack.github.io/</id>
 <author>
   <name>Nedim Šabić</name>
@@ -16,11 +16,70 @@
   
 
 <entry>
+  <title type="html"><![CDATA[Spring Boot or Not to Spring Boot?]]></title>
+  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/spring-boot-or-not-to-spring-boot/" />
+  <id>http://rabbitstack.github.io/spring-boot-or-not-to-spring-boot</id>
+  <published>2015-05-16T21:48:42+02:00</published>
+  <updated>2015-05-16T21:48:42+02:00</updated>
+  <author>
+    <name>Nedim Šabić</name>
+    <uri>http://rabbitstack.github.io</uri>
+    <email>bhnedo@hotmail.com</email>
+  </author>
+  <content type="html">&lt;p&gt;
+For me, it could be difficult to imagine the inception of a medium / big Java project without using Spring framework. There is a myriad of reasons for that. It makes the code base clean and loosely coupled. The whole plethora of abstractions provided by Spring makes the life easier when dealing with JDBC, JMS, NoSQL datastores, transaction management, AOP programming, etc. It&#39;s modular, lightweight, opensource and has a vibrant community. It can order you a pizza. Not actually, but however, it&#39;s &lt;i&gt;de facto&lt;/i&gt; J2EE framework (anybody heard about Seam?).
+&lt;/p&gt;
+
+&lt;p class=&quot;image-pull-right&quot;&gt;
+	&lt;img src=&quot;/images/spring-boot-logo.png&quot; /&gt;
+&lt;/p&gt;
+
+&lt;p&gt;
+I have been using Spring for almost seven years and had followed it&#39;s evolution, the born of new subprojects and the overall expansion of the Spring ecosystem. Spring had been often criticized for being a XML metadata configuration oriented framework. Then, &lt;b&gt;Spring JavaConfig&lt;/b&gt; has appeared. Its goal was to focus on a Java centric Spring configuration through different annotations like &lt;code&gt;@Configuration&lt;/code&gt;, &lt;code&gt;@Bean&lt;/code&gt; and the &lt;code&gt;AnnotationConfigApplicationContext&lt;/code&gt; implementation. Spring JavaConfig was a trampoline for what now is known as &lt;b&gt;Spring Boot&lt;/b&gt;.
+&lt;/p&gt;
+
+&lt;p&gt;
+Spring Boot provides an abstraction layer on top of Spring core and the rest of subprojects under the Spring umbrella, with no need to deal with XML configuration files, the fact known as &lt;b&gt;CoC&lt;/b&gt; (Convention Over Configuration). In this post I would like to expose the pros and cons of Spring Boot.
+&lt;/p&gt;
+
+&lt;p class=&quot;notice&quot;&gt;
+&lt;strong&gt;NOTE:&lt;/strong&gt; These are my very personal and humble opinions whose might not be coherent, and off course, it doesn&#39;t mean you have to agree with them.
+&lt;/p&gt;
+
+&lt;h3&gt;Pros&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Quick up and running of the standalone and containerless Spring applications. You just assemble the jar artifact which comes with an embedded Tomact, Jetty or Undertow application server and you are ready to go.&lt;/li&gt;
+  &lt;li&gt;Simplified dependency management through the &lt;b&gt;starter&lt;/b&gt; POMs.&lt;/li&gt;
+  &lt;li&gt;Visibility into your application internals. Spring Boot provides the HTTP endpoints to get detailed metrics about the application inner working, health status, etc. SSH shell and the &lt;b&gt;jtop&lt;/b&gt; are really awesome.&lt;/li&gt;
+  &lt;li&gt;For the Java purists and the haters of XML configuration files, the good news is there are no XML at all. The beans are initialized, configured and wired automagically.&lt;/li&gt;
+  &lt;li&gt;The &lt;a href=&quot;https://start.spring.io/&quot;&gt;Spring Initializr&lt;/a&gt; provides a project generator to make you productive with the certain technology stack from the beginning. You can create a skeleton project with web, data access (relational and NoSQL datastores), cloud, or messaging support.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Cons&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;If you are new to Spring and want to learn how the dependency injection, AOP programming, and proxies work, starting with Spring Boot is not a good choice. Spring Boot hides the most of these details from you.&lt;/li&gt;
+  &lt;li&gt;I find the Java Config programming model is more intrusive with your application code base. If the &lt;b&gt;IoC&lt;/b&gt; principle is about delegating the lifecycle and the instantiation of the classes to external entity (the container), then, the principle is being violated. It’s the programmer itself who is responsible for creating the required beans. Moreover, if the implementation of your class changes, you are forced to change it in your code. With XML oriented programming model it would be enough to update the bean definition. The introduction of Spring XML namespaces had greatly simplified the configuration files, so there is one less reason to hate them.&lt;/li&gt;
+  &lt;li&gt;If you are a control freak, I doubt Spring Boot would fit your needs.&lt;/li&gt;
+  &lt;li&gt;Spring Boot sticks good with microservices. The Spring Boot artifacts can be deployed directly into Docker containers. In a large and monolithic based applications, I wouldn’t encourage you to use Spring Boot.&lt;/li&gt;
+  &lt;li&gt;If you are not familiarized with other projects of the Spring ecosystem (Spring Integration, Spring AMQP, Spring Security, etc), using them from Spring Boot will make you miss a lot of concepts, which by the other hand you would acquire if you had started using them independently.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;Seven years ago, Spring framework had changed my perception on software development. Nowdays, it’s being the essential part of my day to day programmer’s life. I still feel very comfortable with XML based configuration, or the hybrid combination of JavaConfig and XML. That doesn’t mean things won’t change, and made the tip to scales in favor of Spring Boot.&lt;/p&gt;
+
+  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/spring-boot-or-not-to-spring-boot/&quot;&gt;Spring Boot or Not to Spring Boot?&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on May 16, 2015.&lt;/p&gt;</content>
+</entry>
+
+
+  
+
+<entry>
   <title type="html"><![CDATA[From monolithic to cloud-native architectures]]></title>
   <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/from-monolithic-to-cloud-native-architectures/" />
   <id>http://rabbitstack.github.io/from-monolithic-to-cloud-native-architectures</id>
-  <published>2015-05-05T22:29:25+02:00</published>
-  <updated>2015-05-05T22:29:25+02:00</updated>
+  <published>2015-05-11T22:29:25+02:00</published>
+  <updated>2015-05-11T22:29:25+02:00</updated>
   <author>
     <name>Nedim Šabić</name>
     <uri>http://rabbitstack.github.io</uri>
@@ -41,13 +100,13 @@ changes are also essentials. It&#39;s not enough to introduce the agile practice
 To establish an analogy, think about the following quote I have borrowed from &lt;a href=&quot;http://www.imdb.com/title/tt0285736/&quot; target=&quot;_blank&quot;&gt;Milky Way&lt;/a&gt; movie: 
 &lt;blockquote&gt;You can&#39;t focus on healing one organ and take for granted the rest of the organism.&lt;/blockquote&gt; The similar approach can be applied to the organizations. Traditionally, an organization can be divided into various units called &lt;b&gt;silos&lt;/b&gt;, each of them operating inside isolated contexts, with specific vocabularies, practices, habits and communication kinds. The system administration silo tends to keep an IT ecosystem durable and available, sticking to established SLAs and performance indicators. The changes generated by development team are not very welcome as they tend to introduce risks into the system. Therefore, as long as changes can&#39;t be introduced safely, the speed of innovation and delivery of new business values are governed by heavyweight processes that are clashing directly with cloud-native principles. The &lt;a href=&quot;http://en.wikipedia.org/wiki/DevOps&quot; target=&quot;_blank&quot;&gt;DevOps&lt;/a&gt; is an emerging movement which goal is to establish the collaboration lines between development and the IT operations which can lead to continuous value delivery without compromising the performance, safety, availability and speed of innovation.&lt;/p&gt;
 
-&lt;p&gt;The silos are dissolved and recreated into a totally new organizational structure with shared agile practices, vocabulary and communication channels. Instead of focusing on processes, we focus on persons as the foundational aspect of the change and innovation.&lt;/p&gt;
+&lt;p&gt;The silos are dissolved and recreated into a totally new organizational structure with shared agile practices, vocabulary and communication channels. Instead of focusing on processes, we focus on persons as the foundational aspect of change and innovation.&lt;/p&gt;
 
-&lt;p&gt;The development team can provision the required infrastructure for the application deployment using a simple API to create virtual machines instances, storage and network topologies. That way the teams are considered as autonomous entities coexisting inside a totally decentralized ecosystem. When new members are incorporated into the team, they don&#39;t have to deal with the enormous codebase since separated bounded contexts can be used to reduce the coordination overhead and make developers productive from the beginning. The teams can cooporate independently using the REST API based collaboration model and deploy new functionality in a relaxed harmony with the rest of the teams. &lt;/p&gt;
+&lt;p&gt;The development team can provision the required infrastructure for the application deployment using a simple API to create virtual machine instances, storage and network topologies. That way the teams are considered as autonomous entities coexisting inside a totally decentralized ecosystem. When new members are incorporated into the team, they don&#39;t have to deal with the enormous codebase since separated bounded contexts can be used to reduce the coordination overhead and make developers productive from the beginning. The teams can cooporate independently using the REST API based collaboration model and deploy new functionality in a relaxed harmony with the rest of the teams. &lt;/p&gt;
 
 &lt;h2&gt;Distributed patterns&lt;/h2&gt;
 
-&lt;p&gt;The migration to the cloud-native architectures comes at the cost of complexity involved in coordinating the distributed ecosystem. As you will see some new infrastructure blocks must be build as trade off to adoption of cloud-native principles. The series of the well known distributed patterns will make ascending to the cloud less painful..&lt;/p&gt;
+&lt;p&gt;The migration to the cloud-native architectures comes at the cost of complexity involved in coordinating the distributed ecosystem. As you will see some new infrastructure blocks must be build as trade off to adoption of cloud-native principles. The series of the well known distributed patterns will make ascending to the cloud less painful.&lt;/p&gt;
 
 &lt;h3&gt;API Gateway&lt;/h3&gt;
 
@@ -85,9 +144,9 @@ To establish an analogy, think about the following quote I have borrowed from &l
 
 &lt;h3&gt;Circuit breaker&lt;/h3&gt;
 &lt;p&gt;In a cloud-native architectures it is essential to guarantee the fault tolerance and prevent cascading failures when one of the microservices comes out of control. As we already mentioned, packaging and partitioning the microservices into Linux containers will prevent a nasty microservice to consume an entire machine&#39;s resources or affect another container. That is a wise doze of defense at infrastructure level. But what&#39;s about the application level protection? The circuit breaker pattern is based on the premise that unhealthy microservices wouldn&#39;t have to cause the interruption of other services. Every RPC call that is being routed to an unhealthy microservice shouldn&#39;t continuously punch the service making it impossible to recover. The circuit breaker behavior can be compared to our home circuit breaker that prevents the current from damaging devices when it exceeds the certain threshold.&lt;/p&gt;
-&lt;p&gt;Similarly, the circuit breaker pattern counts the number of failed calls, and when the number is above the specified threshold, it transitions into the open state and make the call to fail immediately. Once when service has recovered, the circuit breaker can be closed and the calls can be executed successfully.&lt;/p&gt;
+&lt;p&gt;Similarly, the circuit breaker pattern counts the number of failed calls, and when the number is above the specified threshold, it transitions into the open state and make the call to fail immediately. Once the service has recovered, the circuit breaker is closed and the calls can be executed successfully.&lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/from-monolithic-to-cloud-native-architectures/&quot;&gt;From monolithic to cloud-native architectures&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on May 05, 2015.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/from-monolithic-to-cloud-native-architectures/&quot;&gt;From monolithic to cloud-native architectures&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on May 11, 2015.&lt;/p&gt;</content>
 </entry>
 
 
