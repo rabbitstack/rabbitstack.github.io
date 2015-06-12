@@ -80,9 +80,9 @@
 
 <div class="navigation-wrapper">
 		<div class="site-name">
-			<img src="/images/rabbit-small.jpg" alt="Rabbit Stack logo" class="logo" />
+			<!-- <img src="/images/rabbit-small.jpg" alt="Rabbit Stack logo" class="logo" /> -->
 			<!-- <a href="http://rabbitstack.github.io/">Rabbit Stack</a> -->
-			<a href="http://rabbitstack.github.io/"><span class="site-name-segment">Rabbit</span> Stack</a>
+			<a href="http://rabbitstack.github.io/"><span class="site-name-segment">Rabbit</span> <span class="big-font">Stack</span></a>
 
 		</div><!-- /.site-name -->
 
@@ -92,6 +92,11 @@
 		<nav role="navigation" id="site-nav" class="nav">
 		    <ul>
 		        
+				    
+				        
+				    
+				    <li><a href="http://rabbitstack.github.io#" >Home</a></li>
+				
 				    
 				        
 				    
@@ -109,13 +114,14 @@
 
 
   <div class="image-wrap">
-  <img src=
+  <img class="bkg" src=
     
       "http://rabbitstack.github.io/images/rabbit-bkgd.jpg"
     
   alt="Lua Rocks! feature image">
   
        <div class="headline-wrap">
+          <img src="http://rabbitstack.github.io/images/rabbitstack.png" />
           <h1> The place where bunnies dwell </h1>
           <h2> And bits become colossal </h2>
       </div>
@@ -134,7 +140,7 @@
 
 
   <h3 itemprop="name">Nedim Šabić</h3>
-  <p>Senior software engineer, devops enthusiast and platform architect who is also very curious about OS design, internals and implementation. Falling in love with Go language and idiomatic sugars of Ruby, although he is more experienced in Python, J2EE platform and Spring framework ecosystem for development of distributed and event processing solutions. He never stops learning, and at the moment he is reading a lot about Big data, virtualization and cloud technologies. He hates rainy days.</p>
+  <p>Senior software engineer, devops enthusiast and platform architect who is also very curious about OS design, internals and implementation. Falling in love with Go language and idiomatic sugars of Ruby, although he is more experienced in Python, J2EE platform and Spring framework ecosystem for development of distributed and event processing solutions. He never stops learning, and at the moment he is reading a lot about Big data, machine learning, virtualization and cloud technologies.</p>
   <a href="mailto:bhnedo@hotmail.com" class="author-social" target="_blank"><i class="fa fa-fw fa-envelope-square"></i>Email</a>
   
   <a href="http://facebook.com/nedim.sabic.39" class="author-social" target="_blank"><i class="fa fa-fw fa-facebook-square"></i> Facebook</a>
@@ -162,13 +168,13 @@
       
     </div><!--/ .headline-wrap -->
     <div class="article-wrap">
-      <p>For the ones used to read my large posts, I am sorry to disappoint you. This time it will be a very short post about a thing that recently called my attention and I want to share it with you. After I had discovered <a href="http://luajit.org/luajit.html" target="_blank">LuaJIT</a>, I am thinking seriously about embracing the Lua language and incorporating it into my arsenal of programming languages. LuaJIT is a high performance <i>Just-In-Time</i> compiler for the Lua programming language which is compatible with all major desktop and mobile operating systems, processor's architectures, gaming consoles, and more. It makes it a perfect fit for the IoT. As far as the interpreter is written in <strong>assembly</strong> language, it beats other dynamic languages in most benchmarks. As a language itself, Lua is very flexible and lightweight, and syntactically it reminds me of Ruby (at least the control flow structures). One of the things I missed at first was the absence of classes, as long as Lua is not really an object-oriented programming language, but it is quite easy to build your own abstraction using tables and metatables.
+      <p>For the ones used to read my large posts, I am sorry to disappoint you. This time it will be a very short post about a thing that recently called my attention and I want to share it with you. After I had discovered <a href="http://luajit.org/luajit.html" target="_blank">LuaJIT</a>, I am thinking seriously about embracing the Lua language and incorporating it into my arsenal of programming languages. LuaJIT is a high performance <i>Just-In-Time</i> compiler for the Lua programming language which is compatible with all major desktop and mobile operating systems, processor's architectures, gaming consoles, and more. It makes it a perfect fit for the IoT. As far as the interpreter is written in <strong>assembly</strong> language, it beats other dynamic languages in most benchmarks. As a language itself, Lua is very flexible and lightweight, and syntactically it reminds me of Ruby (at least the control flow structures). One of the things I missed at first was the absence of classes, as long as Lua is not really an object-oriented programming language, but it is quite easily to build your own abstraction using tables and metatables.
 </p>
 <p class="image-pull-right">
 	<img src="/images/lua.png" />
 </p>
 <p>
-I have started using Lua for the operating system statistics aggregation and centralization which are provided by <a href="https://github.com/draios/sysdig" target="_blank">Sysdig</a> tool. At the very top of Sysdig there is a nice layer which enables us to write small Lua scripts called <i>chisels</i>. As a new instance of sysdig is required to run every chisel and  as I couldn't find an elegant way to collect the stats from the chisel's output, I decided to build a seperate component that aggregates the necessary stats in JSON format and stream them over <a href="http://zeromq.org/" target="_blank">ZeroMQ</a>. This way, a single instance of sysdig can be used to obtain all stats and they can be easily consumed from any programming language (which has bindings for ZeroMQ). 
+I have started using Lua for the operating system statistics aggregation and centralization which are provided by <a href="https://github.com/draios/sysdig" target="_blank">Sysdig</a> tool. At the very top of Sysdig there is a nice layer which enable us to write small Lua scripts called <i>chisels</i>. As a new instance of sysdig is required to run every chisel and  as I couldn't find an elegant way to collect the stats from the chisel's output, I decided to build a seperate component that aggregates the necessary stats in JSON format and stream them over <a href="http://zeromq.org/" target="_blank">ZeroMQ</a>. This way, a single instance of sysdig can be used to obtain all stats and they can be be easily consumed from any programming language (which has bindings for ZeroMQ). 
 </p>
 <p>
 Lua also has it's own package manager, <a href="https://rocks.moonscript.org/" target="_blank">luarocks</a>.
@@ -227,11 +233,11 @@ Lua also has it's own package manager, <a href="https://rocks.moonscript.org/" t
   <h4>You might also enjoy <small class="pull-right">(<a href="http://rabbitstack.github.io/posts/">View all posts</a>)</small></h4>
     <ul>
     
+      <li><a href="http://rabbitstack.github.io/spring-boot-or-not-to-spring-boot/" title="Spring Boot or Not to Spring Boot?">Spring Boot or Not to Spring Boot?</a></li>
+    
+      <li><a href="http://rabbitstack.github.io/from-monolithic-to-cloud-native-architectures/" title="From monolithic to cloud-native architectures">From monolithic to cloud-native architectures</a></li>
+    
       <li><a href="http://rabbitstack.github.io/running-a-storm-cluster-on-smartos/" title="Running a Storm cluster on SmartOS">Running a Storm cluster on SmartOS</a></li>
-    
-      <li><a href="http://rabbitstack.github.io/introduction-to-cqrs/" title="Introduction to CQRS">Introduction to CQRS</a></li>
-    
-      <li><a href="http://rabbitstack.github.io/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-ii/" title="Deploying Cloud Foundry on OpenStack Juno and XenServer (Part II)">Deploying Cloud Foundry on OpenStack Juno and XenServer (Part II)</a></li>
     
     </ul>
     <hr />
@@ -256,7 +262,7 @@ Lua also has it's own package manager, <a href="https://rocks.moonscript.org/" t
   var pluginUrl = 
  '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
   _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
-  _gaq.push(['_setAccount', 'bhnedo']);
+  _gaq.push(['_setAccount', 'rabbitstack']);
   _gaq.push(['_trackPageview']);
 
   (function() {

@@ -80,9 +80,9 @@
 
 <div class="navigation-wrapper">
 		<div class="site-name">
-			<img src="/images/rabbit-small.jpg" alt="Rabbit Stack logo" class="logo" />
+			<!-- <img src="/images/rabbit-small.jpg" alt="Rabbit Stack logo" class="logo" /> -->
 			<!-- <a href="http://rabbitstack.github.io/">Rabbit Stack</a> -->
-			<a href="http://rabbitstack.github.io/"><span class="site-name-segment">Rabbit</span> Stack</a>
+			<a href="http://rabbitstack.github.io/"><span class="site-name-segment">Rabbit</span> <span class="big-font">Stack</span></a>
 
 		</div><!-- /.site-name -->
 
@@ -92,6 +92,11 @@
 		<nav role="navigation" id="site-nav" class="nav">
 		    <ul>
 		        
+				    
+				        
+				    
+				    <li><a href="http://rabbitstack.github.io#" >Home</a></li>
+				
 				    
 				        
 				    
@@ -109,13 +114,14 @@
 
 
   <div class="image-wrap">
-  <img src=
+  <img class="bkg" src=
     
       "http://rabbitstack.github.io/images/rabbit-bkgd.jpg"
     
   alt="Deploying Cloud Foundry on OpenStack Juno and XenServer (Part I) feature image">
   
        <div class="headline-wrap">
+          <img src="http://rabbitstack.github.io/images/rabbitstack.png" />
           <h1> The place where bunnies dwell </h1>
           <h2> And bits become colossal </h2>
       </div>
@@ -134,7 +140,7 @@
 
 
   <h3 itemprop="name">Nedim Šabić</h3>
-  <p>Senior software engineer, devops enthusiast and platform architect who is also very curious about OS design, internals and implementation. Falling in love with Go language and idiomatic sugars of Ruby, although he is more experienced in Python, J2EE platform and Spring framework ecosystem for development of distributed and event processing solutions. He never stops learning, and at the moment he is reading a lot about Big data, virtualization and cloud technologies. He hates rainy days.</p>
+  <p>Senior software engineer, devops enthusiast and platform architect who is also very curious about OS design, internals and implementation. Falling in love with Go language and idiomatic sugars of Ruby, although he is more experienced in Python, J2EE platform and Spring framework ecosystem for development of distributed and event processing solutions. He never stops learning, and at the moment he is reading a lot about Big data, machine learning, virtualization and cloud technologies.</p>
   <a href="mailto:bhnedo@hotmail.com" class="author-social" target="_blank"><i class="fa fa-fw fa-envelope-square"></i>Email</a>
   
   <a href="http://facebook.com/nedim.sabic.39" class="author-social" target="_blank"><i class="fa fa-fw fa-facebook-square"></i> Facebook</a>
@@ -167,7 +173,7 @@
 </p>
 
 <p>
-While I was investigating about Cloud Foundry, I also figured out its agnostic nature which enable it to be easily deployed on AWS, vSphere or <a href="https://www.openstack.org/" target="_blank">OpenStack</a>. That is how I got motivated to acquire one of those cheap Dell rack servers on eBay and start the experiment. XenServer 6.2 is what I choose as hypervisor to be orchestrated by OpenStack. Unfortunately, the documentation about setting up the OpenStack compute node on XenServer is rather incomplete, deprecated and very hard to follow if you
+While I was investigating about Cloud Foundry, I also figured out its agnostic nature which enable it to be easily deployed on AWS, vSphere or <a href="https://www.openstack.org/" target="_blank">OpenStack</a>. That is how I got motivated to acquire one of those cheap Dell rack servers on eBay and start the experiment. I had opted for XenServer 6.2 as the hypervisor. Unfortunately, the documentation about setting up the OpenStack compute node on XenServer is rather incomplete, deprecated and very hard to follow if you
 are doing it for the first time. So, let's see how to proceed step by step, and prepare our OpenStack environment for Cloud Foundry instance deployment. I already assume you have successfully installed and configured the controller node.
 </p>
 
@@ -181,7 +187,7 @@ are doing it for the first time. So, let's see how to proceed step by step, and 
 xe vm-param-set <span class="nv">uuid</span><span class="o">=</span><span class="nv">$VMUUID</span> other-config:install-repository<span class="o">=</span>http://mirror.centos.org/centos/7/os/x86_64
 xe vm-param-set <span class="nv">uuid</span><span class="o">=</span><span class="nv">$VMUUID</span> PV-args<span class="o">=</span><span class="s2">&quot;ks=https://gist.githubusercontent.com/bhnedo/4648499f5680207e86ec/raw/4239fd8d0e10f7f2759d600b28b52f1744d9b5ad/kickstart-centos-minimal.cfg ksdevice=eth0&quot;</span></code></pre></div>
 
-<p>Find out the network UUID for the bridge that has access to the Internet. Note that one Xen bridge is created for every physical network adapter on your machine. Get a list of XenServer networks and store the UUID for the appropriate bridge (in most cases it will be <code>xenbr0</code>).</p>
+<p>Find out the network UUID for the bridge that has access to the Internet. Note that Xen bridge is created for every physical network adapter on your machine. Get a list of XenServer networks and store the UUID for the appropriate bridge (in most cases it will be <code>xenbr0</code>).</p>
 
 <div class="highlight"><pre><code class="language-bash" data-lang="bash">xe network-list
 <span class="nv">NETUUID</span><span class="o">=</span><span class="k">$(</span>xe network-list <span class="nv">bridge</span><span class="o">=</span>xenbr0 --minimal<span class="k">)</span></code></pre></div>
@@ -414,7 +420,7 @@ It is also necessary to instruct the LVM which block storage devices should be s
 <span class="o">}</span></code></pre></div>
 
 <p>
-We are now ready to install and configure Block Storage components and dependencies. I wasn't able to get iSCSI LUNs to work using <code>targetcli</code>, probably because XenServer relies on SCSI initiator utilities. The solution was to use <code>scsi-target-utils</code> instead of it.
+We are now ready to install and configure Block Storage components and dependencies. I wasn't able to get iSCSI LUNs to work using <code>targetcli</code>, probably because XenServer relies on SCSI initiator utilities. The solution was to use <code>scsi-target-utils</code> instead.
 </p>
 
 <div class="highlight"><pre><code class="language-bash" data-lang="bash">yum install scsi-target-utils
@@ -471,7 +477,7 @@ Edit the <code>/etc/cinder/cinder.conf</code> configuration file.
  		</pre>
 	
 	<li>
-		<strong>Target administartion service</strong>
+		<strong>Target administration service</strong>
 		<p>In the <code>[DEFAULT]</code> configure Cinder to use <code>tgtadm</code> service for iSCSI storage management:</p>
 				<pre>
  [DEFAULT]
@@ -565,11 +571,11 @@ systemctl start openstack-cinder-volume.service tgtd.service</code></pre></div>
   <h4>You might also enjoy <small class="pull-right">(<a href="http://rabbitstack.github.io/posts/">View all posts</a>)</small></h4>
     <ul>
     
+      <li><a href="http://rabbitstack.github.io/spring-boot-or-not-to-spring-boot/" title="Spring Boot or Not to Spring Boot?">Spring Boot or Not to Spring Boot?</a></li>
+    
+      <li><a href="http://rabbitstack.github.io/from-monolithic-to-cloud-native-architectures/" title="From monolithic to cloud-native architectures">From monolithic to cloud-native architectures</a></li>
+    
       <li><a href="http://rabbitstack.github.io/lua-rocks/" title="Lua Rocks!">Lua Rocks!</a></li>
-    
-      <li><a href="http://rabbitstack.github.io/running-a-storm-cluster-on-smartos/" title="Running a Storm cluster on SmartOS">Running a Storm cluster on SmartOS</a></li>
-    
-      <li><a href="http://rabbitstack.github.io/introduction-to-cqrs/" title="Introduction to CQRS">Introduction to CQRS</a></li>
     
     </ul>
     <hr />
@@ -594,7 +600,7 @@ systemctl start openstack-cinder-volume.service tgtd.service</code></pre></div>
   var pluginUrl = 
  '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
   _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
-  _gaq.push(['_setAccount', 'bhnedo']);
+  _gaq.push(['_setAccount', 'rabbitstack']);
   _gaq.push(['_trackPageview']);
 
   (function() {

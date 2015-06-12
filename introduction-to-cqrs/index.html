@@ -6,7 +6,7 @@
 <head>
 <meta charset="utf-8">
 <title>Introduction to CQRS &#8211; Rabbit Stack</title>
-<meta name="description" content="In the world dominated by the IoT and the increasingly demanding users, the applications and the developers itself need to adapt a new paradigm to satisfy those neccesities.">
+<meta name="description" content="In the world dominated by the IoT and the increasingly demanding users, the applications and the developers itself need to adopt a new paradigm to satisfy those neccesities.">
 <meta name="keywords" content="CQRS, design patterns, event sourcing, DDD, domain events">
 
 
@@ -80,9 +80,9 @@
 
 <div class="navigation-wrapper">
 		<div class="site-name">
-			<img src="/images/rabbit-small.jpg" alt="Rabbit Stack logo" class="logo" />
+			<!-- <img src="/images/rabbit-small.jpg" alt="Rabbit Stack logo" class="logo" /> -->
 			<!-- <a href="http://rabbitstack.github.io/">Rabbit Stack</a> -->
-			<a href="http://rabbitstack.github.io/"><span class="site-name-segment">Rabbit</span> Stack</a>
+			<a href="http://rabbitstack.github.io/"><span class="site-name-segment">Rabbit</span> <span class="big-font">Stack</span></a>
 
 		</div><!-- /.site-name -->
 
@@ -92,6 +92,11 @@
 		<nav role="navigation" id="site-nav" class="nav">
 		    <ul>
 		        
+				    
+				        
+				    
+				    <li><a href="http://rabbitstack.github.io#" >Home</a></li>
+				
 				    
 				        
 				    
@@ -109,13 +114,14 @@
 
 
   <div class="image-wrap">
-  <img src=
+  <img class="bkg" src=
     
       "http://rabbitstack.github.io/images/rabbit-bkgd.jpg"
     
   alt="Introduction to CQRS feature image">
   
        <div class="headline-wrap">
+          <img src="http://rabbitstack.github.io/images/rabbitstack.png" />
           <h1> The place where bunnies dwell </h1>
           <h2> And bits become colossal </h2>
       </div>
@@ -134,7 +140,7 @@
 
 
   <h3 itemprop="name">Nedim Šabić</h3>
-  <p>Senior software engineer, devops enthusiast and platform architect who is also very curious about OS design, internals and implementation. Falling in love with Go language and idiomatic sugars of Ruby, although he is more experienced in Python, J2EE platform and Spring framework ecosystem for development of distributed and event processing solutions. He never stops learning, and at the moment he is reading a lot about Big data, virtualization and cloud technologies. He hates rainy days.</p>
+  <p>Senior software engineer, devops enthusiast and platform architect who is also very curious about OS design, internals and implementation. Falling in love with Go language and idiomatic sugars of Ruby, although he is more experienced in Python, J2EE platform and Spring framework ecosystem for development of distributed and event processing solutions. He never stops learning, and at the moment he is reading a lot about Big data, machine learning, virtualization and cloud technologies.</p>
   <a href="mailto:bhnedo@hotmail.com" class="author-social" target="_blank"><i class="fa fa-fw fa-envelope-square"></i>Email</a>
   
   <a href="http://facebook.com/nedim.sabic.39" class="author-social" target="_blank"><i class="fa fa-fw fa-facebook-square"></i> Facebook</a>
@@ -189,7 +195,7 @@ It is where <strong>CQRS</strong> comes to the rescue. CQRS stands for <i>Comman
 		<strong>Repositories</strong> provide access to domain objects and allow isolating the domain model from persistence mechanism. Repositories just have to be able to recover the aggregate (domain object) from its unique identifier, while any other type of query is performed against read model.
 	</li>
 	<li>
-		<strong>Events</strong> are the source of any state changes in the application. As mentioned above, executing commands on aggregate, initiates the state change in the system, which in turn will produce a series of domain events. We don't need to persist domain objects but the generated domain events. With this we are able to reconstruct the domain object to its last state, just applying the stream of events on it. This pattern is known as <i>event sourcing</i>. Events are sent to the event bus, and dispatched to any component interested in consuming it.
+		<strong>Events</strong> are the source of any state changes in the application. As mentioned above, executing commands on aggregate, initiates the state change in the system, which in turn will produce a series of domain events. We don't need to persist domain objects but the generated domain events. With this we are able to reconstruct the domain object to its last state, just by applying the stream of events on it. This pattern is known as <i>event sourcing</i>. Events are sent to the event bus, and dispatched to any component interested in consuming it.
 	</li>
 	<li>
 		<strong>Event store</strong> provides a backing store for domain events. Those are often relational databases and NoSQL databases, but for the proof of concepts they can be implemented as file system stores.
@@ -297,11 +303,11 @@ It is where <strong>CQRS</strong> comes to the rescue. CQRS stands for <i>Comman
   <h4>You might also enjoy <small class="pull-right">(<a href="http://rabbitstack.github.io/posts/">View all posts</a>)</small></h4>
     <ul>
     
+      <li><a href="http://rabbitstack.github.io/spring-boot-or-not-to-spring-boot/" title="Spring Boot or Not to Spring Boot?">Spring Boot or Not to Spring Boot?</a></li>
+    
+      <li><a href="http://rabbitstack.github.io/from-monolithic-to-cloud-native-architectures/" title="From monolithic to cloud-native architectures">From monolithic to cloud-native architectures</a></li>
+    
       <li><a href="http://rabbitstack.github.io/lua-rocks/" title="Lua Rocks!">Lua Rocks!</a></li>
-    
-      <li><a href="http://rabbitstack.github.io/running-a-storm-cluster-on-smartos/" title="Running a Storm cluster on SmartOS">Running a Storm cluster on SmartOS</a></li>
-    
-      <li><a href="http://rabbitstack.github.io/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-ii/" title="Deploying Cloud Foundry on OpenStack Juno and XenServer (Part II)">Deploying Cloud Foundry on OpenStack Juno and XenServer (Part II)</a></li>
     
     </ul>
     <hr />
@@ -326,7 +332,7 @@ It is where <strong>CQRS</strong> comes to the rescue. CQRS stands for <i>Comman
   var pluginUrl = 
  '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
   _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
-  _gaq.push(['_setAccount', 'bhnedo']);
+  _gaq.push(['_setAccount', 'rabbitstack']);
   _gaq.push(['_trackPageview']);
 
   (function() {

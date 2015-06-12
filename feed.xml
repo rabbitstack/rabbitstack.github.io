@@ -4,7 +4,7 @@
 <generator uri="https://github.com/jekyll/jekyll">Jekyll</generator>
 <link rel="self" type="application/atom+xml" href="http://rabbitstack.github.io/feed.xml" />
 <link rel="alternate" type="text/html" href="http://rabbitstack.github.io" />
-<updated>2015-05-16T17:05:25+02:00</updated>
+<updated>2015-06-12T23:19:57+02:00</updated>
 <id>http://rabbitstack.github.io/</id>
 <author>
   <name>Nedim Šabić</name>
@@ -66,7 +66,7 @@ Spring Boot provides an abstraction layer on top of Spring core and the rest of 
 
 &lt;h2&gt;Conclusion&lt;/h2&gt;
 
-&lt;p&gt;Seven years ago, Spring framework had changed my perception on software development. Nowdays, it’s being the essential part of my day to day programmer’s life. I still feel very comfortable with XML based configuration, or the hybrid combination of JavaConfig and XML. That doesn’t mean things won’t change, and made the tip to scales in favor of Spring Boot.&lt;/p&gt;
+&lt;p&gt;Seven years ago, Spring framework had changed my perception on software development. Nowdays, it’s being the essential part of my day to day programmer’s life. I still feel very comfortable with XML based configuration, or the hybrid combination of JavaConfig and XML. That doesn’t mean things won’t change, and make the tip to scales in favor of Spring Boot.&lt;/p&gt;
 
   &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/spring-boot-or-not-to-spring-boot/&quot;&gt;Spring Boot or Not to Spring Boot?&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on May 16, 2015.&lt;/p&gt;</content>
 </entry>
@@ -629,7 +629,7 @@ File &lt;span class=&quot;s1&quot;&gt;&amp;#39;storm-starter-0.10.0-SNAPSHOT.jar
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;
-In the world dominated by the IoT and the increasingly demanding users, the applications and the developers itself need to adapt a new paradigm to satisfy those needs. The users (customers) expectations are often very high as they want the contracted IT services highly available and the new feature requirements implemented as soon as possible. Besides that,
+In the world dominated by the IoT and the increasingly demanding users, the applications and the developers itself need to adopt a new paradigm to satisfy those needs. The users (customers) expectations are often very high as they want the contracted IT services highly available and the new feature requirements implemented as soon as possible. Besides that,
 project managers also want developers to complete the tasks in a time-constrained iterations guaranteeing the quality and good performance of the final product. Despite the increasing size and complexity of the applications, we still need to stay agile and deliver the product in established deadlines. Definitely, not a trivial task, at least not in a monolithic tightly coupled application architectures.
 &lt;/p&gt;
 &lt;p&gt;
@@ -655,7 +655,7 @@ It is where &lt;strong&gt;CQRS&lt;/strong&gt; comes to the rescue. CQRS stands f
 		&lt;strong&gt;Repositories&lt;/strong&gt; provide access to domain objects and allow isolating the domain model from persistence mechanism. Repositories just have to be able to recover the aggregate (domain object) from its unique identifier, while any other type of query is performed against read model.
 	&lt;/li&gt;
 	&lt;li&gt;
-		&lt;strong&gt;Events&lt;/strong&gt; are the source of any state changes in the application. As mentioned above, executing commands on aggregate, initiates the state change in the system, which in turn will produce a series of domain events. We don&#39;t need to persist domain objects but the generated domain events. With this we are able to reconstruct the domain object to its last state, just applying the stream of events on it. This pattern is known as &lt;i&gt;event sourcing&lt;/i&gt;. Events are sent to the event bus, and dispatched to any component interested in consuming it.
+		&lt;strong&gt;Events&lt;/strong&gt; are the source of any state changes in the application. As mentioned above, executing commands on aggregate, initiates the state change in the system, which in turn will produce a series of domain events. We don&#39;t need to persist domain objects but the generated domain events. With this we are able to reconstruct the domain object to its last state, just by applying the stream of events on it. This pattern is known as &lt;i&gt;event sourcing&lt;/i&gt;. Events are sent to the event bus, and dispatched to any component interested in consuming it.
 	&lt;/li&gt;
 	&lt;li&gt;
 		&lt;strong&gt;Event store&lt;/strong&gt; provides a backing store for domain events. Those are often relational databases and NoSQL databases, but for the proof of concepts they can be implemented as file system stores.
@@ -730,7 +730,7 @@ It is where &lt;strong&gt;CQRS&lt;/strong&gt; comes to the rescue. CQRS stands f
   <content type="html">&lt;p&gt;Let&#39;s move on. We should have our OpenStack instance prepared for Cloud Foundry. The most usual way of deploying Cloud Foundry is through &lt;strong&gt;BOSH&lt;/strong&gt;. For the who still didn&#39;t hear about it, &lt;a href=&quot;http://bosh.io/docs&quot; target=&quot;_blank&quot;&gt;BOSH&lt;/a&gt; is the platform for automation and lifecycle management of software and distributed services. It is also capable of monitoring and failure recovery of processes and virtual machines. There are already a few IT automation platforms in the market like &lt;a href=&quot;https://www.chef.io/&quot; target=&quot;_blank&quot;&gt;Chef&lt;/a&gt; or &lt;a href=&quot;http://puppetlabs.com/&quot; target=&quot;_blank&quot;&gt;Puppet&lt;/a&gt;, so, why to learn / use BOSH then?
 &lt;/p&gt;
 &lt;p&gt;
-One notable difference is that BOSH is able to perform the deployment from the sterile environment, i.e. package source code and dependencies, create the virtual machines (jobs in BOSH terminology) from the so called&lt;i&gt;stemcell&lt;/i&gt; template (VM which has BOSH agent installed and is used to generate the jobs), and finally install, start and monitor the required services and VMs. Visit the official page from the link above to learn more about BOSH.
+One notable difference is that BOSH is able to perform the deployment from the sterile environment, i.e. package source code and dependencies, create the virtual machines (jobs in BOSH terminology) from the so-called&lt;i&gt;stemcell&lt;/i&gt; template (VM which has BOSH agent installed and is used to generate the jobs), and finally install, start and monitor the required services and VMs. Visit the official page from the link above to learn more about BOSH.
 &lt;/p&gt;
 &lt;h3&gt;Deploying MicroBOSH&lt;/h3&gt;
 
@@ -1044,7 +1044,7 @@ Congratulations! You now have a fully functional private Cloud Foundry.&lt;/p&gt
 &lt;/p&gt;
 
 &lt;p&gt;
-While I was investigating about Cloud Foundry, I also figured out its agnostic nature which enable it to be easily deployed on AWS, vSphere or &lt;a href=&quot;https://www.openstack.org/&quot; target=&quot;_blank&quot;&gt;OpenStack&lt;/a&gt;. That is how I got motivated to acquire one of those cheap Dell rack servers on eBay and start the experiment. XenServer 6.2 is what I choose as hypervisor to be orchestrated by OpenStack. Unfortunately, the documentation about setting up the OpenStack compute node on XenServer is rather incomplete, deprecated and very hard to follow if you
+While I was investigating about Cloud Foundry, I also figured out its agnostic nature which enable it to be easily deployed on AWS, vSphere or &lt;a href=&quot;https://www.openstack.org/&quot; target=&quot;_blank&quot;&gt;OpenStack&lt;/a&gt;. That is how I got motivated to acquire one of those cheap Dell rack servers on eBay and start the experiment. I had opted for XenServer 6.2 as the hypervisor. Unfortunately, the documentation about setting up the OpenStack compute node on XenServer is rather incomplete, deprecated and very hard to follow if you
 are doing it for the first time. So, let&#39;s see how to proceed step by step, and prepare our OpenStack environment for Cloud Foundry instance deployment. I already assume you have successfully installed and configured the controller node.
 &lt;/p&gt;
 
@@ -1058,7 +1058,7 @@ are doing it for the first time. So, let&#39;s see how to proceed step by step, 
 xe vm-param-set &lt;span class=&quot;nv&quot;&gt;uuid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$VMUUID&lt;/span&gt; other-config:install-repository&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;http://mirror.centos.org/centos/7/os/x86_64
 xe vm-param-set &lt;span class=&quot;nv&quot;&gt;uuid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$VMUUID&lt;/span&gt; PV-args&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;ks=https://gist.githubusercontent.com/bhnedo/4648499f5680207e86ec/raw/4239fd8d0e10f7f2759d600b28b52f1744d9b5ad/kickstart-centos-minimal.cfg ksdevice=eth0&amp;quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;Find out the network UUID for the bridge that has access to the Internet. Note that one Xen bridge is created for every physical network adapter on your machine. Get a list of XenServer networks and store the UUID for the appropriate bridge (in most cases it will be &lt;code&gt;xenbr0&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;Find out the network UUID for the bridge that has access to the Internet. Note that Xen bridge is created for every physical network adapter on your machine. Get a list of XenServer networks and store the UUID for the appropriate bridge (in most cases it will be &lt;code&gt;xenbr0&lt;/code&gt;).&lt;/p&gt;
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;xe network-list
 &lt;span class=&quot;nv&quot;&gt;NETUUID&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;xe network-list &lt;span class=&quot;nv&quot;&gt;bridge&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;xenbr0 --minimal&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
@@ -1291,7 +1291,7 @@ It is also necessary to instruct the LVM which block storage devices should be s
 &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;
-We are now ready to install and configure Block Storage components and dependencies. I wasn&#39;t able to get iSCSI LUNs to work using &lt;code&gt;targetcli&lt;/code&gt;, probably because XenServer relies on SCSI initiator utilities. The solution was to use &lt;code&gt;scsi-target-utils&lt;/code&gt; instead of it.
+We are now ready to install and configure Block Storage components and dependencies. I wasn&#39;t able to get iSCSI LUNs to work using &lt;code&gt;targetcli&lt;/code&gt;, probably because XenServer relies on SCSI initiator utilities. The solution was to use &lt;code&gt;scsi-target-utils&lt;/code&gt; instead.
 &lt;/p&gt;
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;yum install scsi-target-utils
@@ -1348,7 +1348,7 @@ Edit the &lt;code&gt;/etc/cinder/cinder.conf&lt;/code&gt; configuration file.
  		&lt;/pre&gt;
 	
 	&lt;li&gt;
-		&lt;strong&gt;Target administartion service&lt;/strong&gt;
+		&lt;strong&gt;Target administration service&lt;/strong&gt;
 		&lt;p&gt;In the &lt;code&gt;[DEFAULT]&lt;/code&gt; configure Cinder to use &lt;code&gt;tgtadm&lt;/code&gt; service for iSCSI storage management:&lt;/p&gt;
 				&lt;pre&gt;
  [DEFAULT]

@@ -16,6 +16,7 @@
 <meta name="twitter:description" content="The software industry is moving fast - that's crystal clear. What now is considered as the state of the art model for software development and deployment, in a few years it usually becomes business agility barrier for the most organizations.">
 
 
+
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://rabbitstack.github.io/images/rabbit-bkgd.jpg">
 
@@ -79,9 +80,9 @@
 
 <div class="navigation-wrapper">
 		<div class="site-name">
-			<img src="/images/rabbit-small.jpg" alt="Rabbit Stack logo" class="logo" />
+			<!-- <img src="/images/rabbit-small.jpg" alt="Rabbit Stack logo" class="logo" /> -->
 			<!-- <a href="http://rabbitstack.github.io/">Rabbit Stack</a> -->
-			<a href="http://rabbitstack.github.io/"><span class="site-name-segment">Rabbit</span> Stack</a>
+			<a href="http://rabbitstack.github.io/"><span class="site-name-segment">Rabbit</span> <span class="big-font">Stack</span></a>
 
 		</div><!-- /.site-name -->
 
@@ -91,6 +92,11 @@
 		<nav role="navigation" id="site-nav" class="nav">
 		    <ul>
 		        
+				    
+				        
+				    
+				    <li><a href="http://rabbitstack.github.io#" >Home</a></li>
+				
 				    
 				        
 				    
@@ -108,13 +114,14 @@
 
 
   <div class="image-wrap">
-  <img src=
+  <img class="bkg" src=
     
       "http://rabbitstack.github.io/images/rabbit-bkgd.jpg"
     
   alt="From monolithic to cloud-native architectures feature image">
   
        <div class="headline-wrap">
+          <img src="http://rabbitstack.github.io/images/rabbitstack.png" />
           <h1> The place where bunnies dwell </h1>
           <h2> And bits become colossal </h2>
       </div>
@@ -133,7 +140,7 @@
 
 
   <h3 itemprop="name">Nedim Šabić</h3>
-  <p>Senior software engineer, devops enthusiast and platform architect who is also very curious about OS design, internals and implementation. Falling in love with Go language and idiomatic sugars of Ruby, although he is more experienced in Python, J2EE platform and Spring framework ecosystem for development of distributed and event processing solutions. He never stops learning, and at the moment he is reading a lot about Big data, virtualization and cloud technologies. He hates rainy days.</p>
+  <p>Senior software engineer, devops enthusiast and platform architect who is also very curious about OS design, internals and implementation. Falling in love with Go language and idiomatic sugars of Ruby, although he is more experienced in Python, J2EE platform and Spring framework ecosystem for development of distributed and event processing solutions. He never stops learning, and at the moment he is reading a lot about Big data, machine learning, virtualization and cloud technologies.</p>
   <a href="mailto:bhnedo@hotmail.com" class="author-social" target="_blank"><i class="fa fa-fw fa-envelope-square"></i>Email</a>
   
   <a href="http://facebook.com/nedim.sabic.39" class="author-social" target="_blank"><i class="fa fa-fw fa-facebook-square"></i> Facebook</a>
@@ -220,7 +227,7 @@ To establish an analogy, think about the following quote I have borrowed from <a
 
 <h3>Circuit breaker</h3>
 <p>In a cloud-native architectures it is essential to guarantee the fault tolerance and prevent cascading failures when one of the microservices comes out of control. As we already mentioned, packaging and partitioning the microservices into Linux containers will prevent a nasty microservice to consume an entire machine's resources or affect another container. That is a wise doze of defense at infrastructure level. But what's about the application level protection? The circuit breaker pattern is based on the premise that unhealthy microservices wouldn't have to cause the interruption of other services. Every RPC call that is being routed to an unhealthy microservice shouldn't continuously punch the service making it impossible to recover. The circuit breaker behavior can be compared to our home circuit breaker that prevents the current from damaging devices when it exceeds the certain threshold.</p>
-<p>Similarly, the circuit breaker pattern counts the number of failed calls, and when the number is above the specified threshold, it transitions into the open state and it makes the call to fail immediately. Once the service has recovered, the circuit breaker is closed and the calls can be executed successfully.</p>
+<p>Similarly, the circuit breaker pattern counts the number of failed calls, and when the number is above the specified threshold, it transitions into the open state and make the call to fail immediately. Once the service has recovered, the circuit breaker is closed and the calls can be executed successfully.</p>
 
       <hr />
       <footer role="contentinfo">
@@ -275,11 +282,11 @@ To establish an analogy, think about the following quote I have borrowed from <a
   <h4>You might also enjoy <small class="pull-right">(<a href="http://rabbitstack.github.io/posts/">View all posts</a>)</small></h4>
     <ul>
     
+      <li><a href="http://rabbitstack.github.io/spring-boot-or-not-to-spring-boot/" title="Spring Boot or Not to Spring Boot?">Spring Boot or Not to Spring Boot?</a></li>
+    
       <li><a href="http://rabbitstack.github.io/lua-rocks/" title="Lua Rocks!">Lua Rocks!</a></li>
     
       <li><a href="http://rabbitstack.github.io/running-a-storm-cluster-on-smartos/" title="Running a Storm cluster on SmartOS">Running a Storm cluster on SmartOS</a></li>
-    
-      <li><a href="http://rabbitstack.github.io/introduction-to-cqrs/" title="Introduction to CQRS">Introduction to CQRS</a></li>
     
     </ul>
     <hr />
@@ -304,7 +311,7 @@ To establish an analogy, think about the following quote I have borrowed from <a
   var pluginUrl = 
  '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
   _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
-  _gaq.push(['_setAccount', 'bhnedo']);
+  _gaq.push(['_setAccount', 'rabbitstack']);
   _gaq.push(['_trackPageview']);
 
   (function() {

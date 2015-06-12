@@ -80,9 +80,9 @@
 
 <div class="navigation-wrapper">
 		<div class="site-name">
-			<img src="/images/rabbit-small.jpg" alt="Rabbit Stack logo" class="logo" />
+			<!-- <img src="/images/rabbit-small.jpg" alt="Rabbit Stack logo" class="logo" /> -->
 			<!-- <a href="http://rabbitstack.github.io/">Rabbit Stack</a> -->
-			<a href="http://rabbitstack.github.io/"><span class="site-name-segment">Rabbit</span> Stack</a>
+			<a href="http://rabbitstack.github.io/"><span class="site-name-segment">Rabbit</span> <span class="big-font">Stack</span></a>
 
 		</div><!-- /.site-name -->
 
@@ -92,6 +92,11 @@
 		<nav role="navigation" id="site-nav" class="nav">
 		    <ul>
 		        
+				    
+				        
+				    
+				    <li><a href="http://rabbitstack.github.io#" >Home</a></li>
+				
 				    
 				        
 				    
@@ -109,13 +114,14 @@
 
 
   <div class="image-wrap">
-  <img src=
+  <img class="bkg" src=
     
       "http://rabbitstack.github.io/images/rabbit-bkgd.jpg"
     
   alt="Deploying Cloud Foundry on OpenStack Juno and XenServer (Part II) feature image">
   
        <div class="headline-wrap">
+          <img src="http://rabbitstack.github.io/images/rabbitstack.png" />
           <h1> The place where bunnies dwell </h1>
           <h2> And bits become colossal </h2>
       </div>
@@ -134,7 +140,7 @@
 
 
   <h3 itemprop="name">Nedim Šabić</h3>
-  <p>Senior software engineer, devops enthusiast and platform architect who is also very curious about OS design, internals and implementation. Falling in love with Go language and idiomatic sugars of Ruby, although he is more experienced in Python, J2EE platform and Spring framework ecosystem for development of distributed and event processing solutions. He never stops learning, and at the moment he is reading a lot about Big data, virtualization and cloud technologies. He hates rainy days.</p>
+  <p>Senior software engineer, devops enthusiast and platform architect who is also very curious about OS design, internals and implementation. Falling in love with Go language and idiomatic sugars of Ruby, although he is more experienced in Python, J2EE platform and Spring framework ecosystem for development of distributed and event processing solutions. He never stops learning, and at the moment he is reading a lot about Big data, machine learning, virtualization and cloud technologies.</p>
   <a href="mailto:bhnedo@hotmail.com" class="author-social" target="_blank"><i class="fa fa-fw fa-envelope-square"></i>Email</a>
   
   <a href="http://facebook.com/nedim.sabic.39" class="author-social" target="_blank"><i class="fa fa-fw fa-facebook-square"></i> Facebook</a>
@@ -165,7 +171,7 @@
       <p>Let's move on. We should have our OpenStack instance prepared for Cloud Foundry. The most usual way of deploying Cloud Foundry is through <strong>BOSH</strong>. For the who still didn't hear about it, <a href="http://bosh.io/docs" target="_blank">BOSH</a> is the platform for automation and lifecycle management of software and distributed services. It is also capable of monitoring and failure recovery of processes and virtual machines. There are already a few IT automation platforms in the market like <a href="https://www.chef.io/" target="_blank">Chef</a> or <a href="http://puppetlabs.com/" target="_blank">Puppet</a>, so, why to learn / use BOSH then?
 </p>
 <p>
-One notable difference is that BOSH is able to perform the deployment from the sterile environment, i.e. package source code and dependencies, create the virtual machines (jobs in BOSH terminology) from the so called<i>stemcell</i> template (VM which has BOSH agent installed and is used to generate the jobs), and finally install, start and monitor the required services and VMs. Visit the official page from the link above to learn more about BOSH.
+One notable difference is that BOSH is able to perform the deployment from the sterile environment, i.e. package source code and dependencies, create the virtual machines (jobs in BOSH terminology) from the so-called<i>stemcell</i> template (VM which has BOSH agent installed and is used to generate the jobs), and finally install, start and monitor the required services and VMs. Visit the official page from the link above to learn more about BOSH.
 </p>
 <h3>Deploying MicroBOSH</h3>
 
@@ -510,11 +516,11 @@ Congratulations! You now have a fully functional private Cloud Foundry.</p>
   <h4>You might also enjoy <small class="pull-right">(<a href="http://rabbitstack.github.io/posts/">View all posts</a>)</small></h4>
     <ul>
     
+      <li><a href="http://rabbitstack.github.io/spring-boot-or-not-to-spring-boot/" title="Spring Boot or Not to Spring Boot?">Spring Boot or Not to Spring Boot?</a></li>
+    
+      <li><a href="http://rabbitstack.github.io/from-monolithic-to-cloud-native-architectures/" title="From monolithic to cloud-native architectures">From monolithic to cloud-native architectures</a></li>
+    
       <li><a href="http://rabbitstack.github.io/lua-rocks/" title="Lua Rocks!">Lua Rocks!</a></li>
-    
-      <li><a href="http://rabbitstack.github.io/running-a-storm-cluster-on-smartos/" title="Running a Storm cluster on SmartOS">Running a Storm cluster on SmartOS</a></li>
-    
-      <li><a href="http://rabbitstack.github.io/introduction-to-cqrs/" title="Introduction to CQRS">Introduction to CQRS</a></li>
     
     </ul>
     <hr />
@@ -539,7 +545,7 @@ Congratulations! You now have a fully functional private Cloud Foundry.</p>
   var pluginUrl = 
  '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
   _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
-  _gaq.push(['_setAccount', 'bhnedo']);
+  _gaq.push(['_setAccount', 'rabbitstack']);
   _gaq.push(['_trackPageview']);
 
   (function() {
