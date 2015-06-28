@@ -2,13 +2,13 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
 <title type="text">Rabbit Stack</title>
 <generator uri="https://github.com/jekyll/jekyll">Jekyll</generator>
-<link rel="self" type="application/atom+xml" href="http://127.0.0.1:4000/feed.xml" />
-<link rel="alternate" type="text/html" href="http://127.0.0.1:4000" />
-<updated>2015-06-28T20:33:33+02:00</updated>
-<id>http://127.0.0.1:4000/</id>
+<link rel="self" type="application/atom+xml" href="http://rabbitstack.github.io/feed.xml" />
+<link rel="alternate" type="text/html" href="http://rabbitstack.github.io" />
+<updated>2015-06-28T20:38:56+02:00</updated>
+<id>http://rabbitstack.github.io/</id>
 <author>
   <name>Nedim Šabić</name>
-  <uri>http://127.0.0.1:4000/</uri>
+  <uri>http://rabbitstack.github.io/</uri>
   <email>bhnedo@hotmail.com</email>
 </author>
 
@@ -17,13 +17,13 @@
 
 <entry>
   <title type="html"><![CDATA[Spring MVC + Angular = Hasta la vista JSP!]]></title>
-  <link rel="alternate" type="text/html" href="http://127.0.0.1:4000/spring-mvc-angular-hasta-la-vista-jsp/" />
-  <id>http://127.0.0.1:4000/spring-mvc-angular-hasta-la-vista-jsp</id>
+  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/spring-mvc-angular-hasta-la-vista-jsp/" />
+  <id>http://rabbitstack.github.io/spring-mvc-angular-hasta-la-vista-jsp</id>
   <published>2015-06-28T21:38:45+02:00</published>
   <updated>2015-06-28T21:38:45+02:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://127.0.0.1:4000</uri>
+    <uri>http://rabbitstack.github.io</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;
@@ -235,7 +235,7 @@ In this post we will focus on how to build a simple web application to highlight
 
 &lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://127.0.0.1:4000/spring-mvc-angular-hasta-la-vista-jsp/&quot;&gt;Spring MVC + Angular = Hasta la vista JSP!&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://127.0.0.1:4000&quot;&gt;Rabbit Stack&lt;/a&gt; on June 28, 2015.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/spring-mvc-angular-hasta-la-vista-jsp/&quot;&gt;Spring MVC + Angular = Hasta la vista JSP!&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on June 28, 2015.&lt;/p&gt;</content>
 </entry>
 
 
@@ -243,13 +243,13 @@ In this post we will focus on how to build a simple web application to highlight
 
 <entry>
   <title type="html"><![CDATA[Spring Boot or Not to Spring Boot?]]></title>
-  <link rel="alternate" type="text/html" href="http://127.0.0.1:4000/spring-boot-or-not-to-spring-boot/" />
-  <id>http://127.0.0.1:4000/spring-boot-or-not-to-spring-boot</id>
+  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/spring-boot-or-not-to-spring-boot/" />
+  <id>http://rabbitstack.github.io/spring-boot-or-not-to-spring-boot</id>
   <published>2015-05-16T21:48:42+02:00</published>
   <updated>2015-05-16T21:48:42+02:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://127.0.0.1:4000</uri>
+    <uri>http://rabbitstack.github.io</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;
@@ -294,7 +294,7 @@ Spring Boot provides an abstraction layer on top of Spring core and the rest of 
 
 &lt;p&gt;Seven years ago, Spring framework had changed my perception on software development. Nowdays, it’s being the essential part of my day to day programmer’s life. I still feel very comfortable with XML based configuration, or the hybrid combination of JavaConfig and XML. That doesn’t mean things won’t change, and make the tip to scales in favor of Spring Boot.&lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://127.0.0.1:4000/spring-boot-or-not-to-spring-boot/&quot;&gt;Spring Boot or Not to Spring Boot?&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://127.0.0.1:4000&quot;&gt;Rabbit Stack&lt;/a&gt; on May 16, 2015.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/spring-boot-or-not-to-spring-boot/&quot;&gt;Spring Boot or Not to Spring Boot?&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on May 16, 2015.&lt;/p&gt;</content>
 </entry>
 
 
@@ -302,13 +302,13 @@ Spring Boot provides an abstraction layer on top of Spring core and the rest of 
 
 <entry>
   <title type="html"><![CDATA[From monolithic to cloud-native architectures]]></title>
-  <link rel="alternate" type="text/html" href="http://127.0.0.1:4000/from-monolithic-to-cloud-native-architectures/" />
-  <id>http://127.0.0.1:4000/from-monolithic-to-cloud-native-architectures</id>
+  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/from-monolithic-to-cloud-native-architectures/" />
+  <id>http://rabbitstack.github.io/from-monolithic-to-cloud-native-architectures</id>
   <published>2015-05-11T22:29:25+02:00</published>
   <updated>2015-05-11T22:29:25+02:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://127.0.0.1:4000</uri>
+    <uri>http://rabbitstack.github.io</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;The software industry is moving fast - that fact should be crystal clear. What now is considered as the state of the art model for software development and deployment, in a few years it usually becomes business agility barrier for the most organizations. The lack of agility limits the innovation factor and response time needed for the organizations to react, correct or deliver the business values before their competitors. The era of cloud computing has brought a myriad of new choices for software delivery. Computing resources, storage and networks can be provisioned elastically and on demand. Application can be scaled in question of seconds and the most of the &lt;strong&gt;PaaS&lt;/strong&gt; solutions also provide proactive application monitoring, recovery, load balancing and centralized log aggregation.&lt;/p&gt;
@@ -372,7 +372,7 @@ To establish an analogy, think about the following quote I have borrowed from &l
 &lt;p&gt;In a cloud-native architectures it is essential to guarantee the fault tolerance and prevent cascading failures when one of the microservices comes out of control. As we already mentioned, packaging and partitioning the microservices into Linux containers will prevent a nasty microservice to consume an entire machine&#39;s resources or affect another container. That is a wise doze of defense at infrastructure level. But what&#39;s about the application level protection? The circuit breaker pattern is based on the premise that unhealthy microservices wouldn&#39;t have to cause the interruption of other services. Every RPC call that is being routed to an unhealthy microservice shouldn&#39;t continuously punch the service making it impossible to recover. The circuit breaker behavior can be compared to our home circuit breaker that prevents the current from damaging devices when it exceeds the certain threshold.&lt;/p&gt;
 &lt;p&gt;Similarly, the circuit breaker pattern counts the number of failed calls, and when the number is above the specified threshold, it transitions into the open state and make the call to fail immediately. Once the service has recovered, the circuit breaker is closed and the calls can be executed successfully.&lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://127.0.0.1:4000/from-monolithic-to-cloud-native-architectures/&quot;&gt;From monolithic to cloud-native architectures&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://127.0.0.1:4000&quot;&gt;Rabbit Stack&lt;/a&gt; on May 11, 2015.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/from-monolithic-to-cloud-native-architectures/&quot;&gt;From monolithic to cloud-native architectures&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on May 11, 2015.&lt;/p&gt;</content>
 </entry>
 
 
@@ -380,13 +380,13 @@ To establish an analogy, think about the following quote I have borrowed from &l
 
 <entry>
   <title type="html"><![CDATA[Lua Rocks!]]></title>
-  <link rel="alternate" type="text/html" href="http://127.0.0.1:4000/lua-rocks/" />
-  <id>http://127.0.0.1:4000/lua-rocks</id>
+  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/lua-rocks/" />
+  <id>http://rabbitstack.github.io/lua-rocks</id>
   <published>2015-04-08T00:21:29+02:00</published>
   <updated>2015-04-08T00:21:29+02:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://127.0.0.1:4000</uri>
+    <uri>http://rabbitstack.github.io</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;For the ones used to read my large posts, I am sorry to disappoint you. This time it will be a very short post about a thing that recently called my attention and I want to share it with you. After I had discovered &lt;a href=&quot;http://luajit.org/luajit.html&quot; target=&quot;_blank&quot;&gt;LuaJIT&lt;/a&gt;, I am thinking seriously about embracing the Lua language and incorporating it into my arsenal of programming languages. LuaJIT is a high performance &lt;i&gt;Just-In-Time&lt;/i&gt; compiler for the Lua programming language which is compatible with all major desktop and mobile operating systems, processor&#39;s architectures, gaming consoles, and more. It makes it a perfect fit for the IoT. As far as the interpreter is written in &lt;strong&gt;assembly&lt;/strong&gt; language, it beats other dynamic languages in most benchmarks. As a language itself, Lua is very flexible and lightweight, and syntactically it reminds me of Ruby (at least the control flow structures). One of the things I missed at first was the absence of classes, as long as Lua is not really an object-oriented programming language, but it is quite easily to build your own abstraction using tables and metatables.
@@ -401,7 +401,7 @@ I have started using Lua for the operating system statistics aggregation and cen
 Lua also has it&#39;s own package manager, &lt;a href=&quot;https://rocks.moonscript.org/&quot; target=&quot;_blank&quot;&gt;luarocks&lt;/a&gt;.
 &lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://127.0.0.1:4000/lua-rocks/&quot;&gt;Lua Rocks!&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://127.0.0.1:4000&quot;&gt;Rabbit Stack&lt;/a&gt; on April 08, 2015.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/lua-rocks/&quot;&gt;Lua Rocks!&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on April 08, 2015.&lt;/p&gt;</content>
 </entry>
 
 
@@ -409,13 +409,13 @@ Lua also has it&#39;s own package manager, &lt;a href=&quot;https://rocks.moonsc
 
 <entry>
   <title type="html"><![CDATA[Running a Storm cluster on SmartOS]]></title>
-  <link rel="alternate" type="text/html" href="http://127.0.0.1:4000/running-a-storm-cluster-on-smartos/" />
-  <id>http://127.0.0.1:4000/running-a-storm-cluster-on-smartos</id>
+  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/running-a-storm-cluster-on-smartos/" />
+  <id>http://rabbitstack.github.io/running-a-storm-cluster-on-smartos</id>
   <published>2015-03-21T21:35:37+01:00</published>
   <updated>2015-03-21T21:35:37+01:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://127.0.0.1:4000</uri>
+    <uri>http://rabbitstack.github.io</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;In a time when Storm was still developed and maintained by Twitter, I was working on small experiments in local cluster mode by processing social data from Facebook. It rained a lot since then, and Storm is now an active project under Apache umbrella. The curiosity of mine was eager to see how would the Storm operate in multi node deployment, so I decided to build a cluster on SmartOS hypervisor. I really adore SmartOS. It is so lightweight and it loads from the USB media. While the other hypervisors I&#39;ve tried (XenServer, ESX) reserved the &quot;huge&quot; amount of RAM (on my 24 GB server XenServer was taking almost 4GB for the Dom0), SmartOS needs 200-300 MB of RAM. The provisioning of new virtual machines is really fast. You can run an OS level virtualization units called zones, or the KVM based virtual machines to run almost any legacy operating system (Linux, Windows, FreeBSD). You can learn more about SmartOS &lt;a href=&quot;https://wiki.smartos.org/display/DOC/Home&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;. &lt;/p&gt;
@@ -837,7 +837,7 @@ File &lt;span class=&quot;s1&quot;&gt;&amp;#39;storm-starter-0.10.0-SNAPSHOT.jar
 &lt;/figure&gt;
 &lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://127.0.0.1:4000/running-a-storm-cluster-on-smartos/&quot;&gt;Running a Storm cluster on SmartOS&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://127.0.0.1:4000&quot;&gt;Rabbit Stack&lt;/a&gt; on March 21, 2015.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/running-a-storm-cluster-on-smartos/&quot;&gt;Running a Storm cluster on SmartOS&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on March 21, 2015.&lt;/p&gt;</content>
 </entry>
 
 
@@ -845,13 +845,13 @@ File &lt;span class=&quot;s1&quot;&gt;&amp;#39;storm-starter-0.10.0-SNAPSHOT.jar
 
 <entry>
   <title type="html"><![CDATA[Introduction to CQRS]]></title>
-  <link rel="alternate" type="text/html" href="http://127.0.0.1:4000/introduction-to-cqrs/" />
-  <id>http://127.0.0.1:4000/introduction-to-cqrs</id>
+  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/introduction-to-cqrs/" />
+  <id>http://rabbitstack.github.io/introduction-to-cqrs</id>
   <published>2015-02-21T19:11:46+01:00</published>
   <updated>2015-02-21T19:11:46+01:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://127.0.0.1:4000</uri>
+    <uri>http://rabbitstack.github.io</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;
@@ -936,7 +936,7 @@ It is where &lt;strong&gt;CQRS&lt;/strong&gt; comes to the rescue. CQRS stands f
 &lt;h3&gt;Conclusion&lt;/h3&gt;
 &lt;p&gt;Perhaps the time has come to change the traditional approach to software development? At the end, it is up to you. The benefits of CQRS are tremendous. It keeps the software maintainable, easily extensible and ready to face new challenges that the future holds. If your next project’s requirements are going to be complex, or you just need high availability and scalability at the application level and you want to grow without losing the agility, don’t hesitate, use CQRS.&lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://127.0.0.1:4000/introduction-to-cqrs/&quot;&gt;Introduction to CQRS&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://127.0.0.1:4000&quot;&gt;Rabbit Stack&lt;/a&gt; on February 21, 2015.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/introduction-to-cqrs/&quot;&gt;Introduction to CQRS&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on February 21, 2015.&lt;/p&gt;</content>
 </entry>
 
 
@@ -944,13 +944,13 @@ It is where &lt;strong&gt;CQRS&lt;/strong&gt; comes to the rescue. CQRS stands f
 
 <entry>
   <title type="html"><![CDATA[Deploying Cloud Foundry on OpenStack Juno and XenServer (Part II)]]></title>
-  <link rel="alternate" type="text/html" href="http://127.0.0.1:4000/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-ii/" />
-  <id>http://127.0.0.1:4000/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-ii</id>
+  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-ii/" />
+  <id>http://rabbitstack.github.io/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-ii</id>
   <published>2015-02-14T11:48:52+01:00</published>
   <updated>2015-02-14T11:48:52+01:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://127.0.0.1:4000</uri>
+    <uri>http://rabbitstack.github.io</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;Let&#39;s move on. We should have our OpenStack instance prepared for Cloud Foundry. The most usual way of deploying Cloud Foundry is through &lt;strong&gt;BOSH&lt;/strong&gt;. For the who still didn&#39;t hear about it, &lt;a href=&quot;http://bosh.io/docs&quot; target=&quot;_blank&quot;&gt;BOSH&lt;/a&gt; is the platform for automation and lifecycle management of software and distributed services. It is also capable of monitoring and failure recovery of processes and virtual machines. There are already a few IT automation platforms in the market like &lt;a href=&quot;https://www.chef.io/&quot; target=&quot;_blank&quot;&gt;Chef&lt;/a&gt; or &lt;a href=&quot;http://puppetlabs.com/&quot; target=&quot;_blank&quot;&gt;Puppet&lt;/a&gt;, so, why to learn / use BOSH then?
@@ -1248,7 +1248,7 @@ Make sure you can access the API endpoint of the Cloud Foundry instance. If so, 
 &lt;p&gt;&lt;br /&gt;
 Congratulations! You now have a fully functional private Cloud Foundry.&lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://127.0.0.1:4000/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-ii/&quot;&gt;Deploying Cloud Foundry on OpenStack Juno and XenServer (Part II)&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://127.0.0.1:4000&quot;&gt;Rabbit Stack&lt;/a&gt; on February 14, 2015.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-ii/&quot;&gt;Deploying Cloud Foundry on OpenStack Juno and XenServer (Part II)&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on February 14, 2015.&lt;/p&gt;</content>
 </entry>
 
 
@@ -1256,13 +1256,13 @@ Congratulations! You now have a fully functional private Cloud Foundry.&lt;/p&gt
 
 <entry>
   <title type="html"><![CDATA[Deploying Cloud Foundry on OpenStack Juno and XenServer (Part I)]]></title>
-  <link rel="alternate" type="text/html" href="http://127.0.0.1:4000/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i/" />
-  <id>http://127.0.0.1:4000/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i</id>
+  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i/" />
+  <id>http://rabbitstack.github.io/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i</id>
   <published>2015-01-30T17:03:28+01:00</published>
   <updated>2015-01-30T17:03:28+01:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://127.0.0.1:4000</uri>
+    <uri>http://rabbitstack.github.io</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;
@@ -1615,7 +1615,7 @@ systemctl start openstack-cinder-volume.service tgtd.service&lt;/code&gt;&lt;/pr
 &lt;br /&gt;
 &lt;/p&gt;&lt;/li&gt;&lt;/ol&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://127.0.0.1:4000/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i/&quot;&gt;Deploying Cloud Foundry on OpenStack Juno and XenServer (Part I)&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://127.0.0.1:4000&quot;&gt;Rabbit Stack&lt;/a&gt; on January 30, 2015.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i/&quot;&gt;Deploying Cloud Foundry on OpenStack Juno and XenServer (Part I)&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on January 30, 2015.&lt;/p&gt;</content>
 </entry>
 
 
@@ -1623,20 +1623,20 @@ systemctl start openstack-cinder-volume.service tgtd.service&lt;/code&gt;&lt;/pr
 
 <entry>
   <title type="html"><![CDATA[Origins]]></title>
-  <link rel="alternate" type="text/html" href="http://127.0.0.1:4000/origins/" />
-  <id>http://127.0.0.1:4000/origins</id>
+  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/origins/" />
+  <id>http://rabbitstack.github.io/origins</id>
   <published>2015-01-29T17:53:53+01:00</published>
   <updated>2015-01-29T17:53:53+01:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://127.0.0.1:4000</uri>
+    <uri>http://rabbitstack.github.io</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;
 I finally decided to go digital with what I called &lt;strong&gt;Rabbit Stack&lt;/strong&gt;. It will be a place where I&#39;ll be writing mostly about programming, devops, virtualization and similar IT freaky stuffs. Sometimes I will also write about album reviews, new bands I have discovered or some totally random stuff which would anyway be lost in the limbo of my mind. The blog is still under heavy development, but I&#39;ll try to work hard on it, so stay tuned...
 &lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://127.0.0.1:4000/origins/&quot;&gt;Origins&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://127.0.0.1:4000&quot;&gt;Rabbit Stack&lt;/a&gt; on January 29, 2015.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/origins/&quot;&gt;Origins&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on January 29, 2015.&lt;/p&gt;</content>
 </entry>
 
 </feed>
