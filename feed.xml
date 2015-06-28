@@ -2,13 +2,13 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
 <title type="text">Rabbit Stack</title>
 <generator uri="https://github.com/jekyll/jekyll">Jekyll</generator>
-<link rel="self" type="application/atom+xml" href="http://rabbitstack.github.io/feed.xml" />
-<link rel="alternate" type="text/html" href="http://rabbitstack.github.io" />
-<updated>2015-06-12T23:19:57+02:00</updated>
-<id>http://rabbitstack.github.io/</id>
+<link rel="self" type="application/atom+xml" href="http://127.0.0.1:4000/feed.xml" />
+<link rel="alternate" type="text/html" href="http://127.0.0.1:4000" />
+<updated>2015-06-28T20:33:33+02:00</updated>
+<id>http://127.0.0.1:4000/</id>
 <author>
   <name>Nedim Šabić</name>
-  <uri>http://rabbitstack.github.io/</uri>
+  <uri>http://127.0.0.1:4000/</uri>
   <email>bhnedo@hotmail.com</email>
 </author>
 
@@ -16,14 +16,240 @@
   
 
 <entry>
+  <title type="html"><![CDATA[Spring MVC + Angular = Hasta la vista JSP!]]></title>
+  <link rel="alternate" type="text/html" href="http://127.0.0.1:4000/spring-mvc-angular-hasta-la-vista-jsp/" />
+  <id>http://127.0.0.1:4000/spring-mvc-angular-hasta-la-vista-jsp</id>
+  <published>2015-06-28T21:38:45+02:00</published>
+  <updated>2015-06-28T21:38:45+02:00</updated>
+  <author>
+    <name>Nedim Šabić</name>
+    <uri>http://127.0.0.1:4000</uri>
+    <email>bhnedo@hotmail.com</email>
+  </author>
+  <content type="html">&lt;p&gt;
+In a sea of client side MVC web frameworks, &lt;strong&gt;Angular&lt;/strong&gt; is becoming the most prominent one due to its increasing popularity. Unlike other MVC frameworks (Backbone, Ember),
+Angular uses HTML as the templating language and also allow us to build our own HTML directives that can be interpreted by the browser. One of the unique Angular&#39;s features are the dependency injection mechanisms which promote code reuse and make it easier to assemble the web application.
+&lt;/p&gt;
+
+&lt;p&gt;
+In this post we will focus on how to build a simple web application to highlight the most important building blocks every modern Angular application should have. So, let&#39;s start.
+&lt;/p&gt;
+
+&lt;h3&gt;What we are going to build?&lt;/h3&gt;
+
+&lt;p&gt;I bet you had already read a lot of tutorials where a &lt;i&gt;todo&lt;/i&gt; like application was used to illustrate the basic concepts. I wanted to go step further and build a real time collaborative web application to manage the &lt;i&gt;todo&lt;/i&gt; lists. The full source code is hosted on the &lt;a href=&quot;https://github.com/bhnedo/rabbit-todo&quot; target=&quot;_blank&quot;&gt;github&lt;/a&gt;. Even simple, the application uses rather complete technology stack.
+&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;b&gt;MongoDB&lt;/b&gt;, document oriented NoSQL data store.&lt;/li&gt;
+  &lt;li&gt;&lt;b&gt;Spring&lt;/b&gt;, the Spring MVC framework for building the RESTful web services. Spring Data had been used to simplify data access and persistence through Mongo repositories.&lt;/li&gt;
+  &lt;li&gt;&lt;b&gt;SockJS&lt;/b&gt;, websockets to make the realtime application. &lt;/li&gt;
+  &lt;li&gt;&lt;b&gt;Bourbon/Refills&lt;/b&gt;, is the SaSS based framework with very cool components and responsive grids.&lt;/li&gt;
+  &lt;li&gt;&lt;b&gt;Bower&lt;/b&gt; for dependency management of web artifacts.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure&gt;
+  &lt;a href=&quot;/images/rabbit-todos.png&quot; class=&quot;image-popup&quot;&gt;
+    &lt;img src=&quot;/images/rabbit-todos.png&quot; /&gt;
+  &lt;/a&gt;
+  &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;figure&gt;
+  &lt;a href=&quot;/images/rabbit-todo-popup.png&quot; class=&quot;image-popup&quot;&gt;
+    &lt;img src=&quot;/images/rabbit-todo-popup.png&quot; /&gt;
+  &lt;/a&gt;
+  &lt;figcaption&gt;rabbit-todo in action&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;h3&gt;Implementation&lt;/h3&gt;
+&lt;h4&gt;Going persistent with Mongo&lt;/h4&gt;
+
+&lt;p&gt;&lt;b&gt;Spring Data&lt;/b&gt; makes it extremely easy to access and manipulate the new generation data access technologies as well as relational databases, providing the well known Spring programming model such as POJOs, templates, etc. For instance, our &lt;code&gt;Todo&lt;/code&gt; entity could be modeled as follows. &lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;nd&quot;&gt;@Document&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Todo&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+
+    &lt;span class=&quot;nd&quot;&gt;@Id&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;description&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Date&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;creationDate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Task&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tasks&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ArrayList&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Task&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;();&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;The &lt;code&gt;@Document&lt;/code&gt; annotation identifies the domain object to be saved in Mongo. Spring Data provides the &lt;code&gt;MongoTemplate&lt;/code&gt; abstraction we could use to query and manipulate the data store. However, a more consistent and idiomatic approach can be achieved with the data repositories.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;TodoRepository&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MongoRepository&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Todo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;That&#39;s the whole code needed to enable the basic CRUD operations on &lt;i&gt;Todo&lt;/i&gt; documents. Magic! Isn&#39;t it? It is also necessary to activate the repository scanning in the Spring XML configuration file.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-xml&quot; data-lang=&quot;xml&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;mongo:repositories&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;base-package=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;org.rabbitstack.rabbit.todo.data.repository&amp;quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h4&gt;Serving up the data via REST&lt;/h4&gt;
+
+&lt;p&gt;The next step is to expose the HTTP endpoints the will be called from Angular to get &lt;i&gt;todo&lt;/i&gt; lists, create new ones, change tasks priority or mark them as done. That won&#39;t be a big deal. Spring MVC &lt;b&gt;controllers&lt;/b&gt; allow us the create lightweight REST services and map the methods with requests using the &lt;code&gt;@RequestMapping&lt;/code&gt; annotation. Let&#39;s see some code. &lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;nd&quot;&gt;@Controller&lt;/span&gt;
+&lt;span class=&quot;nd&quot;&gt;@RequestMapping&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;api/v1&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;TodoController&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+
+    &lt;span class=&quot;nd&quot;&gt;@Autowired&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TodoRepository&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;todoRepository&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;cm&quot;&gt;/**&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;     * Gets all todo lists.&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;     * @return a JSON array of todo lists&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;     */&lt;/span&gt;
+    &lt;span class=&quot;nd&quot;&gt;@RequestMapping&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;value&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;/todos&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;method&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RequestMethod&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;GET&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nd&quot;&gt;@ResponseBody&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Todo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;todos&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;todoRepository&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;findAll&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;That&#39;s pretty straightforward. We have annotated the &lt;code&gt;TodoController&lt;/code&gt; class with &lt;code&gt;@Controller&lt;/code&gt; and &lt;code&gt;@RequestMapping&lt;/code&gt; annotations, so the Spring knows this class will act as the controller. Note how the controller receives the reference of the repository and how the &lt;code&gt;findAll&lt;/code&gt; method is called to get all created todos in Mongo. When the client (browser) requests the &lt;code&gt;api/v1/todos&lt;/code&gt; endpoint the &lt;code&gt;todos&lt;/code&gt; method will be triggered to respond with the JSON array of todo lists in the response body.&lt;/p&gt;
+
+&lt;h4&gt;Pushing with web sockets&lt;/h4&gt;
+
+&lt;p&gt;Every time a user adds a new todo list, delete the task or performs any other action, we want that changes to propagate to the rest of the users. Instead of pulling for the changes using the traditional XHR calls, the websockets open a bidirectional full duplex channel with the server. Once the connection had been established they can interchange data in real time.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Spring Websocket&lt;/b&gt; provides a SockJS endpoint which can be enabled with the following XML configuration.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-xml&quot; data-lang=&quot;xml&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;websocket:message-broker&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;application-destination-prefix=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;/todo&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;websocket:stomp-endpoint&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;path=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;/io&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;websocket:sockjs&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/websocket:stomp-endpoint&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;websocket:simple-broker&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;prefix=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;/topic&amp;quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/websocket:message-broker&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;This will boot up a broker on &lt;code&gt;/io&lt;/code&gt; endpoint so the clients can connect over the Stomp protocol. Here we also tell the Spring to use &lt;b&gt;SockJS&lt;/b&gt; websocket emulation. If web browser doesn&#39;t support web sockets, SockJS will choose another transport.&lt;/p&gt;
+
+&lt;p&gt;On the client side, the Angular service is responsible for establishing the connection with websocket server upon application bootstrap.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;todoApi&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+    &lt;span class=&quot;nx&quot;&gt;stomp&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+
+    &lt;span class=&quot;nx&quot;&gt;connect&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;endpoint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;socket&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;SockJS&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;endpoint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;defer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;$q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;defer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;todoApi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;stomp&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Stomp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;over&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;socket&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;todoApi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;stomp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;connect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({},&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;defer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;resolve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;defer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;promise&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+
+    &lt;span class=&quot;nx&quot;&gt;subscribe&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;topic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;callback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;todoApi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;stomp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;subscribe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;topic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;$rootScope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;$apply&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;nx&quot;&gt;callback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;The &lt;code&gt;subscribe&lt;/code&gt; function registers a callback that is called every time the content is being pushed from the server. For sending the messages to a subscribed topic, Spring provides the &lt;code&gt;SimpMessagingTemplate&lt;/code&gt; template. See the code below. Upon the creation of a &lt;i&gt;todo&lt;/i&gt; list &lt;code&gt;convertAndSend&lt;/code&gt; will serialize a &lt;code&gt;Todo&lt;/code&gt; object to JSON and send it to the browser.
+
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;cm&quot;&gt;/**&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt; * Creates a new todo list.&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt; * @param todo list to be created&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt; */&lt;/span&gt;
+&lt;span class=&quot;nd&quot;&gt;@RequestMapping&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;value&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;/todos&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;method&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RequestMethod&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;POST&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;nd&quot;&gt;@ResponseStatus&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;HttpStatus&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;NO_CONTENT&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;createTodo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nd&quot;&gt;@Valid&lt;/span&gt; &lt;span class=&quot;nd&quot;&gt;@RequestBody&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Todo&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;todo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;todo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setCreationDate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Date&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;LocalDateTime&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;now&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;atZone&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ZoneId&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;systemDefault&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;toInstant&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()));&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;todo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getTasks&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;forEach&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
+                        &lt;span class=&quot;n&quot;&gt;task&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;task&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setId&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UUID&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;randomUUID&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;toString&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;())&lt;/span&gt;
+                    &lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Todo&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;todoRepository&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;insert&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;todo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;messagingTemplate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;convertAndSend&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;/topic/todos/created&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;On the Angular side, we inject the &lt;code&gt;TodoService&lt;/code&gt; into the controller, and then call the &lt;code&gt;connect&lt;/code&gt; method to initiate the connection and register the callbacks that are triggered when message is received from the server.&lt;/p&gt;
+
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span class=&quot;nx&quot;&gt;todoService&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;connect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;/io&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+    &lt;span class=&quot;nx&quot;&gt;todoService&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;subscribe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;/topic/todos/created&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;todo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;nx&quot;&gt;$scope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;todos&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;push&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;angular&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;fromJson&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;todo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Consuming the REST API&lt;/h4&gt;
+
+&lt;p&gt;Angular ships with the built in &lt;code&gt;$http&lt;/code&gt; service that can be used to perform requests. For example to create a new &lt;i&gt;todo&lt;/i&gt; list, we can call the &lt;code&gt;post&lt;/code&gt; method.&lt;/p&gt; 
+
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span class=&quot;nx&quot;&gt;create&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;description&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;tasks&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;$http&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;API_ENDPOINT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                              &lt;span class=&quot;nx&quot;&gt;description&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;description&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                              &lt;span class=&quot;nx&quot;&gt;tasks&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;tasks&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Similarly, we can send a GET request like this.&lt;/p&gt;
+
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span class=&quot;nx&quot;&gt;list&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+   &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;promise&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;$http&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;API_ENDPOINT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+        &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+   &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;promise&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This function returns a special promise object which encapsulates the asynchronous action. In the controller we wait for the operation to complete, and then we provide the scope with the result.&lt;/p&gt;
+
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span class=&quot;nx&quot;&gt;todoService&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;todos&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;$scope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;todos&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;todos&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Rendering the views&lt;/h4&gt;
+
+&lt;p&gt;As we already stated, Angular uses the HTML templates to build up the views with the set of well known directives. They provide bidirectional data binding, iterations, conditional rendering, event handlers, etc. Here is a part of the view which renders &lt;i&gt;todo&lt;/i&gt; lists.&lt;/p&gt;  
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;flex-boxes&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+	&lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;flex-box&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;ng-repeat=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;todo in todos&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+		 &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;delete&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;i&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;ng-click=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;deleteTodo(todo.id)&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;icon ion-close-circled&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/i&amp;gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;h1&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;flex-title uppercase&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/h1&amp;gt;&lt;/span&gt;
+
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;p&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;todo-description&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/p&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/p&gt;
+
+  &lt;p&gt;&lt;a href=&quot;http://127.0.0.1:4000/spring-mvc-angular-hasta-la-vista-jsp/&quot;&gt;Spring MVC + Angular = Hasta la vista JSP!&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://127.0.0.1:4000&quot;&gt;Rabbit Stack&lt;/a&gt; on June 28, 2015.&lt;/p&gt;</content>
+</entry>
+
+
+  
+
+<entry>
   <title type="html"><![CDATA[Spring Boot or Not to Spring Boot?]]></title>
-  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/spring-boot-or-not-to-spring-boot/" />
-  <id>http://rabbitstack.github.io/spring-boot-or-not-to-spring-boot</id>
+  <link rel="alternate" type="text/html" href="http://127.0.0.1:4000/spring-boot-or-not-to-spring-boot/" />
+  <id>http://127.0.0.1:4000/spring-boot-or-not-to-spring-boot</id>
   <published>2015-05-16T21:48:42+02:00</published>
   <updated>2015-05-16T21:48:42+02:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://rabbitstack.github.io</uri>
+    <uri>http://127.0.0.1:4000</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;
@@ -68,7 +294,7 @@ Spring Boot provides an abstraction layer on top of Spring core and the rest of 
 
 &lt;p&gt;Seven years ago, Spring framework had changed my perception on software development. Nowdays, it’s being the essential part of my day to day programmer’s life. I still feel very comfortable with XML based configuration, or the hybrid combination of JavaConfig and XML. That doesn’t mean things won’t change, and make the tip to scales in favor of Spring Boot.&lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/spring-boot-or-not-to-spring-boot/&quot;&gt;Spring Boot or Not to Spring Boot?&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on May 16, 2015.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;http://127.0.0.1:4000/spring-boot-or-not-to-spring-boot/&quot;&gt;Spring Boot or Not to Spring Boot?&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://127.0.0.1:4000&quot;&gt;Rabbit Stack&lt;/a&gt; on May 16, 2015.&lt;/p&gt;</content>
 </entry>
 
 
@@ -76,13 +302,13 @@ Spring Boot provides an abstraction layer on top of Spring core and the rest of 
 
 <entry>
   <title type="html"><![CDATA[From monolithic to cloud-native architectures]]></title>
-  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/from-monolithic-to-cloud-native-architectures/" />
-  <id>http://rabbitstack.github.io/from-monolithic-to-cloud-native-architectures</id>
+  <link rel="alternate" type="text/html" href="http://127.0.0.1:4000/from-monolithic-to-cloud-native-architectures/" />
+  <id>http://127.0.0.1:4000/from-monolithic-to-cloud-native-architectures</id>
   <published>2015-05-11T22:29:25+02:00</published>
   <updated>2015-05-11T22:29:25+02:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://rabbitstack.github.io</uri>
+    <uri>http://127.0.0.1:4000</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;The software industry is moving fast - that fact should be crystal clear. What now is considered as the state of the art model for software development and deployment, in a few years it usually becomes business agility barrier for the most organizations. The lack of agility limits the innovation factor and response time needed for the organizations to react, correct or deliver the business values before their competitors. The era of cloud computing has brought a myriad of new choices for software delivery. Computing resources, storage and networks can be provisioned elastically and on demand. Application can be scaled in question of seconds and the most of the &lt;strong&gt;PaaS&lt;/strong&gt; solutions also provide proactive application monitoring, recovery, load balancing and centralized log aggregation.&lt;/p&gt;
@@ -146,7 +372,7 @@ To establish an analogy, think about the following quote I have borrowed from &l
 &lt;p&gt;In a cloud-native architectures it is essential to guarantee the fault tolerance and prevent cascading failures when one of the microservices comes out of control. As we already mentioned, packaging and partitioning the microservices into Linux containers will prevent a nasty microservice to consume an entire machine&#39;s resources or affect another container. That is a wise doze of defense at infrastructure level. But what&#39;s about the application level protection? The circuit breaker pattern is based on the premise that unhealthy microservices wouldn&#39;t have to cause the interruption of other services. Every RPC call that is being routed to an unhealthy microservice shouldn&#39;t continuously punch the service making it impossible to recover. The circuit breaker behavior can be compared to our home circuit breaker that prevents the current from damaging devices when it exceeds the certain threshold.&lt;/p&gt;
 &lt;p&gt;Similarly, the circuit breaker pattern counts the number of failed calls, and when the number is above the specified threshold, it transitions into the open state and make the call to fail immediately. Once the service has recovered, the circuit breaker is closed and the calls can be executed successfully.&lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/from-monolithic-to-cloud-native-architectures/&quot;&gt;From monolithic to cloud-native architectures&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on May 11, 2015.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;http://127.0.0.1:4000/from-monolithic-to-cloud-native-architectures/&quot;&gt;From monolithic to cloud-native architectures&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://127.0.0.1:4000&quot;&gt;Rabbit Stack&lt;/a&gt; on May 11, 2015.&lt;/p&gt;</content>
 </entry>
 
 
@@ -154,13 +380,13 @@ To establish an analogy, think about the following quote I have borrowed from &l
 
 <entry>
   <title type="html"><![CDATA[Lua Rocks!]]></title>
-  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/lua-rocks/" />
-  <id>http://rabbitstack.github.io/lua-rocks</id>
+  <link rel="alternate" type="text/html" href="http://127.0.0.1:4000/lua-rocks/" />
+  <id>http://127.0.0.1:4000/lua-rocks</id>
   <published>2015-04-08T00:21:29+02:00</published>
   <updated>2015-04-08T00:21:29+02:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://rabbitstack.github.io</uri>
+    <uri>http://127.0.0.1:4000</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;For the ones used to read my large posts, I am sorry to disappoint you. This time it will be a very short post about a thing that recently called my attention and I want to share it with you. After I had discovered &lt;a href=&quot;http://luajit.org/luajit.html&quot; target=&quot;_blank&quot;&gt;LuaJIT&lt;/a&gt;, I am thinking seriously about embracing the Lua language and incorporating it into my arsenal of programming languages. LuaJIT is a high performance &lt;i&gt;Just-In-Time&lt;/i&gt; compiler for the Lua programming language which is compatible with all major desktop and mobile operating systems, processor&#39;s architectures, gaming consoles, and more. It makes it a perfect fit for the IoT. As far as the interpreter is written in &lt;strong&gt;assembly&lt;/strong&gt; language, it beats other dynamic languages in most benchmarks. As a language itself, Lua is very flexible and lightweight, and syntactically it reminds me of Ruby (at least the control flow structures). One of the things I missed at first was the absence of classes, as long as Lua is not really an object-oriented programming language, but it is quite easily to build your own abstraction using tables and metatables.
@@ -175,7 +401,7 @@ I have started using Lua for the operating system statistics aggregation and cen
 Lua also has it&#39;s own package manager, &lt;a href=&quot;https://rocks.moonscript.org/&quot; target=&quot;_blank&quot;&gt;luarocks&lt;/a&gt;.
 &lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/lua-rocks/&quot;&gt;Lua Rocks!&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on April 08, 2015.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;http://127.0.0.1:4000/lua-rocks/&quot;&gt;Lua Rocks!&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://127.0.0.1:4000&quot;&gt;Rabbit Stack&lt;/a&gt; on April 08, 2015.&lt;/p&gt;</content>
 </entry>
 
 
@@ -183,13 +409,13 @@ Lua also has it&#39;s own package manager, &lt;a href=&quot;https://rocks.moonsc
 
 <entry>
   <title type="html"><![CDATA[Running a Storm cluster on SmartOS]]></title>
-  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/running-a-storm-cluster-on-smartos/" />
-  <id>http://rabbitstack.github.io/running-a-storm-cluster-on-smartos</id>
+  <link rel="alternate" type="text/html" href="http://127.0.0.1:4000/running-a-storm-cluster-on-smartos/" />
+  <id>http://127.0.0.1:4000/running-a-storm-cluster-on-smartos</id>
   <published>2015-03-21T21:35:37+01:00</published>
   <updated>2015-03-21T21:35:37+01:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://rabbitstack.github.io</uri>
+    <uri>http://127.0.0.1:4000</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;In a time when Storm was still developed and maintained by Twitter, I was working on small experiments in local cluster mode by processing social data from Facebook. It rained a lot since then, and Storm is now an active project under Apache umbrella. The curiosity of mine was eager to see how would the Storm operate in multi node deployment, so I decided to build a cluster on SmartOS hypervisor. I really adore SmartOS. It is so lightweight and it loads from the USB media. While the other hypervisors I&#39;ve tried (XenServer, ESX) reserved the &quot;huge&quot; amount of RAM (on my 24 GB server XenServer was taking almost 4GB for the Dom0), SmartOS needs 200-300 MB of RAM. The provisioning of new virtual machines is really fast. You can run an OS level virtualization units called zones, or the KVM based virtual machines to run almost any legacy operating system (Linux, Windows, FreeBSD). You can learn more about SmartOS &lt;a href=&quot;https://wiki.smartos.org/display/DOC/Home&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;. &lt;/p&gt;
@@ -611,7 +837,7 @@ File &lt;span class=&quot;s1&quot;&gt;&amp;#39;storm-starter-0.10.0-SNAPSHOT.jar
 &lt;/figure&gt;
 &lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/running-a-storm-cluster-on-smartos/&quot;&gt;Running a Storm cluster on SmartOS&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on March 21, 2015.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;http://127.0.0.1:4000/running-a-storm-cluster-on-smartos/&quot;&gt;Running a Storm cluster on SmartOS&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://127.0.0.1:4000&quot;&gt;Rabbit Stack&lt;/a&gt; on March 21, 2015.&lt;/p&gt;</content>
 </entry>
 
 
@@ -619,13 +845,13 @@ File &lt;span class=&quot;s1&quot;&gt;&amp;#39;storm-starter-0.10.0-SNAPSHOT.jar
 
 <entry>
   <title type="html"><![CDATA[Introduction to CQRS]]></title>
-  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/introduction-to-cqrs/" />
-  <id>http://rabbitstack.github.io/introduction-to-cqrs</id>
+  <link rel="alternate" type="text/html" href="http://127.0.0.1:4000/introduction-to-cqrs/" />
+  <id>http://127.0.0.1:4000/introduction-to-cqrs</id>
   <published>2015-02-21T19:11:46+01:00</published>
   <updated>2015-02-21T19:11:46+01:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://rabbitstack.github.io</uri>
+    <uri>http://127.0.0.1:4000</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;
@@ -710,7 +936,7 @@ It is where &lt;strong&gt;CQRS&lt;/strong&gt; comes to the rescue. CQRS stands f
 &lt;h3&gt;Conclusion&lt;/h3&gt;
 &lt;p&gt;Perhaps the time has come to change the traditional approach to software development? At the end, it is up to you. The benefits of CQRS are tremendous. It keeps the software maintainable, easily extensible and ready to face new challenges that the future holds. If your next project’s requirements are going to be complex, or you just need high availability and scalability at the application level and you want to grow without losing the agility, don’t hesitate, use CQRS.&lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/introduction-to-cqrs/&quot;&gt;Introduction to CQRS&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on February 21, 2015.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;http://127.0.0.1:4000/introduction-to-cqrs/&quot;&gt;Introduction to CQRS&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://127.0.0.1:4000&quot;&gt;Rabbit Stack&lt;/a&gt; on February 21, 2015.&lt;/p&gt;</content>
 </entry>
 
 
@@ -718,13 +944,13 @@ It is where &lt;strong&gt;CQRS&lt;/strong&gt; comes to the rescue. CQRS stands f
 
 <entry>
   <title type="html"><![CDATA[Deploying Cloud Foundry on OpenStack Juno and XenServer (Part II)]]></title>
-  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-ii/" />
-  <id>http://rabbitstack.github.io/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-ii</id>
+  <link rel="alternate" type="text/html" href="http://127.0.0.1:4000/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-ii/" />
+  <id>http://127.0.0.1:4000/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-ii</id>
   <published>2015-02-14T11:48:52+01:00</published>
   <updated>2015-02-14T11:48:52+01:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://rabbitstack.github.io</uri>
+    <uri>http://127.0.0.1:4000</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;Let&#39;s move on. We should have our OpenStack instance prepared for Cloud Foundry. The most usual way of deploying Cloud Foundry is through &lt;strong&gt;BOSH&lt;/strong&gt;. For the who still didn&#39;t hear about it, &lt;a href=&quot;http://bosh.io/docs&quot; target=&quot;_blank&quot;&gt;BOSH&lt;/a&gt; is the platform for automation and lifecycle management of software and distributed services. It is also capable of monitoring and failure recovery of processes and virtual machines. There are already a few IT automation platforms in the market like &lt;a href=&quot;https://www.chef.io/&quot; target=&quot;_blank&quot;&gt;Chef&lt;/a&gt; or &lt;a href=&quot;http://puppetlabs.com/&quot; target=&quot;_blank&quot;&gt;Puppet&lt;/a&gt;, so, why to learn / use BOSH then?
@@ -1022,7 +1248,7 @@ Make sure you can access the API endpoint of the Cloud Foundry instance. If so, 
 &lt;p&gt;&lt;br /&gt;
 Congratulations! You now have a fully functional private Cloud Foundry.&lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-ii/&quot;&gt;Deploying Cloud Foundry on OpenStack Juno and XenServer (Part II)&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on February 14, 2015.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;http://127.0.0.1:4000/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-ii/&quot;&gt;Deploying Cloud Foundry on OpenStack Juno and XenServer (Part II)&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://127.0.0.1:4000&quot;&gt;Rabbit Stack&lt;/a&gt; on February 14, 2015.&lt;/p&gt;</content>
 </entry>
 
 
@@ -1030,13 +1256,13 @@ Congratulations! You now have a fully functional private Cloud Foundry.&lt;/p&gt
 
 <entry>
   <title type="html"><![CDATA[Deploying Cloud Foundry on OpenStack Juno and XenServer (Part I)]]></title>
-  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i/" />
-  <id>http://rabbitstack.github.io/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i</id>
+  <link rel="alternate" type="text/html" href="http://127.0.0.1:4000/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i/" />
+  <id>http://127.0.0.1:4000/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i</id>
   <published>2015-01-30T17:03:28+01:00</published>
   <updated>2015-01-30T17:03:28+01:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://rabbitstack.github.io</uri>
+    <uri>http://127.0.0.1:4000</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;
@@ -1389,7 +1615,7 @@ systemctl start openstack-cinder-volume.service tgtd.service&lt;/code&gt;&lt;/pr
 &lt;br /&gt;
 &lt;/p&gt;&lt;/li&gt;&lt;/ol&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i/&quot;&gt;Deploying Cloud Foundry on OpenStack Juno and XenServer (Part I)&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on January 30, 2015.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;http://127.0.0.1:4000/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i/&quot;&gt;Deploying Cloud Foundry on OpenStack Juno and XenServer (Part I)&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://127.0.0.1:4000&quot;&gt;Rabbit Stack&lt;/a&gt; on January 30, 2015.&lt;/p&gt;</content>
 </entry>
 
 
@@ -1397,20 +1623,20 @@ systemctl start openstack-cinder-volume.service tgtd.service&lt;/code&gt;&lt;/pr
 
 <entry>
   <title type="html"><![CDATA[Origins]]></title>
-  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/origins/" />
-  <id>http://rabbitstack.github.io/origins</id>
+  <link rel="alternate" type="text/html" href="http://127.0.0.1:4000/origins/" />
+  <id>http://127.0.0.1:4000/origins</id>
   <published>2015-01-29T17:53:53+01:00</published>
   <updated>2015-01-29T17:53:53+01:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://rabbitstack.github.io</uri>
+    <uri>http://127.0.0.1:4000</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;
 I finally decided to go digital with what I called &lt;strong&gt;Rabbit Stack&lt;/strong&gt;. It will be a place where I&#39;ll be writing mostly about programming, devops, virtualization and similar IT freaky stuffs. Sometimes I will also write about album reviews, new bands I have discovered or some totally random stuff which would anyway be lost in the limbo of my mind. The blog is still under heavy development, but I&#39;ll try to work hard on it, so stay tuned...
 &lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/origins/&quot;&gt;Origins&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on January 29, 2015.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;http://127.0.0.1:4000/origins/&quot;&gt;Origins&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://127.0.0.1:4000&quot;&gt;Rabbit Stack&lt;/a&gt; on January 29, 2015.&lt;/p&gt;</content>
 </entry>
 
 </feed>
