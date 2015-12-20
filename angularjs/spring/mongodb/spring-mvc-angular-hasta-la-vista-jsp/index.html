@@ -1,0 +1,505 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<title>Spring MVC + Angular = Hasta la vista JSP! &#8211; Rabbit Stack</title>
+<meta name="description" content="In a sea of client side MVC web frameworks, Angular seems to be the most prominent one due to its increasing popularity. Unlike other MVC frameworks (Backbone, Ember), Angular uses HTML as the templating language and also allow us to build our own HTML directives that can be interpreted by the browser.">
+<meta name="keywords" content="spring mvc, angular, websockets, spring, single page application, Spring Data, Mongodb, SockJS, SaSS, Bourbon, Neat, Refills">
+
+
+
+<!-- Twitter Cards -->
+<meta name="twitter:title" content="Spring MVC + Angular = Hasta la vista JSP!">
+<meta name="twitter:description" content="In a sea of client side MVC web frameworks, Angular seems to be the most prominent one due to its increasing popularity. Unlike other MVC frameworks (Backbone, Ember), Angular uses HTML as the templating language and also allow us to build our own HTML directives that can be interpreted by the browser.">
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://rabbitstack.github.io/images/rabbit-bkgd.jpg">
+
+<!-- Open Graph -->
+<meta property="og:locale" content="en_US">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring MVC + Angular = Hasta la vista JSP!">
+<meta property="og:description" content="In a sea of client side MVC web frameworks, Angular seems to be the most prominent one due to its increasing popularity. Unlike other MVC frameworks (Backbone, Ember), Angular uses HTML as the templating language and also allow us to build our own HTML directives that can be interpreted by the browser.">
+<meta property="og:url" content="http://rabbitstack.github.io/angularjs/spring/mongodb/spring-mvc-angular-hasta-la-vista-jsp/">
+<meta property="og:site_name" content="Rabbit Stack">
+
+
+
+
+
+<link rel="canonical" href="http://rabbitstack.github.io/angularjs/spring/mongodb/spring-mvc-angular-hasta-la-vista-jsp/">
+<link href="http://rabbitstack.github.io/feed.xml" type="application/atom+xml" rel="alternate" title="Rabbit Stack Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://rabbitstack.github.io/assets/css/main.css">
+
+<meta http-equiv="cleartype" content="on">
+
+<!-- HTML5 Shiv and Media Query Support -->
+<!--[if lt IE 9]>
+	<script src="http://rabbitstack.github.io/assets/js/vendor/html5shiv.min.js"></script>
+	<script src="http://rabbitstack.github.io/assets/js/vendor/respond.min.js"></script>
+<![endif]-->
+
+<!-- Modernizr -->
+<script src="http://rabbitstack.github.io/assets/js/vendor/modernizr-2.7.1.custom.min.js"></script>
+
+<link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'>
+
+<!-- Icons -->
+<!-- 16x16 -->
+<link rel="shortcut icon" href="http://rabbitstack.github.io/favicon.ico">
+<!-- 32x32 -->
+<link rel="shortcut icon" href="http://rabbitstack.github.io/favicon.png">
+<!-- 57x57 (precomposed) for iPhone 3GS, pre-2011 iPod Touch and older Android devices -->
+<link rel="apple-touch-icon-precomposed" href="http://rabbitstack.github.io/images/apple-touch-icon-precomposed.png">
+<!-- 72x72 (precomposed) for 1st generation iPad, iPad 2 and iPad mini -->
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="http://rabbitstack.github.io/images/apple-touch-icon-72x72-precomposed.png">
+<!-- 114x114 (precomposed) for iPhone 4, 4S, 5 and post-2011 iPod Touch -->
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="http://rabbitstack.github.io/images/apple-touch-icon-114x114-precomposed.png">
+<!-- 144x144 (precomposed) for iPad 3rd and 4th generation -->
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://rabbitstack.github.io/images/apple-touch-icon-144x144-precomposed.png">
+
+</head>
+
+<body class="post">
+
+<!--[if lt IE 9]><div class="browser-upgrade alert alert-info">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div><![endif]-->
+
+<div class="navigation-wrapper">
+		<div class="site-name">
+			<!-- <img src="/images/rabbit-small.jpg" alt="Rabbit Stack logo" class="logo" /> -->
+			<!-- <a href="http://rabbitstack.github.io/">Rabbit Stack</a> -->
+			<a href="http://rabbitstack.github.io/"><span class="site-name-segment">Rabbit</span> <span class="big-font">Stack</span></a>
+
+		</div><!-- /.site-name -->
+
+	
+	
+	<div class="top-navigation">
+		<nav role="navigation" id="site-nav" class="nav">
+		    <ul>
+		        
+				    
+				        
+				    
+				    <li><a href="http://rabbitstack.github.io#" >Home</a></li>
+				
+				    
+				        
+				    
+				    <li><a href="http://rabbitstack.github.io/posts/" >Archive</a></li>
+				
+				    
+				        
+				    
+				    <li><a href="http://rabbitstack.github.io/about/" >About</a></li>
+				
+		    </ul>
+		</nav>
+	</div><!-- /.top-navigation -->
+</div><!-- /.navigation-wrapper -->
+
+
+  <div class="image-wrap">
+  <img class="bkg" src=
+    
+      "http://rabbitstack.github.io/images/rabbit-bkgd.jpg"
+    
+  alt="Spring MVC + Angular = Hasta la vista JSP! feature image">
+  
+       <div class="headline-wrap">
+          <img src="http://rabbitstack.github.io/images/rabbitstack.png" />
+          <h1> The place where bunnies dwell </h1>
+          <h2> And bits become colossal </h2>
+      </div>
+  </div><!-- /.image-wrap -->
+
+
+<div id="main" role="main">
+  <div class="article-author-side">
+    
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+
+	<img src="http://rabbitstack.github.io/images/nedo.jpg" class="bio-photo" alt="Nedim Šabić bio photo">
+
+
+  <h3 itemprop="name">Nedim Šabić</h3>
+  <p>Senior software engineer, devops enthusiast and platform architect who is also very curious about OS design, internals and implementation. Falling in love with Go language and idiomatic sugars of Ruby, although he is more experienced in Python, J2EE platform and Spring framework ecosystem for development of distributed and event processing solutions. He never stops learning, and at the moment he is reading a lot about Big data, machine learning, virtualization and cloud technologies.</p>
+  <a href="mailto:bhnedo@hotmail.com" class="author-social" target="_blank"><i class="fa fa-fw fa-envelope-square"></i>Email</a>
+  
+  <a href="http://facebook.com/nedim.sabic.39" class="author-social" target="_blank"><i class="fa fa-fw fa-facebook-square"></i> Facebook</a>
+  
+  <a href="https://es.linkedin.com/pub/nedim-šabić/107/435/8a6" class="author-social" target="_blank"><i class="fa fa-fw fa-linkedin-square"></i> LinkedIn</a>
+  
+  
+  <a href="http://github.com/bhnedo" class="author-social" target="_blank"><i class="fa fa-fw fa-github"></i> Github</a>
+  <a href="http://stackoverflow.com/users/1027467/nedo" class="author-social" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i> Stackoverflow</a>
+  
+  
+  
+  
+  
+  
+  <a href="http://soundcloud.com/nedim-abi" class="author-social" target="_blank"><i class="fa fa-fw fa-soundcloud"></i> Soundcloud</a>
+  
+  
+</div>
+
+  </div>
+  <article class="post">
+    <div class="headline-wrap">
+      
+        <h1><a href="http://rabbitstack.github.io/angularjs/spring/mongodb/spring-mvc-angular-hasta-la-vista-jsp/" rel="bookmark" title="Spring MVC + Angular = Hasta la vista JSP!">Spring MVC + Angular = Hasta la vista JSP!</a></h1>
+      
+    </div><!--/ .headline-wrap -->
+    <div class="article-wrap">
+      <p>
+In a sea of client side MVC web frameworks, <strong>Angular</strong> is becoming the most prominent one due to its increasing popularity. Unlike other MVC frameworks (Backbone, Ember),
+Angular uses HTML as the templating language and also allow us to build our own HTML directives that can be interpreted by the browser. One of the unique Angular's features are the dependency injection mechanisms which promote code reuse and make it easier to assemble the web application.
+</p>
+
+<p>
+In this post we will focus on how to build a simple web application to highlight the most important building blocks every modern Angular application should have. So, let's start.
+</p>
+
+<h3>What we are going to build?</h3>
+
+<p>I bet you had already read a lot of tutorials where a <i>todo</i> like application was used to illustrate the basic concepts. I wanted to go step further and build a real time collaborative web application to manage the <i>todo</i> lists. The full source code is hosted on the <a href="https://github.com/bhnedo/rabbit-todo" target="_blank">github</a>. Even simple, the application uses rather complete technology stack.
+</p>
+
+<ul>
+  <li><b>MongoDB</b>, document oriented NoSQL data store.</li>
+  <li><b>Spring</b>, the Spring MVC framework for building the RESTful web services. Spring Data had been used to simplify data access and persistence through Mongo repositories.</li>
+  <li><b>SockJS</b>, websockets to make the realtime application.</li>
+  <li><b>Bourbon/Refills</b>, is the SaSS based framework with very cool components and responsive grids.</li>
+  <li><b>Bower</b> for dependency management of web artifacts.</li>
+</ul>
+
+<figure>
+  <a href="/images/rabbit-todos.png" class="image-popup">
+    <img src="/images/rabbit-todos.png" />
+  </a>
+  <figcaption></figcaption>
+</figure>
+
+<figure>
+  <a href="/images/rabbit-todo-popup.png" class="image-popup">
+    <img src="/images/rabbit-todo-popup.png" />
+  </a>
+  <figcaption>rabbit-todo in action</figcaption>
+</figure>
+
+<h3>Implementation</h3>
+<h4>Going persistent with Mongo</h4>
+
+<p><b>Spring Data</b> makes it extremely easy to access and manipulate the new generation data access technologies as well as relational databases, providing the well known Spring programming model such as POJOs, templates, etc. For instance, our <code>Todo</code> entity could be modeled as follows. </p>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Document</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Todo</span> <span class="o">{</span>
+
+    <span class="nd">@Id</span>
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">id</span><span class="o">;</span>
+
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">description</span><span class="o">;</span>
+
+    <span class="kd">private</span> <span class="n">Date</span> <span class="n">creationDate</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Task</span><span class="o">&gt;</span> <span class="n">tasks</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Task</span><span class="o">&gt;();</span>
+
+<span class="o">}</span></code></pre></div>
+
+<p>The <code>@Document</code> annotation identifies the domain object to be saved in Mongo. Spring Data provides the <code>MongoTemplate</code> abstraction we could use to query and manipulate the data store. However, a more consistent and idiomatic approach can be achieved with the data repositories.</p>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">TodoRepository</span> <span class="kd">extends</span> <span class="n">MongoRepository</span><span class="o">&lt;</span><span class="n">Todo</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="o">{</span>
+<span class="o">}</span></code></pre></div>
+
+<p>That's the whole code needed to enable the basic CRUD operations on <i>Todo</i> documents. Magic! Isn't it? It is also necessary to activate the repository scanning in the Spring XML configuration file.</p>
+
+<div class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="nt">&lt;mongo:repositories</span> <span class="na">base-package=</span><span class="s">&quot;org.rabbitstack.rabbit.todo.data.repository&quot;</span> <span class="nt">/&gt;</span></code></pre></div>
+
+<h4>Serving up the data via REST</h4>
+
+<p>The next step is to expose the HTTP endpoints the will be called from Angular to get <i>todo</i> lists, create new ones, change tasks priority or mark them as done. That won't be a big deal. Spring MVC <b>controllers</b> allow us the create lightweight REST services and map the methods with requests using the <code>@RequestMapping</code> annotation. Let's see some code. </p>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Controller</span>
+<span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">&quot;api/v1&quot;</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">TodoController</span> <span class="o">{</span>
+
+    <span class="nd">@Autowired</span>
+    <span class="kd">private</span> <span class="n">TodoRepository</span> <span class="n">todoRepository</span><span class="o">;</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Gets all todo lists.</span>
+<span class="cm">     * @return a JSON array of todo lists</span>
+<span class="cm">     */</span>
+    <span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">&quot;/todos&quot;</span><span class="o">,</span> <span class="n">method</span> <span class="o">=</span> <span class="n">RequestMethod</span><span class="o">.</span><span class="na">GET</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="nd">@ResponseBody</span>
+    <span class="n">List</span><span class="o">&lt;</span><span class="n">Todo</span><span class="o">&gt;</span> <span class="nf">todos</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">todoRepository</span><span class="o">.</span><span class="na">findAll</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></div>
+
+<p>That's pretty straightforward. We have annotated the <code>TodoController</code> class with <code>@Controller</code> and <code>@RequestMapping</code> annotations, so the Spring knows this class will act as the controller. Note how the controller receives the reference of the repository and how the <code>findAll</code> method is called to get all created todos in Mongo. When the client (browser) requests the <code>api/v1/todos</code> endpoint the <code>todos</code> method will be triggered to respond with the JSON array of todo lists in the response body.</p>
+
+<h4>Pushing with web sockets</h4>
+
+<p>Every time a user adds a new todo list, delete the task or performs any other action, we want that changes to propagate to the rest of the users. Instead of pulling for the changes using the traditional XHR calls, the websockets open a bidirectional full duplex channel with the server. Once the connection had been established they can interchange data in real time.</p>
+<p><b>Spring Websocket</b> provides a SockJS endpoint which can be enabled with the following XML configuration.</p>
+
+<div class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="nt">&lt;websocket:message-broker</span> <span class="na">application-destination-prefix=</span><span class="s">&quot;/todo&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;websocket:stomp-endpoint</span> <span class="na">path=</span><span class="s">&quot;/io&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;websocket:sockjs</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;/websocket:stomp-endpoint&gt;</span>
+    <span class="nt">&lt;websocket:simple-broker</span> <span class="na">prefix=</span><span class="s">&quot;/topic&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/websocket:message-broker&gt;</span></code></pre></div>
+
+<p>This will boot up a broker on <code>/io</code> endpoint so the clients can connect over the Stomp protocol. Here we also tell the Spring to use <b>SockJS</b> websocket emulation. If web browser doesn't support web sockets, SockJS will choose another transport.</p>
+
+<p>On the client side, the Angular service is responsible for establishing the connection with websocket server upon application bootstrap.</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">todoApi</span> <span class="o">=</span> <span class="p">{</span>
+
+    <span class="nx">stomp</span> <span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+
+    <span class="nx">connect</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">endpoint</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">socket</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SockJS</span><span class="p">(</span><span class="nx">endpoint</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">defer</span> <span class="o">=</span> <span class="nx">$q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+        <span class="nx">todoApi</span><span class="p">.</span><span class="nx">stomp</span>  <span class="o">=</span> <span class="nx">Stomp</span><span class="p">.</span><span class="nx">over</span><span class="p">(</span><span class="nx">socket</span><span class="p">);</span>
+        <span class="nx">todoApi</span><span class="p">.</span><span class="nx">stomp</span><span class="p">.</span><span class="nx">connect</span><span class="p">({},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">frame</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">defer</span><span class="p">.</span><span class="nx">resolve</span><span class="p">();</span>
+        <span class="p">});</span>
+        <span class="k">return</span> <span class="nx">defer</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+    <span class="p">},</span>
+
+    <span class="nx">subscribe</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">topic</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">todoApi</span><span class="p">.</span><span class="nx">stomp</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="nx">topic</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">$rootScope</span><span class="p">.</span><span class="nx">$apply</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                <span class="nx">callback</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">body</span><span class="p">);</span>
+            <span class="p">});</span>
+        <span class="p">});</span>
+    <span class="p">}</span></code></pre></div>
+
+<p>The <code>subscribe</code> function registers a callback that is called every time the content is being pushed from the server. For sending the messages to a subscribed topic, Spring provides the <code>SimpMessagingTemplate</code> template. See the code below. Upon the creation of a <i>todo</i> list <code>convertAndSend</code> will serialize a <code>Todo</code> object to JSON and send it to the browser.
+
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="cm">/**</span>
+<span class="cm"> * Creates a new todo list.</span>
+<span class="cm"> * @param todo list to be created</span>
+<span class="cm"> */</span>
+<span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">&quot;/todos&quot;</span><span class="o">,</span> <span class="n">method</span> <span class="o">=</span> <span class="n">RequestMethod</span><span class="o">.</span><span class="na">POST</span><span class="o">)</span>
+<span class="nd">@ResponseStatus</span><span class="o">(</span><span class="n">HttpStatus</span><span class="o">.</span><span class="na">NO_CONTENT</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">createTodo</span><span class="o">(</span><span class="nd">@Valid</span> <span class="nd">@RequestBody</span> <span class="n">Todo</span> <span class="n">todo</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">todo</span><span class="o">.</span><span class="na">setCreationDate</span><span class="o">(</span><span class="n">Date</span><span class="o">.</span><span class="na">from</span><span class="o">(</span><span class="n">LocalDateTime</span><span class="o">.</span><span class="na">now</span><span class="o">().</span><span class="na">atZone</span><span class="o">(</span><span class="n">ZoneId</span><span class="o">.</span><span class="na">systemDefault</span><span class="o">()).</span><span class="na">toInstant</span><span class="o">()));</span>
+    <span class="n">todo</span><span class="o">.</span><span class="na">getTasks</span><span class="o">().</span><span class="na">forEach</span><span class="o">(</span>
+                        <span class="n">task</span> <span class="o">-&gt;</span> <span class="n">task</span><span class="o">.</span><span class="na">setId</span><span class="o">(</span><span class="n">UUID</span><span class="o">.</span><span class="na">randomUUID</span><span class="o">().</span><span class="na">toString</span><span class="o">())</span>
+                    <span class="o">);</span>
+    <span class="n">Todo</span> <span class="n">t</span> <span class="o">=</span> <span class="n">todoRepository</span><span class="o">.</span><span class="na">insert</span><span class="o">(</span><span class="n">todo</span><span class="o">);</span>
+    <span class="n">messagingTemplate</span><span class="o">.</span><span class="na">convertAndSend</span><span class="o">(</span><span class="s">&quot;/topic/todos/created&quot;</span><span class="o">,</span> <span class="n">t</span><span class="o">);</span>
+
+<span class="o">}</span></code></pre></div>
+
+
+<p>On the Angular side, we inject the <code>TodoService</code> into the controller, and then call the <code>connect</code> method to initiate the connection and register the callbacks that are triggered when message is received from the server.</p>
+
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">todoService</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="s1">&#39;/io&#39;</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+
+    <span class="nx">todoService</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="s1">&#39;/topic/todos/created&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">todo</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">$scope</span><span class="p">.</span><span class="nx">todos</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">angular</span><span class="p">.</span><span class="nx">fromJson</span><span class="p">(</span><span class="nx">todo</span><span class="p">));</span>
+
+<span class="p">});</span></code></pre></div>
+
+
+<h4>Consuming the REST API</h4>
+
+<p>Angular ships with the built in <code>$http</code> service that can be used to perform requests. For example to create a new <i>todo</i> list, we can call the <code>post</code> method.</p>
+
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">create</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">description</span><span class="p">,</span> <span class="nx">tasks</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">$http</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="nx">API_ENDPOINT</span><span class="p">,</span> <span class="p">{</span> <span class="nx">name</span> <span class="o">:</span> <span class="nx">name</span><span class="p">,</span>
+                              <span class="nx">description</span> <span class="o">:</span> <span class="nx">description</span><span class="p">,</span>
+                              <span class="nx">tasks</span><span class="o">:</span> <span class="nx">tasks</span><span class="p">});</span>
+
+<span class="p">}</span></code></pre></div>
+
+
+<p>Similarly, we can send a GET request like this.</p>
+
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">list</span> <span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+   <span class="kd">var</span> <span class="nx">promise</span> <span class="o">=</span> <span class="nx">$http</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">API_ENDPOINT</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+
+            <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+
+        <span class="p">});</span>
+   <span class="k">return</span> <span class="nx">promise</span><span class="p">;</span>
+<span class="p">}</span></code></pre></div>
+
+
+<p>This function returns a special promise object which encapsulates the asynchronous action. In the controller we wait for the operation to complete, and then we provide the scope with the result.</p>
+
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">todoService</span><span class="p">.</span><span class="nx">list</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">todos</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">$scope</span><span class="p">.</span><span class="nx">todos</span> <span class="o">=</span> <span class="nx">todos</span><span class="p">;</span>
+
+<span class="p">});</span></code></pre></div>
+
+
+<h4>Rendering the views</h4>
+
+<p>As we already stated, Angular uses the HTML templates to build up the views with the set of well known directives. They provide bidirectional data binding, iterations, conditional rendering, event handlers, etc. Here is a part of the view which renders <i>todo</i> lists.</p>  
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;flex-boxes&quot;</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;flex-box&quot;</span> <span class="na">ng-repeat=</span><span class="s">&quot;todo in todos&quot;</span><span class="nt">&gt;</span>
+		 <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;delete&quot;</span><span class="nt">&gt;&lt;i</span> <span class="na">ng-click=</span><span class="s">&quot;deleteTodo(todo.id)&quot;</span> <span class="na">class=</span><span class="s">&quot;icon ion-close-circled&quot;</span><span class="nt">&gt;&lt;/i&gt;&lt;/div&gt;</span>
+                <span class="nt">&lt;h1</span> <span class="na">class=</span><span class="s">&quot;flex-title uppercase&quot;</span><span class="nt">&gt;&lt;/h1&gt;</span>
+
+                <span class="nt">&lt;p</span> <span class="na">class=</span><span class="s">&quot;todo-description&quot;</span><span class="nt">&gt;&lt;/p&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span></code></pre></div>
+
+</p>
+
+      <hr />
+      <footer role="contentinfo">
+        <div class="social-share">
+  <h4>Share on</h4>
+  <ul>
+    <li>
+      <a href="https://twitter.com/intent/tweet?text=http://rabbitstack.github.io/angularjs/spring/mongodb/spring-mvc-angular-hasta-la-vista-jsp/" class="twitter" title="Share on Twitter"><i class="fa fa-twitter"></i><span> Twitter</span></a>
+    </li>
+    <li>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=http://rabbitstack.github.io/angularjs/spring/mongodb/spring-mvc-angular-hasta-la-vista-jsp/" class="facebook" title="Share on Facebook"><i class="fa fa-facebook"></i><span> Facebook</span></a>
+    </li>
+    <li>
+      <a href="https://plus.google.com/share?url=http://rabbitstack.github.io/angularjs/spring/mongodb/spring-mvc-angular-hasta-la-vista-jsp/" class="google-plus" title="Share on Google Plus"><i class="fa fa-google-plus"></i><span> Google+</span></a>
+    </li>
+  </ul>
+</div><!-- /.social-share -->
+        <p class="byline"><strong>Spring MVC + Angular = Hasta la vista JSP!</strong> was published on <time datetime="2015-06-28T21:38:45+02:00">June 28, 2015</time>.</p>
+      </footer>
+    </div><!-- /.article-wrap -->
+  
+    <section id="disqus_thread">
+        
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'rabbitstack'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+    </section><!-- /#disqus_thread -->
+  
+  </article>
+</div><!-- /#main -->
+ 
+<div class="footer-wrap">
+  <div class="related-articles">
+  <h4>You might also enjoy <small class="pull-right">(<a href="http://rabbitstack.github.io/posts/">View all posts</a>)</small></h4>
+    <ul>
+    
+      <li><a href="http://rabbitstack.github.io/cloud/microservices/spring/a-pragmatic-approach-to-migration-from-monolithic-to-microservices/" title="A pragmatic approach to migration from monolithic to microservices">A pragmatic approach to migration from monolithic to microservices</a></li>
+    
+      <li><a href="http://rabbitstack.github.io/spring/spring-boot-or-not-to-spring-boot/" title="Spring Boot or Not to Spring Boot?">Spring Boot or Not to Spring Boot?</a></li>
+    
+      <li><a href="http://rabbitstack.github.io/cloud/microservices/from-monolithic-to-cloud-native-architectures/" title="From monolithic to cloud-native architectures">From monolithic to cloud-native architectures</a></li>
+    
+    </ul>
+    <hr />
+  </div><!-- /.related-articles -->
+  
+  <footer>
+    
+
+<span>&copy; 2015 Nedim Šabić. Rabbit Stack blog is powered by Jekyll. Bunny icon is courtesy of <a href="http://www.freepik.com" title="Freepik">Freepik.</a>
+
+  </footer>
+</div><!-- /.footer-wrap -->
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="http://rabbitstack.github.io/assets/js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+<script src="http://rabbitstack.github.io/assets/js/plugins/jquery.magnific-popup.js"></script>
+<script src="http://rabbitstack.github.io/assets/js/scripts.min.js"></script>
+
+<!-- Asynchronous Google Analytics snippet -->
+<script>
+  var _gaq = _gaq || [];
+  var pluginUrl =
+ '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'rabbitstack']);
+  _gaq.push(['_trackPageview']);
+
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-61212549-1', 'auto');
+  ga('send', 'pageview');
+
+  $(document).ready(function() {
+     $('.image-popup').magnificPopup({type:'image'});
+  });
+</script>
+
+
+  
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'rabbitstack'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+	        
+
+</body>
+</html>

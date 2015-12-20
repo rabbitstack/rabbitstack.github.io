@@ -1,0 +1,647 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<title>Deploying Cloud Foundry on OpenStack Juno and XenServer (Part I) &#8211; Rabbit Stack</title>
+<meta name="description" content="Cloud Foundry ecosystem had been blowing my mind for a long time, and I think it really has made an IT disruption, letting us focus on applications as the essential unit of  business process.">
+<meta name="keywords" content="openstack, cloud foundry, xenserver, virtualization">
+
+
+
+<!-- Twitter Cards -->
+<meta name="twitter:title" content="Deploying Cloud Foundry on OpenStack Juno and XenServer (Part I)">
+<meta name="twitter:description" content="Cloud Foundry ecosystem had been blowing my mind for a long time, and I think it really has made an IT disruption, letting us focus on applications as the essential unit of  business process.">
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://rabbitstack.github.io/images/rabbit-bkgd.jpg">
+
+<!-- Open Graph -->
+<meta property="og:locale" content="en_US">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Deploying Cloud Foundry on OpenStack Juno and XenServer (Part I)">
+<meta property="og:description" content="Cloud Foundry ecosystem had been blowing my mind for a long time, and I think it really has made an IT disruption, letting us focus on applications as the essential unit of  business process.">
+<meta property="og:url" content="http://rabbitstack.github.io/openstack/virtualization/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i/">
+<meta property="og:site_name" content="Rabbit Stack">
+
+
+
+
+
+<link rel="canonical" href="http://rabbitstack.github.io/openstack/virtualization/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i/">
+<link href="http://rabbitstack.github.io/feed.xml" type="application/atom+xml" rel="alternate" title="Rabbit Stack Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://rabbitstack.github.io/assets/css/main.css">
+
+<meta http-equiv="cleartype" content="on">
+
+<!-- HTML5 Shiv and Media Query Support -->
+<!--[if lt IE 9]>
+	<script src="http://rabbitstack.github.io/assets/js/vendor/html5shiv.min.js"></script>
+	<script src="http://rabbitstack.github.io/assets/js/vendor/respond.min.js"></script>
+<![endif]-->
+
+<!-- Modernizr -->
+<script src="http://rabbitstack.github.io/assets/js/vendor/modernizr-2.7.1.custom.min.js"></script>
+
+<link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'>
+
+<!-- Icons -->
+<!-- 16x16 -->
+<link rel="shortcut icon" href="http://rabbitstack.github.io/favicon.ico">
+<!-- 32x32 -->
+<link rel="shortcut icon" href="http://rabbitstack.github.io/favicon.png">
+<!-- 57x57 (precomposed) for iPhone 3GS, pre-2011 iPod Touch and older Android devices -->
+<link rel="apple-touch-icon-precomposed" href="http://rabbitstack.github.io/images/apple-touch-icon-precomposed.png">
+<!-- 72x72 (precomposed) for 1st generation iPad, iPad 2 and iPad mini -->
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="http://rabbitstack.github.io/images/apple-touch-icon-72x72-precomposed.png">
+<!-- 114x114 (precomposed) for iPhone 4, 4S, 5 and post-2011 iPod Touch -->
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="http://rabbitstack.github.io/images/apple-touch-icon-114x114-precomposed.png">
+<!-- 144x144 (precomposed) for iPad 3rd and 4th generation -->
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://rabbitstack.github.io/images/apple-touch-icon-144x144-precomposed.png">
+
+</head>
+
+<body class="post">
+
+<!--[if lt IE 9]><div class="browser-upgrade alert alert-info">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div><![endif]-->
+
+<div class="navigation-wrapper">
+		<div class="site-name">
+			<!-- <img src="/images/rabbit-small.jpg" alt="Rabbit Stack logo" class="logo" /> -->
+			<!-- <a href="http://rabbitstack.github.io/">Rabbit Stack</a> -->
+			<a href="http://rabbitstack.github.io/"><span class="site-name-segment">Rabbit</span> <span class="big-font">Stack</span></a>
+
+		</div><!-- /.site-name -->
+
+	
+	
+	<div class="top-navigation">
+		<nav role="navigation" id="site-nav" class="nav">
+		    <ul>
+		        
+				    
+				        
+				    
+				    <li><a href="http://rabbitstack.github.io#" >Home</a></li>
+				
+				    
+				        
+				    
+				    <li><a href="http://rabbitstack.github.io/posts/" >Archive</a></li>
+				
+				    
+				        
+				    
+				    <li><a href="http://rabbitstack.github.io/about/" >About</a></li>
+				
+		    </ul>
+		</nav>
+	</div><!-- /.top-navigation -->
+</div><!-- /.navigation-wrapper -->
+
+
+  <div class="image-wrap">
+  <img class="bkg" src=
+    
+      "http://rabbitstack.github.io/images/rabbit-bkgd.jpg"
+    
+  alt="Deploying Cloud Foundry on OpenStack Juno and XenServer (Part I) feature image">
+  
+       <div class="headline-wrap">
+          <img src="http://rabbitstack.github.io/images/rabbitstack.png" />
+          <h1> The place where bunnies dwell </h1>
+          <h2> And bits become colossal </h2>
+      </div>
+  </div><!-- /.image-wrap -->
+
+
+<div id="main" role="main">
+  <div class="article-author-side">
+    
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+
+	<img src="http://rabbitstack.github.io/images/nedo.jpg" class="bio-photo" alt="Nedim Šabić bio photo">
+
+
+  <h3 itemprop="name">Nedim Šabić</h3>
+  <p>Senior software engineer, devops enthusiast and platform architect who is also very curious about OS design, internals and implementation. Falling in love with Go language and idiomatic sugars of Ruby, although he is more experienced in Python, J2EE platform and Spring framework ecosystem for development of distributed and event processing solutions. He never stops learning, and at the moment he is reading a lot about Big data, machine learning, virtualization and cloud technologies.</p>
+  <a href="mailto:bhnedo@hotmail.com" class="author-social" target="_blank"><i class="fa fa-fw fa-envelope-square"></i>Email</a>
+  
+  <a href="http://facebook.com/nedim.sabic.39" class="author-social" target="_blank"><i class="fa fa-fw fa-facebook-square"></i> Facebook</a>
+  
+  <a href="https://es.linkedin.com/pub/nedim-šabić/107/435/8a6" class="author-social" target="_blank"><i class="fa fa-fw fa-linkedin-square"></i> LinkedIn</a>
+  
+  
+  <a href="http://github.com/bhnedo" class="author-social" target="_blank"><i class="fa fa-fw fa-github"></i> Github</a>
+  <a href="http://stackoverflow.com/users/1027467/nedo" class="author-social" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i> Stackoverflow</a>
+  
+  
+  
+  
+  
+  
+  <a href="http://soundcloud.com/nedim-abi" class="author-social" target="_blank"><i class="fa fa-fw fa-soundcloud"></i> Soundcloud</a>
+  
+  
+</div>
+
+  </div>
+  <article class="post">
+    <div class="headline-wrap">
+      
+        <h1><a href="http://rabbitstack.github.io/openstack/virtualization/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i/" rel="bookmark" title="Deploying Cloud Foundry on OpenStack Juno and XenServer (Part I)">Deploying Cloud Foundry on OpenStack Juno and XenServer (Part I)</a></h1>
+      
+    </div><!--/ .headline-wrap -->
+    <div class="article-wrap">
+      <p>
+<a href="http://www.cloudfoundry.org/index.html" target="_blank">Cloud Foundry</a> ecosystem had been blowing my mind for a long time, and I think it really has made an IT disruption letting us focus on applications as the essential unit of business process. There is no need for us to worry about all those painful stuffs like scalability, multi tenancy and application health. Cloud Foundry will do that nasty job for us, and much more. It could be considered as an operating system for the cloud.
+</p>
+
+<p>
+While I was investigating about Cloud Foundry, I also figured out its agnostic nature which enable it to be easily deployed on AWS, vSphere or <a href="https://www.openstack.org/" target="_blank">OpenStack</a>. That is how I got motivated to acquire one of those cheap Dell rack servers on eBay and start the experiment. I had opted for XenServer 6.2 as the hypervisor. Unfortunately, the documentation about setting up the OpenStack compute node on XenServer is rather incomplete, deprecated and very hard to follow if you
+are doing it for the first time. So, let's see how to proceed step by step, and prepare our OpenStack environment for Cloud Foundry instance deployment. I already assume you have successfully installed and configured the controller node.
+</p>
+
+<h3>Installing paravirtualized XenServer domain</h3>
+
+<p> OpenStack compute node needs a paravirtualized virtual machine running on each XenServer instance. Paravirtualized VM basically has a recompiled kernel so it can talk directly to the hypervisor API. If Centos is your distribution of choice then the easiest way to set up a PV virtual machine is by using this <a href="https://gist.githubusercontent.com/bhnedo/4648499f5680207e86ec/raw/4239fd8d0e10f7f2759d600b28b52f1744d9b5ad/kickstart-centos-minimal.cfg" target="_blank">kickstart</a> file.</p>
+<p>Let’s first create the VM. Please note we have to use Red Hat 6 template, even if we are going to install Centos 7 distribution. For XenServer 6.5 this is not necessary.</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">TEMPLATE_UUID</span><span class="o">=</span><span class="k">$(</span>xe template-list <span class="p">|</span> grep -B1 <span class="s1">&#39;name-label.*Red Hat.* 6.*64-bit&#39;</span> <span class="p">|</span> awk -F: <span class="s1">&#39;/uuid/{print $2}&#39;</span><span class="p">|</span> tr -d <span class="s2">&quot; &quot;</span><span class="k">)</span>
+<span class="nv">VMUUID</span><span class="o">=</span><span class="k">$(</span>xe vm-install new-name-label<span class="o">=</span><span class="s2">&quot;compute&quot;</span> <span class="nv">template</span><span class="o">=</span><span class="k">${</span><span class="nv">TEMPLATE_UUID</span><span class="k">})</span>
+xe vm-param-set <span class="nv">uuid</span><span class="o">=</span><span class="nv">$VMUUID</span> other-config:install-repository<span class="o">=</span>http://mirror.centos.org/centos/7/os/x86_64
+xe vm-param-set <span class="nv">uuid</span><span class="o">=</span><span class="nv">$VMUUID</span> PV-args<span class="o">=</span><span class="s2">&quot;ks=https://gist.githubusercontent.com/bhnedo/4648499f5680207e86ec/raw/4239fd8d0e10f7f2759d600b28b52f1744d9b5ad/kickstart-centos-minimal.cfg ksdevice=eth0&quot;</span></code></pre></div>
+
+<p>Find out the network UUID for the bridge that has access to the Internet. Note that Xen bridge is created for every physical network adapter on your machine. Get a list of XenServer networks and store the UUID for the appropriate bridge (in most cases it will be <code>xenbr0</code>).</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">xe network-list
+<span class="nv">NETUUID</span><span class="o">=</span><span class="k">$(</span>xe network-list <span class="nv">bridge</span><span class="o">=</span>xenbr0 --minimal<span class="k">)</span></code></pre></div>
+
+<p>Create a virtual network interface (VIF) and attach it to the virtual machine and network. Start the VM and watch the installation progress from XenCenter.</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">xe vif-create vm-uuid<span class="o">=</span><span class="nv">$VMUUID</span> network-uuid<span class="o">=</span><span class="nv">$NETUUID</span> <span class="nv">mac</span><span class="o">=</span>random <span class="nv">device</span><span class="o">=</span>0
+xe vm-start <span class="nv">uuid</span><span class="o">=</span><span class="nv">$VMUUID</span></code></pre></div>
+
+<p>When installation process is done export the VM so we have the base image to use for the storage node too.</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">xe vm-export <span class="nv">uuid</span><span class="o">=</span><span class="nv">$VMUUID</span> <span class="nv">filename</span><span class="o">=</span>openstack-juno-centos7.xva</code></pre></div>
+
+<p class="notice">
+<strong>Notice:</strong> <code>PyGrub</code> doesn't support <code>grub2</code> boot loader. You will need to apply the following <a href="https://github.com/xenserver/xen-4.3.pg/blob/bf5f09b1a8b5ad4086285ce926a2c2dae68771a1/pygrub-fix-for-rhel7.patch" target="_blank">patch</a> in order to boot the VM properly. This issue has been corrected in XenServer 6.5 release.
+</p>
+
+<h3>Installing and configuring compute service</h3>
+
+<p>
+Once you have a running PV guest the next step is to install OpenStack plugins for XenServer Dom0. These will let the compute node to communicate with Xen XAPI in order to provision virtual machines, set up networking, storage, etc. Download the latest Openstack Juno branch, unzip and copy the content of <code>plugins/xenserver/xenapi/etc/xapi.d/plugins</code> directory to<code>/etc/xapi.d/plugins</code>. Also ensure that added files are executable.
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">cd</span> /tmp
+wget https://github.com/openstack/nova/archive/master.zip
+unzip master.zip
+cp /tmp/nova-juno-stable/plugins/xenserver/xenapi/etc/xapi.d/plugins/* /etc/xapi.d/plugins
+chmod a+x /etc/xapi.d/plugins/*</code></pre></div>
+
+
+Log into your newly installed compute node (default password for the <strong>root</strong> user is <i>changeit</i>) and run these commands to enable OpenStack Juno repository and upgrade the packages on your host.
+</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">yum install http://rdo.fedorapeople.org/openstack-juno/rdo-release-juno.rpm
+yum upgrade</code></pre></div>
+
+<p>If your kernel is upgraded you will probably need to reboot the machine after upgrade process in order to activate the new kernel. Now install the required packages for the compute hypervisor components and <i>nova-network</i> legacy networking.
+</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">yum install openstack-nova-compute sysfsutils
+yum install openstack-nova-network openstack-nova-api</code></pre></div>
+
+<p> Xenapi python package is also required, so install it using <code>pip</code> package manager.</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">easy_install pip
+pip install xenapi</code></pre></div>
+
+<blockquote>
+I didn't wanted to setup another network node for <strong>Neutron</strong>, even legacy networking is deprecated in favor of after-mentioned component. If you need advanced features like VLANs, virtual routing, switching, tenant isolation and so on, follow these <a href="http://docs.openstack.org/juno/install-guide/install/yum/content/section_neutron-networking.html" target="_blank">docs</a> on how to add Neutron network.
+</blockquote>
+<p>
+Now we need to edit the <code>/etc/nova/nova.conf</code> configuration file.
+</p>
+<ol>
+	<li>
+		<strong>Message broker settings</strong>
+		<p>Configure RabbitMQ messaging system in the <code>[DEFAULT]</code> section:</p>
+			<pre>
+ [DEFAULT]
+ rpc_backend = rabbit
+ rabbit_host = controller
+ rabbit_userid = RABBIT_USER
+ rabbit_password = RABBIT_PASSWORD
+ 			</pre>
+
+	</li>
+	<li>
+		<strong>Keystone authentication</strong>
+		<p>Modify <code>[DEFAULT]</code> and <code>[keystone_authtoken]</code> sections to configure authentication service access:</p>
+			<pre>
+ [DEFAULT]
+ auth_strategy = keystone
+
+ [keystone_authtoken]
+ auth_uri = http://controller:5000/v2.0
+ identity_uri = http://controller:35357
+ admin_tenant_name = service
+ admin_user = nova
+ admin_password = NOVA_PASSWORD
+		  </pre>
+	</li>
+	<li>
+		<strong>Network configuration</strong>
+		<p>Before proceeding with network parameters, you will need to create a second VIF and attach it to the compute VM. </p>
+		<pre>
+ $ xe vif-create vm-uuid=$VMUUID network-uuid=$NETUUID mac=random device=1
+ $ xe vm-start uuid=$VMUUID
+		</pre>
+		<p> This network interface will be connected to the Linux bridge and at same time will act as default gateway for all VM instances spawned inside OpenStack. The traffic forwarding between tenants is done at L2 level through  this bridge. You should end up with the following interfaces and <code>xenbr0</code> up after creating the network in OpenStack.
+		</p>
+		<pre>
+ $ ifconfig
+ eth0: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500
+        inet 192.168.1.106  netmask 255.255.255.0  broadcast 192.168.1.255
+        inet6 fe80::90b3:8fff:fe2c:1d09  prefixlen 64  scopeid 0x20<link />
+        ether 92:b3:8f:2c:1d:09  txqueuelen 1000  (Ethernet)
+        RX packets 3016  bytes 1189159 (1.1 MiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 2812  bytes 636656 (621.7 KiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+ eth1: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500
+        inet6 fe80::44ab:daff:fe21:46d4  prefixlen 64  scopeid 0x20<link />
+        ether 46:ab:da:21:46:d4  txqueuelen 1000  (Ethernet)
+        RX packets 611  bytes 111213 (108.6 KiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 38  bytes 4943 (4.8 KiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+ xenbr0: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500
+        inet 192.168.1.50  netmask 255.255.255.0  broadcast 192.168.1.255
+        inet6 fe80::4034:39ff:fecd:b9b3  prefixlen 64  scopeid 0x20<link />
+        ether 46:ab:da:21:46:d4  txqueuelen 0  (Ethernet)
+        RX packets 89  bytes 11222 (10.9 KiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 28  bytes 3967 (3.8 KiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+ $ brctl show
+ bridge name     bridge id               STP enabled                  interfaces
+ xenbr0          8000.46abda2146d4          no                         eth1
+		</pre>
+		 <p>In the<code>[DEFAULT]</code> section you will need to put these properties:</p>
+			<pre>
+ [DEFAULT]
+ network_api_class = nova.network.api.API
+ security_group_api = nova
+ network_manager = nova.network.manager.FlatDHCPManager
+ allow_same_net_traffic = True
+ multi_host = True
+ send_arp_for_ha = True
+ share_dhcp_address = True
+ force_dhcp_release = True
+ flat_network_bridge = xenbr0
+ flat_interface = eth1
+ public_interface = eth0
+
+ my_ip = MANAGEMENT_INTERFACE_IP
+ firewall_driver = nova.virt.xenapi.firewall.Dom0IptablesFirewallDriver
+			</pre>
+
+	</li>
+	<li>
+		<strong>Hypervisor settings</strong>
+		<p>Enable Xen compute driver in the <code>[DEFAULT]</code> section, XAPI endpoint and credentials in the <code>[xenserver]</code> section:</p>
+		<pre>
+ [DEFAULT]
+ compute_driver = xenapi.XenAPIDriver
+
+ [xenserver]
+ connection_url = http://XENSERVER_MANAGEMENT_IP
+ connection_username = XENSERVER_USERNAME
+ connection_password = XENSERVER_PASSWORD
+ 		</pre>
+	</li>
+	<li>
+		<strong>Image service and VNC access</strong>
+		<p>We are almost done. In the <code>[glance]</code> section configure the location of the Image Service. In the <code>[DEFAULT]</code> section enable remote console access. When deploying OpenStack services for the first time, it's a good idea to enable verbose logging too.</p>
+				<pre>
+ [glance]
+ host = controller
+
+ [DEFAULT]
+ vnc_enabled = True
+ vncserver_listen = 0.0.0.0
+ vncserver_proxyclient_address = MANAGEMENT_INTERFACE_IP
+ novncproxy_base_url = http://controller:6080/vnc_auto.html
+
+ verbose = true
+ 		</pre>
+	</li>
+</ol>
+<p>Start the Compute and Network services and configure them to be automatically started at boot time.</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">systemctl <span class="nb">enable </span>openstack-nova-compute.service openstack-nova-network.service openstack-nova-metadata-api.service
+systemctl start openstack-nova-compute.service openstack-nova-network.service openstack-nova-metadata-api.service</code></pre></div>
+
+<p>Make sure the <code>nova-compute</code> and <code>nova-network</code> are up and running by executing this command on the controller node:</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">nova service-list
++----+------------------+---------+----------+---------+-------+----------------------------+
+<span class="p">|</span> Id <span class="p">|</span> Binary           <span class="p">|</span> Host    <span class="p">|</span> Zone     <span class="p">|</span> Status  <span class="p">|</span> State <span class="p">|</span> Updated_at                 <span class="p">|</span>
++----+------------------+---------+----------+---------+-------+----------------------------+
+<span class="p">|</span> <span class="m">1</span>  <span class="p">|</span> nova-consoleauth <span class="p">|</span> hydra   <span class="p">|</span> internal <span class="p">|</span> enabled <span class="p">|</span> up    <span class="p">|</span> 2015-01-31T17:57:06.000000 <span class="p">|</span>
+<span class="p">|</span> <span class="m">2</span>  <span class="p">|</span> nova-cert        <span class="p">|</span> hydra   <span class="p">|</span> internal <span class="p">|</span> enabled <span class="p">|</span> up    <span class="p">|</span> 2015-01-31T17:57:06.000000 <span class="p">|</span>
+<span class="p">|</span> <span class="m">3</span>  <span class="p">|</span> nova-scheduler   <span class="p">|</span> hydra   <span class="p">|</span> internal <span class="p">|</span> enabled <span class="p">|</span> up    <span class="p">|</span> 2015-01-31T17:57:06.000000 <span class="p">|</span>
+<span class="p">|</span> <span class="m">4</span>  <span class="p">|</span> nova-conductor   <span class="p">|</span> hydra   <span class="p">|</span> internal <span class="p">|</span> enabled <span class="p">|</span> up    <span class="p">|</span> 2015-01-31T17:57:06.000000 <span class="p">|</span>
+<span class="p">|</span> <span class="m">5</span>  <span class="p">|</span> nova-compute     <span class="p">|</span> compute <span class="p">|</span> nova     <span class="p">|</span> enabled <span class="p">|</span> up    <span class="p">|</span> 2015-01-31T17:57:07.000000 <span class="p">|</span>
+<span class="p">|</span> <span class="m">6</span>  <span class="p">|</span> nova-network     <span class="p">|</span> compute <span class="p">|</span> internal <span class="p">|</span> enabled <span class="p">|</span> up    <span class="p">|</span> 2015-01-31T17:57:00.000000 <span class="p">|</span>
++----+------------------+---------+----------+---------+-------+----------------------------+-</code></pre></div>
+
+<h3>Installing and configuring storage node</h3>
+
+<p>We can start by creating the storage node VM from the base template image we had exported. Run these commands in the XenServer console:
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">SRUUID</span> <span class="o">=</span> <span class="k">$(</span>xe sr-list name-label<span class="o">=</span><span class="s2">&quot;Local storage&quot;</span> --minimal<span class="k">)</span>
+xe vm-import <span class="nv">filename</span><span class="o">=</span>openstack-juno-centos7.xva <span class="nv">force</span><span class="o">=</span><span class="nb">true </span>sr-uuid<span class="o">=</span><span class="nv">$SRUUID</span> <span class="nv">preserve</span><span class="o">=</span><span class="nb">true</span></code></pre></div>
+
+
+You will need to create and attach the VDI where <i>cinder</i> volumes will be stored. Get the UUID of your newly imported VM, and then run
+these commands.
+</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">VDIUUID</span> <span class="o">=</span> <span class="k">$(</span>xe vdi-create sr-uuid<span class="o">=</span><span class="nv">$SRUUID</span> name-label<span class="o">=</span><span class="s2">&quot;cinder&quot;</span> <span class="nb">type</span><span class="o">=</span>user virtual-size<span class="o">=</span>250GiB<span class="k">)</span>
+<span class="nv">VBDUUID</span> <span class="o">=</span> <span class="k">$(</span>xe vbd-create vm-uuid<span class="o">=</span><span class="nv">$VMUUID</span> vdi-uuid<span class="o">=</span><span class="nv">$VDIUUID</span> <span class="nv">device</span><span class="o">=</span>1<span class="k">)</span>
+xe vbd-plug <span class="nv">uuid</span><span class="o">=</span><span class="nv">$VBDUUID</span></code></pre></div>
+
+<p>
+Install the required dependencies and start the LVM metadata service.
+</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">yum install lvm2
+systemctl <span class="nb">enable </span>lvm2-lvmetad.service
+systemctl start lvm2-lvmetad.service</code></pre></div>
+
+<p>
+Partition the disk in order to create the LVM physical volume and the volume group labeled as <code> cinder-volumes </code>. Change <code>/dev/xvdb1</code> with your partition.
+</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">pvcreate /dev/xvdb1
+vgcreate cinder-volumes /dev/xvdb1</code></pre></div>
+
+<p>
+It is also necessary to instruct the LVM which block storage devices should be scanned. Edit the <code>/etc/lvm/lvm.conf</code> file and modify the <code>filter</code> section to include the created volume group.
+</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">devices <span class="o">{</span>
+  ...
+  <span class="nv">filter</span> <span class="o">=</span> <span class="o">[</span> <span class="s2">&quot;a/xvda/&quot;</span>, <span class="s2">&quot;a/xvdb/&quot;</span>, <span class="s2">&quot;r/.*/&quot;</span><span class="o">]</span>
+  ...
+<span class="o">}</span></code></pre></div>
+
+<p>
+We are now ready to install and configure Block Storage components and dependencies. I wasn't able to get iSCSI LUNs to work using <code>targetcli</code>, probably because XenServer relies on SCSI initiator utilities. The solution was to use <code>scsi-target-utils</code> instead.
+</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">yum install scsi-target-utils
+yum install openstack-cinder python-oslo-db MySQL-python</code></pre></div>
+
+<p>
+Edit the <code>/etc/cinder/cinder.conf</code> configuration file.
+</p>
+<ol>
+	<li>
+		<strong>Message broker settings</strong>
+		<p>Configure RabbitMQ messaging system in the <code>[DEFAULT]</code> section:</p>
+			<pre>
+ [DEFAULT]
+ rpc_backend = rabbit
+ rabbit_host = controller
+ rabbit_userid = RABBIT_USER
+ rabbit_password = RABBIT_PASSWORD
+ 			</pre>
+
+	</li>
+	<li>
+		<strong>Keystone authentication</strong>
+		<p>Modify <code>[DEFAULT]</code> and <code>[keystone_authtoken]</code> sections to configure authentication service access:</p>
+			<pre>
+ [DEFAULT]
+ auth_strategy = keystone
+
+ [keystone_authtoken]
+ auth_uri = http://controller:5000/v2.0
+ identity_uri = http://controller:35357
+ admin_tenant_name = service
+ admin_user = cinder
+ admin_password = CINDER_PASSWORD
+		  </pre>
+	</li>
+	<li>
+		<strong>Database connection</strong>
+		<p>In the <code>[database]</code> section change the MySQL connection string:</p>
+		<pre>
+ [database]
+ connection = mysql://cinder:CINDER_DB_PASSWORD@controller/cinder
+ 		</pre>
+	</li>
+	<li>
+		<strong>Image service and management IP address</strong>
+		<p>In the <code>[DEFAULT]</code> section configure the location of the Image Service. Modify management interface address to match your storage node IP. Enable verbose logging.
+				<pre>
+ [DEFAULT]
+ host = controller
+ my_ip = MANAGEMENT_INTERFACE_IP
+
+ verbose = true
+ 		</pre>
+	
+	<li>
+		<strong>Target administration service</strong>
+		<p>In the <code>[DEFAULT]</code> configure Cinder to use <code>tgtadm</code> service for iSCSI storage management:</p>
+				<pre>
+ [DEFAULT]
+ iscsi_helper = tgtadm
+				</pre>
+		<p> Edit the <code>/etc/tgt/targets.conf</code> to include the cinder volumes. This will hold information about volume's location, CHAP credentials, IQNs, etc. </p>
+		<pre>
+ include /etc/cinder/volumes/*
+		</pre>
+	</li>
+
+
+<p>Start the Block Storage and target service and configure them to be automatically started at boot time.</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">systemctl <span class="nb">enable </span>openstack-cinder-volume.service tgtd.service
+systemctl start openstack-cinder-volume.service tgtd.service</code></pre></div>
+
+
+<p> Run this command on the controller node to ensure the Storage service is up and running. </p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">cinder service-list
++------------------+--------+------+---------+-------+----------------------------+
+<span class="p">|</span>      Binary      <span class="p">|</span>  Host  <span class="p">|</span> Zone <span class="p">|</span>  Status <span class="p">|</span> State <span class="p">|</span>         Updated_at         <span class="p">|</span>
++------------------+--------+------+---------+-------+----------------------------+
+<span class="p">|</span> cinder-scheduler <span class="p">|</span> hydra  <span class="p">|</span> nova <span class="p">|</span> enabled <span class="p">|</span>   up  <span class="p">|</span> 2015-01-31T17:57:44.000000 <span class="p">|</span>
+<span class="p">|</span>  cinder-volume   <span class="p">|</span> cinder <span class="p">|</span> nova <span class="p">|</span> enabled <span class="p">|</span>   up  <span class="p">|</span> 2015-01-31T17:57:55.000000 <span class="p">|</span>
++------------------+--------+------+---------+-------+----------------------------+</code></pre></div>
+
+
+<p class="notice">
+<strong>Tip:</strong> If you are able to attach cinder volumes from OpenStack, but the file system creation is taking too long or got stuck, try to disable the checksumming of your storage node VIF. Use <code> ethtool -K vifz.0 tx off </code> where <code>z</code> is the domain identifier of the storage VM.
+</p>
+
+<h3>Validate the OpenStack instance</h3>
+
+<p> You should go through <a href="http://docs.cloudfoundry.org/deploying/openstack/validate_openstack.html" target="_blank">this</a> steps to validate your OpenStack environment. In the second part we will see how to deploy Cloud Foundry using <strong>BOSH</strong> and push our first application.
+</p>
+<br />
+</p></li></ol>
+
+      <hr />
+      <footer role="contentinfo">
+        <div class="social-share">
+  <h4>Share on</h4>
+  <ul>
+    <li>
+      <a href="https://twitter.com/intent/tweet?text=http://rabbitstack.github.io/openstack/virtualization/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i/" class="twitter" title="Share on Twitter"><i class="fa fa-twitter"></i><span> Twitter</span></a>
+    </li>
+    <li>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=http://rabbitstack.github.io/openstack/virtualization/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i/" class="facebook" title="Share on Facebook"><i class="fa fa-facebook"></i><span> Facebook</span></a>
+    </li>
+    <li>
+      <a href="https://plus.google.com/share?url=http://rabbitstack.github.io/openstack/virtualization/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i/" class="google-plus" title="Share on Google Plus"><i class="fa fa-google-plus"></i><span> Google+</span></a>
+    </li>
+  </ul>
+</div><!-- /.social-share -->
+        <p class="byline"><strong>Deploying Cloud Foundry on OpenStack Juno and XenServer (Part I)</strong> was published on <time datetime="2015-01-30T17:03:28+01:00">January 30, 2015</time>.</p>
+      </footer>
+    </div><!-- /.article-wrap -->
+  
+    <section id="disqus_thread">
+        
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'rabbitstack'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+    </section><!-- /#disqus_thread -->
+  
+  </article>
+</div><!-- /#main -->
+ 
+<div class="footer-wrap">
+  <div class="related-articles">
+  <h4>You might also enjoy <small class="pull-right">(<a href="http://rabbitstack.github.io/posts/">View all posts</a>)</small></h4>
+    <ul>
+    
+      <li><a href="http://rabbitstack.github.io/cloud/microservices/spring/a-pragmatic-approach-to-migration-from-monolithic-to-microservices/" title="A pragmatic approach to migration from monolithic to microservices">A pragmatic approach to migration from monolithic to microservices</a></li>
+    
+      <li><a href="http://rabbitstack.github.io/angularjs/spring/mongodb/spring-mvc-angular-hasta-la-vista-jsp/" title="Spring MVC + Angular = Hasta la vista JSP!">Spring MVC + Angular = Hasta la vista JSP!</a></li>
+    
+      <li><a href="http://rabbitstack.github.io/spring/spring-boot-or-not-to-spring-boot/" title="Spring Boot or Not to Spring Boot?">Spring Boot or Not to Spring Boot?</a></li>
+    
+    </ul>
+    <hr />
+  </div><!-- /.related-articles -->
+  
+  <footer>
+    
+
+<span>&copy; 2015 Nedim Šabić. Rabbit Stack blog is powered by Jekyll. Bunny icon is courtesy of <a href="http://www.freepik.com" title="Freepik">Freepik.</a>
+
+  </footer>
+</div><!-- /.footer-wrap -->
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="http://rabbitstack.github.io/assets/js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+<script src="http://rabbitstack.github.io/assets/js/plugins/jquery.magnific-popup.js"></script>
+<script src="http://rabbitstack.github.io/assets/js/scripts.min.js"></script>
+
+<!-- Asynchronous Google Analytics snippet -->
+<script>
+  var _gaq = _gaq || [];
+  var pluginUrl =
+ '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'rabbitstack']);
+  _gaq.push(['_trackPageview']);
+
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-61212549-1', 'auto');
+  ga('send', 'pageview');
+
+  $(document).ready(function() {
+     $('.image-popup').magnificPopup({type:'image'});
+  });
+</script>
+
+
+  
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'rabbitstack'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+	        
+
+</body>
+</html>
