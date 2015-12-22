@@ -5,15 +5,15 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
 <head>
 <meta charset="utf-8">
-<title>A pragmatic approach to migration from monolithic to microservices &#8211; Rabbit Stack</title>
-<meta name="description" content="If you recall from this post, I had stated about cloud native  manifesto and the tradeoff of migrating the monolithic based applications to the cloud. I have to admit it was pretty abstract and theoretical approach...">
-<meta name="keywords" content="spring cloud, spring boot, netflix, eureka, microservices, circuit breaker, zuul, hystrix, monolithic, discovery, consul, golang, go-kit">
+<title>From monolithic to cloud-native architectures &#8211; Rabbit Stack</title>
+<meta name="description" content="The software industry is moving fast - that's crystal clear. What now is considered as the state of the art model for software development and deployment, in a few years it usually becomes business agility barrier for the most organizations.">
+<meta name="keywords" content="monolithic, cloud-native, contenerization, disruptive, distributed patterns, microservices, silos">
 
 
 
 <!-- Twitter Cards -->
-<meta name="twitter:title" content="A pragmatic approach to migration from monolithic to microservices">
-<meta name="twitter:description" content="If you recall from this post, I had stated about cloud native  manifesto and the tradeoff of migrating the monolithic based applications to the cloud. I have to admit it was pretty abstract and theoretical approach...">
+<meta name="twitter:title" content="From monolithic to cloud-native architectures">
+<meta name="twitter:description" content="The software industry is moving fast - that's crystal clear. What now is considered as the state of the art model for software development and deployment, in a few years it usually becomes business agility barrier for the most organizations.">
 
 
 
@@ -23,16 +23,16 @@
 <!-- Open Graph -->
 <meta property="og:locale" content="en_US">
 <meta property="og:type" content="article">
-<meta property="og:title" content="A pragmatic approach to migration from monolithic to microservices">
-<meta property="og:description" content="If you recall from this post, I had stated about cloud native  manifesto and the tradeoff of migrating the monolithic based applications to the cloud. I have to admit it was pretty abstract and theoretical approach...">
-<meta property="og:url" content="http://rabbitstack.github.io/cloud/microservices/spring/a-pragmatic-approach-to-migration-from-monolithic-to-microservices/">
+<meta property="og:title" content="From monolithic to cloud-native architectures">
+<meta property="og:description" content="The software industry is moving fast - that's crystal clear. What now is considered as the state of the art model for software development and deployment, in a few years it usually becomes business agility barrier for the most organizations.">
+<meta property="og:url" content="http://rabbitstack.github.io/cloud/microservices/from-monolithic-to-cloud-native-architectures/">
 <meta property="og:site_name" content="Rabbit Stack">
 
 
 
 
 
-<link rel="canonical" href="http://rabbitstack.github.io/cloud/microservices/spring/a-pragmatic-approach-to-migration-from-monolithic-to-microservices/">
+<link rel="canonical" href="http://rabbitstack.github.io/cloud/microservices/from-monolithic-to-cloud-native-architectures/">
 <link href="http://rabbitstack.github.io/feed.xml" type="application/atom+xml" rel="alternate" title="Rabbit Stack Feed">
 
 <!-- http://t.co/dKP3o1e -->
@@ -118,7 +118,7 @@
     
       "http://rabbitstack.github.io/images/rabbit-bkgd.jpg"
     
-  alt="A pragmatic approach to migration from monolithic to microservices feature image">
+  alt="From monolithic to cloud-native architectures feature image">
   
        <div class="headline-wrap">
           <img src="http://rabbitstack.github.io/images/rabbitstack.png" />
@@ -165,256 +165,70 @@
   <article class="post">
     <div class="headline-wrap">
       
-        <h1><a href="http://rabbitstack.github.io/cloud/microservices/spring/a-pragmatic-approach-to-migration-from-monolithic-to-microservices/" rel="bookmark" title="A pragmatic approach to migration from monolithic to microservices">A pragmatic approach to migration from monolithic to microservices</a></h1>
+        <h1><a href="http://rabbitstack.github.io/cloud/microservices/from-monolithic-to-cloud-native-architectures/" rel="bookmark" title="From monolithic to cloud-native architectures">From monolithic to cloud-native architectures</a></h1>
       
     </div><!--/ .headline-wrap -->
     <div class="article-wrap">
-      <p>If you recall from <a href="http://rabbitstack.github.io/cloud/microservices/from-monolithic-to-cloud-native-architectures">this</a> post, I had stated about cloud native manifesto and the trade-off of migrating the monolithic based applications to the cloud. I have to admit it was pretty abstract and theoretical approach, but the fun starts now! We’ll see how to decompose a simple monolithic application (an already implemented <em>todo</em> list management web application) into independent services to deliver the microservice oriented architecture.</p>
-
-<h3 id="defining-the-bounded-contexts">Defining the bounded contexts</h3>
-<p>When migrating a monolithic code base the first step is to identify the <strong>bounded contexts</strong>. If you are familiar with <strong>DDD</strong> you should also know about the before-mentioned concept. Every bounded context should be encapsulated by a separate microservice where every of them must have an independent data store. In our case that’s an unique microservice which will offer the needed business logic (the management of <em>todo</em> lists). In a complex real world application there would be a dozen of microservices. Think about a big online store platform. We could create a microservice responsible for product operations, one for the payment life cycle management, product recommendations, a wishlist service, shopping cart, etc.</p>
-
-<blockquote>
-The fastest way to get started with microservices on the JVM platform is through <b>Spring Cloud Netflix</b> project which brings the Netflix components for building robust distributed systems. It provides a series of annotations for <b>Spring Boot</b> applications to save us from heavy lifting. Unfortunately, there is no integration for XML configuration model and I'm not really a Spring Boot fan (at least for now). I'm looking forward to see the support for templates and declarative programming model, maybe something based on <code>cloud-netflix</code> namespace, like  <code>&lt;cloud-netflix:eureka-server host="home" port="8671" endpoint="eureka" /&gt;</code>
-</blockquote>
-
-<h3 id="service-discovery">Service discovery</h3>
-
-<p>The service registration and discovery are one of the essential constructs of the microservice based architecture. There are a few service discovery and coordination servers on the market, like <a href="https://www.consul.io/">consul</a>,   <a href="https://coreos.com/etcd/">etcd</a>, <a href="https://zookeeper.apache.org/">zookeeper</a>, and the <a href="https://github.com/Netflix/eureka">Eureka</a> discovery server. The embedded Eureka server can be easily deployed by placing the <code>@EnableEurekaServer</code> annotation on the Spring Boot application. To test it yourself go to <a href="https://start.spring.io/">Spring Initializr</a> and generate a new Spring Boot application with <code>Eureka Server</code> starter support.</p>
-
-<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@SpringBootApplication</span>
-<span class="nd">@EnableEurekaServer</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">EurekaServerApplication</span> <span class="o">{</span>
-
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">SpringApplication</span><span class="o">.</span><span class="na">run</span><span class="o">(</span><span class="n">EurekaServerApplication</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">args</span><span class="o">);</span>
-    <span class="o">}</span>
-<span class="o">}</span></code></pre></div>
-
-<p>By default, the Eureka server will attempt to register itself as client too. To disable the client side registration use this settings in <code>application.yml</code></p>
-
-<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="l-Scalar-Plain">eureka</span><span class="p-Indicator">:</span>
-  <span class="l-Scalar-Plain">client</span><span class="p-Indicator">:</span>
-    <span class="l-Scalar-Plain">registerWithEureka</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">false</span>
-    <span class="l-Scalar-Plain">fetchRegistry</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">false</span></code></pre></div>
-
-<p>After the server has started you can navigate to <code>http://localhost:8761</code> and explore the Eureka dashboard.</p>
-
-<h4 id="creating-a-microservice">Creating a microservice</h4>
-<p>We are now ready to create the actual microservice and register it within Eureka. If you still remember, the <em>todo</em> application stores the corresponding tasks in <strong>MongoDB</strong> and it exposes the operations via RESTful API. The microservice implementation is almost a replica of the code found in the monolithic application (see source code for details). Create another Spring Boot application skeleton with <code>Web</code>, <code>MongoDB</code> and <code>Eureka Discovery</code> starters. Annotate the Spring  Boot application’s main class with <code>@EnableEurekaClient</code> annotation to register the service instance and make it capable to query other registered services.</p>
-
-<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@SpringBootApplication</span>
-<span class="nd">@EnableEurekaClient</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">TodoMicroserviceApplication</span> <span class="o">{</span>
-
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">SpringApplication</span><span class="o">.</span><span class="na">run</span><span class="o">(</span><span class="n">TodoMicroserviceApplication</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">args</span><span class="o">);</span>
-    <span class="o">}</span>
-<span class="o">}</span></code></pre></div>
-
-<p>The following configuration in <code>application.yml</code> is required to locate the Eureka server and setup the MongoDB settings, like database name, port and the host where <code>mongod</code> process is listening for requests.</p>
-
-<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="l-Scalar-Plain">spring</span><span class="p-Indicator">:</span>
-  <span class="l-Scalar-Plain">data</span><span class="p-Indicator">:</span>
-    <span class="l-Scalar-Plain">mongodb</span><span class="p-Indicator">:</span>
-      <span class="l-Scalar-Plain">port</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">27017</span>
-      <span class="l-Scalar-Plain">host</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">localhost</span>
-      <span class="l-Scalar-Plain">database</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">rabbit-todo</span>
-<span class="l-Scalar-Plain">eureka</span><span class="p-Indicator">:</span>
-  <span class="l-Scalar-Plain">client</span><span class="p-Indicator">:</span>
-    <span class="l-Scalar-Plain">serviceUrl</span><span class="p-Indicator">:</span>
-      <span class="l-Scalar-Plain">defaultZone</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">http://localhost:8761/eureka/</span></code></pre></div>
-
-<p>Once it has been deployed successfully, the microservice instance should appear in the Eureka dashboard.</p>
-
-<h4 id="consuming-the-microservice">Consuming the microservice</h4>
-
-<p>Spring Cloud Netflix makes it also trivial to access our registered microservices. An already well known <code>RestTemplate</code> abstraction can be used to consume the service API. Use <code>@Autowired</code> annotation to inject the template and Spring will configure it to be microservice aware (be able to locate the service by name).</p>
-
-<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Autowired</span>
-<span class="kd">private</span> <span class="n">RestTemplate</span> <span class="n">restTemplate</span><span class="o">;</span>
-
-<span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">value</span><span class="o">=</span><span class="s">&quot;/todos&quot;</span><span class="o">,</span> <span class="n">method</span> <span class="o">=</span> <span class="n">RequestMethod</span><span class="o">.</span><span class="na">GET</span><span class="o">)</span>
-<span class="kd">public</span> <span class="nd">@ResponseBody</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Todo</span><span class="o">&gt;</span> <span class="nf">todos</span><span class="o">()</span> <span class="o">{</span>
-    <span class="n">List</span><span class="o">&lt;</span><span class="n">Todo</span><span class="o">&gt;</span> <span class="n">todos</span> <span class="o">=</span> <span class="n">restTemplate</span><span class="o">.</span><span class="na">getForObject</span><span class="o">(</span><span class="s">&quot;http://todo-microservice/todos&quot;</span><span class="o">,</span>
-    <span class="n">List</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
-    <span class="k">return</span> <span class="n">todos</span><span class="o">;</span>
-<span class="o">}</span></code></pre></div>
-
-<p>The code above queries the service registry to locate the <code>todo-microservice</code> service and request the available <em>todo</em> lists.</p>
-
-<h3 id="gateway-and-routing">Gateway and routing</h3>
-
-<p>Another important building block of the microservice architecture are the routing capabilities. It allows the web application to proxy the requests to the service by accessing the specified HTTP endpoint which is mapped to microservice identifier or the service registry URL. Spring Cloud ships with <strong>Zuul</strong> JVM router which is part of Netflix component’s suite. As you could guess, we can enable the embedded <strong>Zuul</strong> proxy by annotating the Spring Boot application’s main class with <code>@EnableZuulProxy</code>.
-The definition of routing paths can be configured in the <code>application.yml</code>.</p>
-
-<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="l-Scalar-Plain">zuul</span><span class="p-Indicator">:</span>
-  <span class="l-Scalar-Plain">routes</span><span class="p-Indicator">:</span>
-    <span class="l-Scalar-Plain">todos</span><span class="p-Indicator">:</span>
-       <span class="l-Scalar-Plain">path</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">/api/v1/todo/**</span>
-       <span class="l-Scalar-Plain">serviceId</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">todo-microservice</span></code></pre></div>
-
-<p>Any request matching the <code>/api/v1/todo/**</code> pattern is routed to the microservice instance with
-<code>todo-microservice</code> identifier. We can rid off <code>TodoController</code> and see the UI is working as usual.
-The benefits of this pattern go from centralized authentication, audit logging, global request interception, intelligent routing scenarios, the ability to apply the refactoring on the back end without altering any client specific entry point URL.</p>
-
-<h3 id="circuit-breaker">Circuit breaker</h3>
-
-<p>The last but not least pattern we are going to dissect is the circuit breaker. The safety and fault isolation are crucial in a cloud native microservice based architecture. We don’t want the malfunctioning services to compromise the rest of the infrastructure or trigger any cascading failures. To keep the code resilient in case of service crashes, Spring Cloud integrates with Netflix <strong>Hystrix</strong> failure isolator.
-<code>@EnableCircuitBreaker</code> annotation arms the application with Hystrix circuit breaker. It’s trivial to connect our methods to the circuit breaker by annotating them with <code>@HystrixCommand</code> where we usually indicate the fallback method.</p>
-
-<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">value</span><span class="o">=</span><span class="s">&quot;/todos&quot;</span><span class="o">,</span> <span class="n">method</span> <span class="o">=</span> <span class="n">RequestMethod</span><span class="o">.</span><span class="na">GET</span><span class="o">)</span>
-<span class="nd">@HystrixCommand</span><span class="o">(</span><span class="n">fallbackMethod</span> <span class="o">=</span> <span class="s">&quot;todosFallback&quot;</span><span class="o">)</span>
-<span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Todo</span><span class="o">&gt;</span> <span class="nf">todos</span><span class="o">()</span> <span class="o">{</span>
-    <span class="n">List</span><span class="o">&lt;</span><span class="n">Todo</span><span class="o">&gt;</span> <span class="n">todos</span> <span class="o">=</span> <span class="n">restTemplate</span><span class="o">.</span><span class="na">getForObject</span><span class="o">(</span><span class="s">&quot;http://todo-microservice/todos&quot;</span><span class="o">,</span> 
-    <span class="n">List</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
-    <span class="k">return</span> <span class="n">todos</span><span class="o">;</span>
-<span class="o">}</span>
-
-<span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Todo</span><span class="o">&gt;</span> <span class="nf">todosFallback</span><span class="o">()</span> <span class="o">{</span>
-    <span class="k">return</span> <span class="n">Collections</span><span class="o">.</span><span class="na">emptyList</span><span class="o">();</span>
-<span class="o">}</span></code></pre></div>
-
-<p>By default, Hystrix will open the circuit and prevent the call from being made
-if there are 20 failures in the timespan of 5 seconds. If you want to see it in action, navigate to Hystrix dashboard after you had stopped the microservice. Try to make some calls by refreshing the page, and you’ll see the circuit being opened. As long as we have provided the fallback method, an empty list will be rendered in the browser.</p>
-
-<h3 id="microservice-patterns-in-go">Microservice patterns in Go</h3>
-
-<p>Although the JVM-based platforms are dominating the (microservice) architecture landscape, the <strong>Go</strong> language’s ecosystem is working its way up to enterprise.</p>
-
-<p class="image-pull-right">
-  <img width="300px" height="300px" src="/images/gopher.png" />
+      <p>The software industry is moving fast - that fact should be crystal clear. What now is considered as the state of the art model for software development and deployment, in a few years it usually becomes business agility barrier for the most organizations. The lack of agility limits the innovation factor and response time needed for the organizations to react, correct or deliver the business values before their competitors. The era of cloud computing has brought a myriad of new choices for software delivery. Computing resources, storage and networks can be provisioned elastically and on demand. Application can be scaled in question of seconds and the most of the <strong>PaaS</strong> solutions also provide proactive application monitoring, recovery, load balancing and centralized log aggregation.</p>
+<p>When talking about scalability, cloud centric and monolithic architectures, there are few issues and discrepancies that stand out immediately. As they are being part of a large code base, monolithic architectures can't be partitioned into independent deployable components. When scaling the monolithic based application we must scale all of it's components, and not just the ones under heavy load. Moreover, the componentes often have different functional requirements - while some might be more CPU intensive, the other might be I/O bounded. Due to the lack of this autonomous and componentization capable nature, the fault isolation can't be achieved, so the partial failures will usually cause total service downtime.</p>
+<p>Cloud-native architectures attempt to solve the problems above by decomposing the monolithic systems into self-sufficient units called <strong>microservices</strong>. They encapsulate the minimal business  capability into single responsibility artifacts under assumption of performing that single capability in the optimal fashion. I had an opportunity to assist to the <a href="http://www.springio.net/" target="_blank">Spring I/O</a> conference in Barcelona, and almost all speakers had mentioned that ubiquitous word - microservice. They were some very prominent and interesting talks, but in the end all of them had tended to converge in an after-mentioned term. Projects like <b>Spring Boot</b> and <b>Spring Cloud</b> are already bringing the Spring programming model into the world of cloud based applications.
+</p>
+<p>
+Cloud-native architectures and microservices seem to be the logical evolution of the software engineering and delivery. The benefits of microservices include other aspects like parallelizing the workflow of development life cycle by dividing the bounded contexts between developers instead of assigning the whole team to the same sandbox, decoupling from the technology stack (for instance we could have one microservice written in Java, another one in Ruby or Python, and so on), implementing new business requirements independently from the rest of the system (in a monolithic application it's required to redeploy the entire application when one part is changed). As we will see, the migration to the cloud implies more than purely technical changes.
 </p>
 
-<p>It’s efficient, intuitive and with built-in concurrency support. It’s compiled but still feels like coding with dynamic programming language.</p>
+<h2>Moving to the cloud</h2>
 
-<p>When it comes to microservice frameworks, I had found <a href="https://github.com/go-kit/kit">go-kit</a> and <a href="https://github.com/micro/go-micro">go-micro</a> the most feature rich ones. After some time of research I had opted for <strong>go-kit</strong>, even it doesn’t offer some useful features when it comes to service registration or the more sophisticated RESTful based transport. That’s why I ended up implementing both of them. Without further ado, let’s see the code.</p>
+<p>As stated in Matt Stine's book <a href="http://pivotal.io/platform-as-a-service/migrating-to-cloud-native-application-architectures-ebook" target="_blank">Migrating to cloud-native application architectures</a>, for the organizations to successfully adopt the cloud-native approach, apart from <b>technical</b> changes, <b>cultural</b> and <b>organizational</b>
+changes are also essentials. It's not enough to introduce the agile practices in our team, if the organization itself is stuck in a traditional process management.
+To establish an analogy, think about the following quote I have borrowed from <a href="http://www.imdb.com/title/tt0285736/" target="_blank">Milky Way</a> movie:
+<blockquote>You can't focus on healing one organ and take for granted the rest of the organism.</blockquote> The similar approach can be applied to the organizations. Traditionally, an organization can be divided into various units called <b>silos</b>, each of them operating inside isolated contexts, with specific vocabularies, practices, habits and communication kinds. The system administration silo tends to keep an IT ecosystem durable and available, sticking to established SLAs and performance indicators. The changes generated by development team are not very welcome as they tend to introduce risks into the system. Therefore, as long as changes can't be introduced safely, the speed of innovation and delivery of new business values are governed by heavyweight processes that are clashing directly with cloud-native principles. The <a href="http://en.wikipedia.org/wiki/DevOps" target="_blank">DevOps</a> is an emerging movement which goal is to establish the collaboration lines between development and the IT operations which can lead to continuous value delivery without compromising the performance, safety, availability and speed of innovation.</p>
 
-<p>I had advocated for service <a href="https://github.com/go-kit/kit/issues/167">registry capability</a> in go-kit, however, here is what I came up with (although this is a minimal implementation and definitely not production ready).</p>
+<p>The silos are dissolved and recreated into a totally new organizational structure with shared agile practices, vocabulary and communication channels. Instead of focusing on processes, we focus on persons as the foundational aspect of change and innovation.</p>
 
-<div class="highlight"><pre><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">ConsulRegistrator</span> <span class="kd">struct</span> <span class="p">{</span>
-    <span class="nx">Config</span> <span class="o">*</span><span class="nx">consul</span><span class="p">.</span><span class="nx">Config</span>
-<span class="p">}</span>
+<p>The development team can provision the required infrastructure for the application deployment using a simple API to create virtual machine instances, storage and network topologies. That way the teams are considered as autonomous entities coexisting inside a totally decentralized ecosystem. When new members are incorporated into the team, they don't have to deal with the enormous codebase since separated bounded contexts can be used to reduce the coordination overhead and make developers productive from the beginning. The teams can cooporate independently using the REST API based collaboration model and deploy new functionality in a relaxed harmony with the rest of the teams. </p>
 
-<span class="kd">func</span> <span class="p">(</span><span class="nx">cr</span> <span class="o">*</span><span class="nx">ConsulRegistrator</span><span class="p">)</span> <span class="nx">Register</span><span class="p">(</span><span class="nx">service</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">port</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+<h2>Distributed patterns</h2>
 
-    <span class="k">if</span> <span class="nx">cr</span><span class="p">.</span><span class="nx">Config</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
-      <span class="nx">cr</span><span class="p">.</span><span class="nx">Config</span> <span class="p">=</span> <span class="nx">consul</span><span class="p">.</span><span class="nx">DefaultConfig</span><span class="p">()</span>
-    <span class="p">}</span>
-    <span class="nx">client</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">consul</span><span class="p">.</span><span class="nx">NewClient</span><span class="p">(</span><span class="nx">cr</span><span class="p">.</span><span class="nx">Config</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="nx">err</span>
-    <span class="p">}</span>
+<p>The migration to the cloud-native architectures comes at the cost of complexity involved in coordinating the distributed ecosystem. As you will see some new infrastructure blocks must be build as trade off to adoption of cloud-native principles. The series of the well known distributed patterns will make ascending to the cloud less painful.</p>
 
-    <span class="nx">err</span> <span class="p">=</span> <span class="nx">client</span><span class="p">.</span><span class="nx">Agent</span><span class="p">().</span><span class="nx">ServiceRegister</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">consul</span><span class="p">.</span><span class="nx">AgentServiceRegistration</span><span class="p">{</span>
-        <span class="nx">ID</span><span class="p">:</span> <span class="nx">service</span><span class="p">,</span>
-        <span class="nx">Name</span><span class="p">:</span> <span class="nx">service</span><span class="p">,</span>
-        <span class="nx">Port</span><span class="p">:</span> <span class="nx">port</span><span class="p">,</span>
-    <span class="p">})</span>
+<h3>API Gateway</h3>
 
-    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="nx">err</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="kc">nil</span>
-<span class="p">}</span></code></pre></div>
+<p>The diversity of clients that interact with the cloud based applications can vary from mobiles to desktop systems and gaming consoles. Some of the after-mentioned clients run in a constrained environment where aspects like battery life or network bandwidth are much appreciated. If a client needs to query a tons of microservices in order to satisfy the UI needs, that would cause a lot of problems like latency and exaggerated number of round trips. To address this issue, the API gateway pattern provides a single entry point for the specific clients, where requests are routed to one or propagated to multiple microservices. As the request travels down the pipeline the responses are aggregated concurrently  by each microservice and then returned to the client.</p>
+<figure>
+  <a href="/images/api-gateway.png" class="image-popup">
+    <img src="/images/api-gateway.png" />
+  </a>
+  <figcaption><b>Figure 1.</b> API Gateway pattern</figcaption>
+</figure>
 
-<p>The code can be found in <code>registry/consul</code> package (see the <a href="https://github.com/bhnedo/kit">fork</a>). Go-kit supports the HTTP transport out of the box. Although, there’s no way to create truly RESTful API as one we have built on Spring service. I figured out it was quite easy to wrap an existing go-kit endpoints with <strong>Gorilla</strong> routes.</p>
+<h3>Service discovery / registration</h3>
 
-<div class="highlight"><pre><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Demux</span> <span class="kd">struct</span> <span class="p">{</span>
-    <span class="nx">Ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span>
-    <span class="nx">Mux</span> <span class="o">*</span><span class="nx">mux</span><span class="p">.</span><span class="nx">Router</span>
-<span class="p">}</span>
+<p>Service discovery pattern acts as a repository of microservice instances. In opposite to the traditional distributed system deployments, cloud-based environments  are characterized by ephemeral resources that are created and disposed in a elastic manner. <a href="http://www.docker.com/" target="_blank">Docker</a> and <a href="https://linuxcontainers.org" target="_blank">LXC</a> have popularized containers as a new medium of application distribution inside the lightweight portable units that can be provisioned much faster then virtual machine instances. The number and locations of instances changes dynamically and every time the new microservice is deployed, the binding is performed on the random dynamic IP address and port. For the client to successfully contact the microservice, it must query the service registry which in order resolves the location of the microservice.</p>
 
-<span class="kd">func</span> <span class="p">(</span><span class="nx">demux</span> <span class="nx">Demux</span><span class="p">)</span> <span class="nx">NewRoute</span><span class="p">(</span>
-    <span class="nx">path</span> <span class="kt">string</span><span class="p">,</span>
-    <span class="nx">e</span> <span class="nx">endpoint</span><span class="p">.</span><span class="nx">Endpoint</span><span class="p">,</span>
-    <span class="nx">method</span> <span class="kt">string</span><span class="p">,</span>
-    <span class="nx">dec</span> <span class="nx">httptransport</span><span class="p">.</span><span class="nx">DecodeRequestFunc</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">handler</span> <span class="o">:=</span> <span class="nx">httptransport</span><span class="p">.</span><span class="nx">NewServer</span><span class="p">(</span>
-      <span class="nx">demux</span><span class="p">.</span><span class="nx">Ctx</span><span class="p">,</span>
-      <span class="nx">e</span><span class="p">,</span>
-      <span class="nx">dec</span><span class="p">,</span>
-      <span class="nx">encoder</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="nx">route</span> <span class="o">:=</span> <span class="kd">func</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">handler</span><span class="p">.</span><span class="nx">ServeHTTP</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="nx">r</span><span class="p">)</span>
-    <span class="p">}</span>
-    <span class="nx">demux</span><span class="p">.</span><span class="nx">Mux</span><span class="p">.</span><span class="nx">HandleFunc</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span> <span class="nx">route</span><span class="p">).</span><span class="nx">Methods</span><span class="p">(</span><span class="nx">method</span><span class="p">)</span>
-<span class="p">}</span>
+<figure>
+  <a href="/images/service-registry.png" class="image-popup">
+    <img src="/images/service-registry.png" />
+  </a>
+  <figcaption><b>Figure 2.</b> Service registry in conjunction with API gateway pattern</figcaption>
+</figure>
 
-<span class="kd">func</span> <span class="nx">encoder</span><span class="p">(</span><span class="nx">writer</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">response</span> <span class="kd">interface</span><span class="p">{})</span> <span class="kt">error</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nx">json</span><span class="p">.</span><span class="nx">NewEncoder</span><span class="p">(</span><span class="nx">writer</span><span class="p">).</span><span class="nx">Encode</span><span class="p">(</span><span class="nx">response</span><span class="p">)</span>
-<span class="p">}</span></code></pre></div>
+<p>When microservice is deployed it emits an autodiscover request to the service registry. Service registry periodically sends a heartbeat to the microservice. If after a specified timeout the microservice doesn't respond it is automatically removed from the service registry.</p>
 
-<h4 id="putting-the-pieces-together">Putting the pieces together</h4>
+<h3>Routing / load balancing</h3>
 
-<p>In order to build a functional microservice adhere to these steps:</p>
+<p>Intelligent routing and load balancing across multiple microservices is a must in a cloud distributed environments. The router / load balancer is another component of a cloud distributed ecosystem which is responsible for querying the service registry and forwarding the requests to the appropiated microservice instances. That scenario is shown on figure 3.</p>
 
-<ul>
-  <li>Create an interface / implementation which represents the business requirements for your service.</li>
-</ul>
+<figure>
+  <a href="/images/load-balancer.png" class="image-popup">
+    <img src="/images/load-balancer.png" />
+  </a>
+  <figcaption><b>Figure 3.</b> Load balancer pattern</figcaption>
+</figure>
 
-<div class="highlight"><pre><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">TodoService</span> <span class="kd">interface</span> <span class="p">{</span>
-    <span class="nx">FindAll</span><span class="p">()</span> <span class="p">([]</span><span class="nx">Todo</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
-<span class="p">}</span>
-
-<span class="kd">type</span> <span class="nx">TodoServiceImpl</span> <span class="kd">struct</span> <span class="p">{</span>
-    <span class="nx">TodoRepo</span> <span class="nx">TodoRepository</span>
-<span class="p">}</span>
-
-<span class="kd">func</span> <span class="p">(</span><span class="nx">t</span> <span class="nx">TodoServiceImpl</span><span class="p">)</span> <span class="nx">FindAll</span><span class="p">()</span> <span class="p">([]</span><span class="nx">Todo</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">todos</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">TodoRepo</span><span class="p">.</span><span class="nx">FindAll</span><span class="p">()</span>
-    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="nx">todos</span><span class="p">,</span> <span class="nx">err</span>
-<span class="p">}</span></code></pre></div>
-
-<ul>
-  <li>Declare the request and response structs for every method in our interface.</li>
-</ul>
-
-<div class="highlight"><pre><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">FindAllRequest</span> <span class="kd">struct</span> <span class="p">{</span>
-<span class="p">}</span>
-
-<span class="kd">type</span> <span class="nx">FindAllResponse</span> <span class="kd">struct</span> <span class="p">{</span>
-  <span class="nx">Todos</span> <span class="p">[]</span><span class="nx">Todo</span> <span class="s">`json:&quot;todos&quot;`</span>
-  <span class="nx">Err</span> <span class="kt">string</span> <span class="s">`json:&quot;err,omitempty&quot;`</span>
-<span class="p">}</span></code></pre></div>
-
-<ul>
-  <li>Expose the endpoints. Every endpoint encapsulates the RPC method of our service. Having the Gorilla router integrated inside go-kit makes it trivial to publish the service interface.</li>
-</ul>
-
-<div class="highlight"><pre><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nx">FindAllEndpoint</span><span class="p">(</span><span class="nx">service</span> <span class="nx">TodoService</span><span class="p">)</span> <span class="nx">endpoint</span><span class="p">.</span><span class="nx">Endpoint</span> <span class="p">{</span>
-  <span class="k">return</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">request</span> <span class="kd">interface</span><span class="p">{},</span> <span class="nx">vars</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="kd">interface</span><span class="p">{},</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">todos</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">service</span><span class="p">.</span><span class="nx">FindAll</span><span class="p">()</span>
-    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="nx">rpc</span><span class="p">.</span><span class="nx">FindResponse</span><span class="p">{[]</span><span class="nx">Todo</span><span class="p">{},</span> <span class="nx">err</span><span class="p">.</span><span class="nx">Error</span><span class="p">()},</span> <span class="kc">nil</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="nx">rpc</span><span class="p">.</span><span class="nx">FindResponse</span><span class="p">{</span><span class="nx">todos</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">},</span> <span class="kc">nil</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="nx">dmx</span> <span class="o">:=</span> <span class="nx">demux</span><span class="p">.</span><span class="nx">Demux</span><span class="p">{</span><span class="nx">Ctx</span><span class="p">:</span> <span class="nx">ctx</span><span class="p">,</span> <span class="nx">Mux</span><span class="p">:</span> <span class="nx">mux</span><span class="p">.</span><span class="nx">NewRouter</span><span class="p">()}</span>
-<span class="nx">dmx</span><span class="p">.</span><span class="nx">NewRoute</span><span class="p">(</span><span class="s">&quot;/todos&quot;</span><span class="p">,</span> <span class="nx">todo</span><span class="p">.</span><span class="nx">FindAllEndpoint</span><span class="p">(</span><span class="nx">service</span><span class="p">),</span> <span class="s">&quot;GET&quot;</span><span class="p">,</span> <span class="nx">decodeFindAllRequest</span><span class="p">)</span></code></pre></div>
-
-<ul>
-  <li>Finally, register the service in Consul discovery server. This allows the service instance to be discovered from Spring Boot app using the <strong>Spring Cloud Consul</strong> integrations.</li>
-</ul>
-
-<div class="highlight"><pre><code class="language-go" data-lang="go"><span class="nx">cr</span> <span class="o">:=</span> <span class="nx">registrator</span><span class="p">.</span><span class="nx">ConsulRegistrator</span><span class="p">{</span><span class="nx">Config</span><span class="p">:</span> <span class="kc">nil</span><span class="p">}</span>
-
-<span class="nx">err</span> <span class="o">:=</span> <span class="nx">cr</span><span class="p">.</span><span class="nx">Register</span><span class="p">(</span><span class="s">&quot;todo-microservice&quot;</span><span class="p">,</span> <span class="mi">8000</span><span class="p">)</span>
-<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-  <span class="nx">log</span><span class="p">.</span><span class="nx">Fatal</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
-<span class="p">}</span></code></pre></div>
-
-<h3 id="the-synergy-of-a-polyglot-ecosystem">The synergy of a polyglot ecosystem</h3>
-
-<p>The microservice architectures are often perceived as the next generation of <strong>SOA</strong>. I would also call it <strong>SOA on steroids</strong>. Well, in fact, they have a lot in common. Traditionally, most of the SOA services had been using <strong>SOAP</strong> as a standard data interchange protocol. Nowadays, the SOA based services can also communicate over <strong>REST</strong>, just like their microservice counterparts. We already know the microservices are language agnostic pieces. SOA based services can also coexist in a polyglot environment which is often orchestrated by <strong>ESB</strong> (Enterprise Service Bus) or the message broker.</p>
-
-<p>Unlike microservices, SOA services are not aware of the single responsibility principle. The size and scope of the latter is measured in <strong>LOC</strong> (Lines of Code), not the functionalities they try to accomplish. Another subtle difference between microservices and SOA are their operational requirements. In a microservice world the <strong>PaaS</strong> solution and the <strong>DevOps</strong> culture are a must. The services have to be replicated over multiple nodes and they have to be able to scale in question of seconds. Another common practise is the packaging of microservices inside isolated execution environments known as containers (here is where Docker excels as the most popular implementation in the container ecosystem). From the point of view of <strong>technical</strong> changes, the operational requirements may be the most challenging factor for organizations when it comes to migrating from monolithic to microservice architectures.</p>
+<h3>Circuit breaker</h3>
+<p>In a cloud-native architectures it is essential to guarantee the fault tolerance and prevent cascading failures when one of the microservices comes out of control. As we already mentioned, packaging and partitioning the microservices into Linux containers will prevent a nasty microservice to consume an entire machine's resources or affect another container. That is a wise doze of defense at infrastructure level. But what's about the application level protection? The circuit breaker pattern is based on the premise that unhealthy microservices wouldn't have to cause the interruption of other services. Every RPC call that is being routed to an unhealthy microservice shouldn't continuously punch the service making it impossible to recover. The circuit breaker behavior can be compared to our home circuit breaker that prevents the current from damaging devices when it exceeds the certain threshold.</p>
+<p>Similarly, the circuit breaker pattern counts the number of failed calls, and when the number is above the specified threshold, it transitions into the open state and make the call to fail immediately. Once the service has recovered, the circuit breaker is closed and the calls can be executed successfully.</p>
 
       <hr />
       <footer role="contentinfo">
@@ -422,17 +236,17 @@ if there are 20 failures in the timespan of 5 seconds. If you want to see it in 
   <h4>Share on</h4>
   <ul>
     <li>
-      <a href="https://twitter.com/intent/tweet?text=http://rabbitstack.github.io/cloud/microservices/spring/a-pragmatic-approach-to-migration-from-monolithic-to-microservices/" class="twitter" title="Share on Twitter"><i class="fa fa-twitter"></i><span> Twitter</span></a>
+      <a href="https://twitter.com/intent/tweet?text=http://rabbitstack.github.io/cloud/microservices/from-monolithic-to-cloud-native-architectures/" class="twitter" title="Share on Twitter"><i class="fa fa-twitter"></i><span> Twitter</span></a>
     </li>
     <li>
-      <a href="https://www.facebook.com/sharer/sharer.php?u=http://rabbitstack.github.io/cloud/microservices/spring/a-pragmatic-approach-to-migration-from-monolithic-to-microservices/" class="facebook" title="Share on Facebook"><i class="fa fa-facebook"></i><span> Facebook</span></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=http://rabbitstack.github.io/cloud/microservices/from-monolithic-to-cloud-native-architectures/" class="facebook" title="Share on Facebook"><i class="fa fa-facebook"></i><span> Facebook</span></a>
     </li>
     <li>
-      <a href="https://plus.google.com/share?url=http://rabbitstack.github.io/cloud/microservices/spring/a-pragmatic-approach-to-migration-from-monolithic-to-microservices/" class="google-plus" title="Share on Google Plus"><i class="fa fa-google-plus"></i><span> Google+</span></a>
+      <a href="https://plus.google.com/share?url=http://rabbitstack.github.io/cloud/microservices/from-monolithic-to-cloud-native-architectures/" class="google-plus" title="Share on Google Plus"><i class="fa fa-google-plus"></i><span> Google+</span></a>
     </li>
   </ul>
 </div><!-- /.social-share -->
-        <p class="byline"><strong>A pragmatic approach to migration from monolithic to microservices</strong> was published on <time datetime="2015-12-20T21:41:42+01:00">December 20, 2015</time>.</p>
+        <p class="byline"><strong>From monolithic to cloud-native architectures</strong> was published on <time datetime="2015-05-11T22:29:25+02:00">May 11, 2015</time>.</p>
       </footer>
     </div><!-- /.article-wrap -->
   
@@ -469,11 +283,11 @@ if there are 20 failures in the timespan of 5 seconds. If you want to see it in 
   <h4>You might also enjoy <small class="pull-right">(<a href="http://rabbitstack.github.io/posts/">View all posts</a>)</small></h4>
     <ul>
     
+      <li><a href="http://rabbitstack.github.io/cloud/microservices/spring/a-pragmatic-approach-to-migration-from-monolithic-to-microservices/" title="A pragmatic approach to migration from monolithic to microservices">A pragmatic approach to migration from monolithic to microservices</a></li>
+    
       <li><a href="http://rabbitstack.github.io/angularjs/spring/mongodb/spring-mvc-angular-hasta-la-vista-jsp/" title="Spring MVC + Angular = Hasta la vista JSP!">Spring MVC + Angular = Hasta la vista JSP!</a></li>
     
       <li><a href="http://rabbitstack.github.io/spring/spring-boot-or-not-to-spring-boot/" title="Spring Boot or Not to Spring Boot?">Spring Boot or Not to Spring Boot?</a></li>
-    
-      <li><a href="http://rabbitstack.github.io/cloud/microservices/from-monolithic-to-cloud-native-architectures/" title="From monolithic to cloud-native architectures">From monolithic to cloud-native architectures</a></li>
     
     </ul>
     <hr />
