@@ -172,10 +172,17 @@
       <p>If you recall from <a href="http://rabbitstack.github.io/cloud/microservices/from-monolithic-to-cloud-native-architectures">this</a> post, I had stated about cloud native manifesto and the trade-off of migrating the monolithic based applications to the cloud. I have to admit it was pretty abstract and theoretical approach, but the fun starts now! We’ll see how to decompose a simple monolithic application (an already implemented <em>todo</em> list management web application) into independent services to deliver the microservice oriented architecture.</p>
 
 <h3 id="defining-the-bounded-contexts">Defining the bounded contexts</h3>
+<<<<<<< HEAD
 <p>When migrating a monolithic code base the first step is to identify the <strong>bounded contexts</strong>. If you are familiar with <strong>DDD</strong> you should also know about the after-mentioned concept. Every bounded context should be encapsulated by a separate microservice where every of them must have an independent data store. In our case that’s an unique microservice which will offer the needed business logic (the management of <em>todo</em> lists). In a complex real world application there would be a dozen of microservices. Think about a big online store platform. We could create a microservice responsible for product operations, one for the payment life cycle management, product recommendations, a wishlist service, shopping cart, etc.</p>
 
 <blockquote>
 The fastest way to get started with microservices on the JVM platform is through <b>Spring Cloud Netflix</b> project which brings the Netflix components for building robust distributed systems. It provides a series of annotations for <b>Spring Boot</b> applications to save us from heavy lifting. Unfortunately, there is no integration for XML configuration model and I'm not really a Spring Boot fan (at least for now). I'm looking forward to see the support for templates and declarative programming model, maybe something based on <code>cloud-netflix</code> namespace, like <code> &lt;cloud-netflix:eureka-server host="home" port="8671" endpoint="eureka" /&gt;</code>
+=======
+<p>When migrating a monolithic code base the first step is to identify the <strong>bounded contexts</strong>. If you are familiar with <strong>DDD</strong> you should also know about the before-mentioned concept. Every bounded context should be encapsulated by a separate microservice where every of them must have an independent data store. In our case that’s an unique microservice which will offer the needed business logic (the management of <em>todo</em> lists). In a complex real world application there would be a dozen of microservices. Think about a big online store platform. We could create a microservice responsible for product operations, one for the payment life cycle management, product recommendations, a wishlist service, shopping cart, etc.</p>
+
+<blockquote>
+The fastest way to get started with microservices on the JVM platform is through <b>Spring Cloud Netflix</b> project which brings the Netflix components for building robust distributed systems. It provides a series of annotations for <b>Spring Boot</b> applications to save us from heavy lifting. Unfortunately, there is no integration for XML configuration model and I'm not really a Spring Boot fan (at least for now). I'm looking forward to see the support for templates and declarative programming model, maybe something based on <code>cloud-netflix</code> namespace, like  <code>&lt;cloud-netflix:eureka-server host="home" port="8671" endpoint="eureka" /&gt;</code>
+>>>>>>> 78c2b4ab54dd198a8d186c30e3cacb20f6bd644b
 </blockquote>
 
 <h3 id="service-discovery">Service discovery</h3>
@@ -307,7 +314,11 @@ if there are 20 failures in the timespan of 5 seconds. If you want to see it in 
     <span class="p">}</span>
 
     <span class="nx">err</span> <span class="p">=</span> <span class="nx">client</span><span class="p">.</span><span class="nx">Agent</span><span class="p">().</span><span class="nx">ServiceRegister</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">consul</span><span class="p">.</span><span class="nx">AgentServiceRegistration</span><span class="p">{</span>
+<<<<<<< HEAD
         <span class="nx">ID</span><span class="p">:</span> <span class="nx">service</span> <span class="o">+</span> <span class="s">&quot;:&quot;</span> <span class="o">+</span> <span class="nx">strconv</span><span class="p">.</span><span class="nx">Itoa</span><span class="p">(</span><span class="nx">port</span><span class="p">),</span>
+=======
+        <span class="nx">ID</span><span class="p">:</span> <span class="nx">service</span><span class="p">,</span>
+>>>>>>> 78c2b4ab54dd198a8d186c30e3cacb20f6bd644b
         <span class="nx">Name</span><span class="p">:</span> <span class="nx">service</span><span class="p">,</span>
         <span class="nx">Port</span><span class="p">:</span> <span class="nx">port</span><span class="p">,</span>
     <span class="p">})</span>
