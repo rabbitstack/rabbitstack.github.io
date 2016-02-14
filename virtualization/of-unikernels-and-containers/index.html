@@ -5,15 +5,15 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
 <head>
 <meta charset="utf-8">
-<title>Lua Rocks! &#8211; Rabbit Stack</title>
-<meta name="description" content="This won't be a huge post as the ones I used to write. This time it will be a very short post about a thing that recently called my attention and I want to share it with you. After I had discovered...">
-<meta name="keywords" content="lua, luajit, programming, lua rocks, jit">
+<title>Of Unikernels and Containers &#8211; Rabbit Stack</title>
+<meta name="description" content="Containers have revolutionized the way we package and deliver software. Instead of distributing large VM images, the application is assembled in a lightweight and portable container which has its own isolated runtime environment.">
+<meta name="keywords" content="virtulization, containers, docker, unikernels, osv, runtime.js, docker, library os, mirageos">
 
 
 
 <!-- Twitter Cards -->
-<meta name="twitter:title" content="Lua Rocks!">
-<meta name="twitter:description" content="This won't be a huge post as the ones I used to write. This time it will be a very short post about a thing that recently called my attention and I want to share it with you. After I had discovered...">
+<meta name="twitter:title" content="Of Unikernels and Containers">
+<meta name="twitter:description" content="Containers have revolutionized the way we package and deliver software. Instead of distributing large VM images, the application is assembled in a lightweight and portable container which has its own isolated runtime environment.">
 
 
 
@@ -23,16 +23,16 @@
 <!-- Open Graph -->
 <meta property="og:locale" content="en_US">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Lua Rocks!">
-<meta property="og:description" content="This won't be a huge post as the ones I used to write. This time it will be a very short post about a thing that recently called my attention and I want to share it with you. After I had discovered...">
-<meta property="og:url" content="http://rabbitstack.github.io/lua/lua-rocks/">
+<meta property="og:title" content="Of Unikernels and Containers">
+<meta property="og:description" content="Containers have revolutionized the way we package and deliver software. Instead of distributing large VM images, the application is assembled in a lightweight and portable container which has its own isolated runtime environment.">
+<meta property="og:url" content="http://rabbitstack.github.io/virtualization/of-unikernels-and-containers/">
 <meta property="og:site_name" content="Rabbit Stack">
 
 
 
 
 
-<link rel="canonical" href="http://rabbitstack.github.io/lua/lua-rocks/">
+<link rel="canonical" href="http://rabbitstack.github.io/virtualization/of-unikernels-and-containers/">
 <link href="http://rabbitstack.github.io/feed.xml" type="application/atom+xml" rel="alternate" title="Rabbit Stack Feed">
 
 <!-- http://t.co/dKP3o1e -->
@@ -118,7 +118,7 @@
     
       "http://rabbitstack.github.io/images/rabbit-bkgd.jpg"
     
-  alt="Lua Rocks! feature image">
+  alt="Of Unikernels and Containers feature image">
   
        <div class="headline-wrap">
           <img src="http://rabbitstack.github.io/images/rabbitstack.png" />
@@ -165,21 +165,55 @@
   <article class="post">
     <div class="headline-wrap">
       
-        <h1><a href="http://rabbitstack.github.io/lua/lua-rocks/" rel="bookmark" title="Lua Rocks!">Lua Rocks!</a></h1>
+        <h1><a href="http://rabbitstack.github.io/virtualization/of-unikernels-and-containers/" rel="bookmark" title="Of Unikernels and Containers">Of Unikernels and Containers</a></h1>
       
     </div><!--/ .headline-wrap -->
     <div class="article-wrap">
-      <p>For the ones used to read my large posts, I am sorry to disappoint you. This time it will be a very short post about a thing that recently called my attention and I want to share it with you. After I had discovered <a href="http://luajit.org/luajit.html" target="_blank">LuaJIT</a>, I am thinking seriously about embracing the Lua language and incorporating it into my arsenal of programming languages. LuaJIT is a high performance <i>Just-In-Time</i> compiler for the Lua programming language which is compatible with all major desktop and mobile operating systems, processor's architectures, gaming consoles, and more. It makes it a perfect fit for the IoT. As far as the interpreter is written in <strong>assembly</strong> language, it beats other dynamic languages in most benchmarks. As a language itself, Lua is very flexible and lightweight, and syntactically it reminds me of Ruby (at least the control flow structures). One of the things I missed at first was the absence of classes, as long as Lua is not really an object-oriented programming language, but it is quite easily to build your own abstraction using tables and metatables.
-</p>
+      <p>Containers have revolutionized the way we package and deliver software. Instead of distributing large VM images, the application is assembled in a lightweight and portable container which has its own isolated runtime environment. This is possible thanks to some Linux kernel capabilities like <strong>cgroups</strong> (system resource accounting and limiting) and <strong>namespaces</strong> (file system, network, process, and hostname segregation), without incurring the virtualization overhead. <strong>Docker</strong>, <strong>Rkt</strong>, or <strong>LXC/LXD</strong> are some of the most popular container platforms, althought the first of them has the market dominance. In fact, FreeBSD Jails and Solaris Zones have never had the adoption
+Docker is having, despite Docker is quite younger compared to Solaris Zones which had been there since 2004.</p>
+
 <p class="image-pull-right">
-	<img src="/images/lua.png" />
+  <img src="/images/runtimejs-logo.png" />
 </p>
-<p>
-I have started using Lua for the operating system statistics aggregation and centralization which are provided by <a href="https://github.com/draios/sysdig" target="_blank">Sysdig</a> tool. At the very top of Sysdig there is a nice layer which enable us to write small Lua scripts called <i>chisels</i>. As a new instance of sysdig is required to run every chisel and  as I couldn't find an elegant way to collect the stats from the chisel's output, I decided to build a seperate component that aggregates the necessary stats in JSON format and stream them over <a href="http://zeromq.org/" target="_blank">ZeroMQ</a>. This way, a single instance of sysdig can be used to obtain all stats and they can be be easily consumed from any programming language (which has bindings for ZeroMQ).
-</p>
-<p>
-Lua also has it's own package manager, <a href="https://rocks.moonscript.org/" target="_blank">luarocks</a>.
-</p>
+
+<p>The container engines recently got an opponent which goes step further by pulling the entire application into the minimalistic operating system kernel. It’s called <strong>unikernel</strong>. Once the app had been packaged, the result is an ultra thin image that can be deployed very fast on a vast majority of hypervisors! Let’s see how.</p>
+
+<h3 id="language-specific-unikernels">Language-specific unikernels</h3>
+
+<p>The proof we can’t take unikernels for granted is sky-rocketing growth of the 
+language oriented unikernel projects. There are also used to be called as <strong>library</strong> operating systems. 
+<a href="https://mirage.io"><strong>MirageOS</strong></a> provides <strong>OCaml</strong> programming language runtime facilities to build high-performance network unikernels that runs on Xen hypervisor, <a href="http://runtimejs.org/"><strong>Runtime.js</strong></a> mimics the Node.js non-blocking I/O model to build unikernels that run <strong>JavaScript</strong> code and <a href="http://rumpkernel.org/"><strong>Rumprun</strong></a> allows running existing POSIX applications as unikernels.</p>
+
+<p>But, what lies behind the motivation for unikernels?
+They claim to notably reduce the attack vector. As the majority of the OS services are pulled out from the kernel (no compiler tools, no shells, only essential drivers are kept, etc.), the zero day exploits or intrusions are less likely to compromise the system itself. The entire application process is operating in the privileged CPU mode, which means no I/O waits, no competing for resources and no context switches at all! Unikernels are made for <strong>immutability</strong>. Rather then patching the existing unikernel when a security issue is detected, the application sources are recompiled to a new unikernel and the old one is disposed.</p>
+
+<p>I found <a href="http://osv.io"><strong>OSv</strong></a> the perfect fit to illustrate how to package any C, Node.js or Java application into unikernel. It provides the <code>capstan</code> CLI tool to pull, build and run unikernel images. Issue the following commands to get the binary.</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ CAPSTAN_URL</span><span class="o">=</span>https://raw.githubusercontent.com/cloudius-systems/capstan/master/scripts/download
+<span class="nv">$ </span>curl <span class="nv">$CAPSTAN_URL</span> <span class="p">|</span> bash
+<span class="nv">$ $HOME</span>/bin/capstan</code></pre></div>
+
+<p>We are going to build the Spring Boot microservice unikernel. Clone the github repository which contains <code>Capstanfile</code> configuration to build the jar artifact and assemble it into unikernel image.</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>git clone https://github.com/bhnedo/cloud-rabbit-todo/tree/master/todo-microservice.git
+<span class="nv">$ </span><span class="nb">cd </span>todo-microservice
+<span class="nv">$ $HOME</span>/bin/capstan build</code></pre></div>
+
+<p>You can test the unikernel locally by running <code>capstan run</code> or use the generated <strong>QEMU</strong> image to boot it straight under KVM hypervisor.</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>virt-install -f <span class="nv">$HOME</span>/.capstan/repository/todo-microservice/todo-microservice.qemu <span class="se">\</span>
+-n spring-boot-unikernel --boot hd -r 1024</code></pre></div>
+
+<p>Voila! The Spring Boot microservice is running happily as KVM guest. The image is about 114M (mainly because of <code>openjdk</code> runtime and Spring Boot dependencies), and less than 80M in size when compressed!</p>
+
+<h3 id="are-unikernels-production-ready">Are unikernels production ready?</h3>
+
+<p>As every new and disruptive technology, unikernels are getting positive as also as negative feedbacks. Bryan Cantrill has elaborated an extensive <a href="https://www.joyent.com/blog/unikernels-are-unfit-for-production">post</a> on Joyent’s blog. He is showing a pretty pesimistic attitude about unikernels. His arguments about the undebuggable nature of unikernels are highly debatable. What if unikernel’s embryonic state could be the inception of a new generation of tools engineered and adapted for unikernel monitoring? Recall how before massive container adoption there was a limited visibility into it’s internals. The traditional system tracing tools lack of functionality needed to efficently explore the containers. As a consequence, tools like <a href="https://sysdig.com/let-light-sysdig-adds-container-visibility"><strong>sysdig</strong></a> has appeared.  Unikernels will definetly leave room for innovation.</p>
+
+<p>When it comes to security concerns, saying unikernel’s premise of being more secure isn’t valid because of hypervisor’s flaws is equally applicable to any traditional OS as well. If an attacker breaks into your infrastructure with the hope of finding the full stack OS which could allow a privilege escalation, they’ll found smaller attack surface - less entry points to compromise, less chances for <strong>APTs</strong> to perform the lateral movement, etc.</p>
+
+<p>The next few years are going to be crucial for unikernels existence. I am eager to see the outcome.</p>
+
 
       <hr />
       <footer role="contentinfo">
@@ -187,17 +221,17 @@ Lua also has it's own package manager, <a href="https://rocks.moonscript.org/" t
   <h4>Share on</h4>
   <ul>
     <li>
-      <a href="https://twitter.com/intent/tweet?text=http://rabbitstack.github.io/lua/lua-rocks/" class="twitter" title="Share on Twitter"><i class="fa fa-twitter"></i><span> Twitter</span></a>
+      <a href="https://twitter.com/intent/tweet?text=http://rabbitstack.github.io/virtualization/of-unikernels-and-containers/" class="twitter" title="Share on Twitter"><i class="fa fa-twitter"></i><span> Twitter</span></a>
     </li>
     <li>
-      <a href="https://www.facebook.com/sharer/sharer.php?u=http://rabbitstack.github.io/lua/lua-rocks/" class="facebook" title="Share on Facebook"><i class="fa fa-facebook"></i><span> Facebook</span></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=http://rabbitstack.github.io/virtualization/of-unikernels-and-containers/" class="facebook" title="Share on Facebook"><i class="fa fa-facebook"></i><span> Facebook</span></a>
     </li>
     <li>
-      <a href="https://plus.google.com/share?url=http://rabbitstack.github.io/lua/lua-rocks/" class="google-plus" title="Share on Google Plus"><i class="fa fa-google-plus"></i><span> Google+</span></a>
+      <a href="https://plus.google.com/share?url=http://rabbitstack.github.io/virtualization/of-unikernels-and-containers/" class="google-plus" title="Share on Google Plus"><i class="fa fa-google-plus"></i><span> Google+</span></a>
     </li>
   </ul>
 </div><!-- /.social-share -->
-        <p class="byline"><strong>Lua Rocks!</strong> was published on <time datetime="2015-04-08T00:21:29+02:00">April 08, 2015</time>.</p>
+        <p class="byline"><strong>Of Unikernels and Containers</strong> was published on <time datetime="2016-02-14T17:55:48+01:00">February 14, 2016</time>.</p>
       </footer>
     </div><!-- /.article-wrap -->
   
@@ -234,11 +268,11 @@ Lua also has it's own package manager, <a href="https://rocks.moonscript.org/" t
   <h4>You might also enjoy <small class="pull-right">(<a href="http://rabbitstack.github.io/posts/">View all posts</a>)</small></h4>
     <ul>
     
-      <li><a href="http://rabbitstack.github.io/virtualization/of-unikernels-and-containers/" title="Of Unikernels and Containers">Of Unikernels and Containers</a></li>
-    
       <li><a href="http://rabbitstack.github.io/cloud/microservices/spring/a-pragmatic-approach-to-migration-from-monolithic-to-microservices/" title="A pragmatic approach to migration from monolithic to microservices">A pragmatic approach to migration from monolithic to microservices</a></li>
     
       <li><a href="http://rabbitstack.github.io/angularjs/spring/mongodb/spring-mvc-angular-hasta-la-vista-jsp/" title="Spring MVC + Angular = Hasta la vista JSP!">Spring MVC + Angular = Hasta la vista JSP!</a></li>
+    
+      <li><a href="http://rabbitstack.github.io/spring/spring-boot-or-not-to-spring-boot/" title="Spring Boot or Not to Spring Boot?">Spring Boot or Not to Spring Boot?</a></li>
     
     </ul>
     <hr />
