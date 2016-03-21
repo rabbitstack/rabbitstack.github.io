@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://rabbitstack.github.io/operating%20systems/fibratus-video-teaser/</loc>
+    <lastmod>2016-03-21T17:24:44+01:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>http://rabbitstack.github.io/virtualization/of-unikernels-and-containers/</loc>
     <lastmod>2016-02-14T17:55:48+01:00</lastmod>
     <priority>0.8</priority>
@@ -57,31 +62,31 @@
   </url>
   <url>
     <loc>http://rabbitstack.github.io/category.html</loc>
-    <lastmod>2016-02-14T11:38:03+01:00</lastmod>
+    <lastmod>2016-03-21T21:34:17+01:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>http://rabbitstack.github.io/about/</loc>
-    <lastmod>2016-02-14T11:38:03+01:00</lastmod>
+    <lastmod>2016-03-21T21:34:17+01:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>http://rabbitstack.github.io/posts/</loc>
-    <lastmod>2016-02-14T11:38:03+01:00</lastmod>
+    <lastmod>2016-03-21T21:34:17+01:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>http://rabbitstack.github.io/category/</loc>
-    <lastmod>2016-02-14T11:38:03+01:00</lastmod>
+    <lastmod>2016-03-21T21:34:17+01:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>http://rabbitstack.github.io/</loc>
-    <lastmod>2016-02-14T11:38:03+01:00</lastmod>
+    <lastmod>2016-03-21T21:34:17+01:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
