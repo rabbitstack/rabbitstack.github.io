@@ -5,15 +5,15 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
 <head>
 <meta charset="utf-8">
-<title>Origins &#8211; Rabbit Stack</title>
-<meta name="description" content="I finally decided to go digital with what I called Rabbit Stack. It will be a place where I'll be writing mostly about programming, devops, virtualization and similar IT freaky stuffs.">
-<meta name="keywords" content="">
+<title>Fibratus Pre-Release &#8211; Rabbit Stack</title>
+<meta name="description" content="Pardon me for not announcing the pre-release availability of Fibratus here on the blog. It was a pretty busy month for me. Anyway, I feel very excited about Fibratus. At the moment of writing, it has **205** stars and **23** forks on Github. I didn't expect much acceptance during these 3 weeks since I had pushed the code to the repository!">
+<meta name="keywords" content="operating systems, windows, kernel, system calls, exploration, python, cython, tracing">
 
 
 
 <!-- Twitter Cards -->
-<meta name="twitter:title" content="Origins">
-<meta name="twitter:description" content="I finally decided to go digital with what I called Rabbit Stack. It will be a place where I'll be writing mostly about programming, devops, virtualization and similar IT freaky stuffs.">
+<meta name="twitter:title" content="Fibratus Pre-Release">
+<meta name="twitter:description" content="Pardon me for not announcing the pre-release availability of Fibratus here on the blog. It was a pretty busy month for me. Anyway, I feel very excited about Fibratus. At the moment of writing, it has **205** stars and **23** forks on Github. I didn't expect much acceptance during these 3 weeks since I had pushed the code to the repository!">
 
 
 
@@ -23,16 +23,16 @@
 <!-- Open Graph -->
 <meta property="og:locale" content="en_US">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Origins">
-<meta property="og:description" content="I finally decided to go digital with what I called Rabbit Stack. It will be a place where I'll be writing mostly about programming, devops, virtualization and similar IT freaky stuffs.">
-<meta property="og:url" content="http://rabbitstack.github.io/origins/">
+<meta property="og:title" content="Fibratus Pre-Release">
+<meta property="og:description" content="Pardon me for not announcing the pre-release availability of Fibratus here on the blog. It was a pretty busy month for me. Anyway, I feel very excited about Fibratus. At the moment of writing, it has **205** stars and **23** forks on Github. I didn't expect much acceptance during these 3 weeks since I had pushed the code to the repository!">
+<meta property="og:url" content="http://rabbitstack.github.io/operating%20systems/fibratus-pre-release/">
 <meta property="og:site_name" content="Rabbit Stack">
 
 
 
 
 
-<link rel="canonical" href="http://rabbitstack.github.io/origins/">
+<link rel="canonical" href="http://rabbitstack.github.io/operating%20systems/fibratus-pre-release/">
 <link href="http://rabbitstack.github.io/feed.xml" type="application/atom+xml" rel="alternate" title="Rabbit Stack Feed">
 
 <!-- http://t.co/dKP3o1e -->
@@ -118,7 +118,7 @@
     
       "http://rabbitstack.github.io/images/rabbit-bkgd.jpg"
     
-  alt="Origins feature image">
+  alt="Fibratus Pre-Release feature image">
   
        <div class="headline-wrap">
           <img src="http://rabbitstack.github.io/images/rabbitstack.png" />
@@ -165,13 +165,21 @@
   <article class="post">
     <div class="headline-wrap">
       
-        <h1><a href="http://rabbitstack.github.io/origins/" rel="bookmark" title="Origins">Origins</a></h1>
+        <h1><a href="http://rabbitstack.github.io/operating%20systems/fibratus-pre-release/" rel="bookmark" title="Fibratus Pre-Release">Fibratus Pre-Release</a></h1>
       
     </div><!--/ .headline-wrap -->
     <div class="article-wrap">
-      <p>
-I finally decided to go digital with what I called <strong>Rabbit Stack</strong>. It will be a place where I'll be writing mostly about programming, devops, virtualization and similar IT freaky stuffs. Sometimes I will also write about album reviews, new bands I have discovered or some totally random stuff which would anyway be lost in the limbo of my mind. The blog is still under heavy development, but I'll try to work hard on it, so stay tuned...
+      <p>Pardon me for not announcing the pre-release availability of <a href="https://github.com/rabbitstack/fibratus"><strong>Fibratus</strong></a> here on the blog. It was a pretty busy month for me.</p>
+
+<p class="image-pull-right">
+  <img src="/images/fibratus.png" />
 </p>
+
+<p>Anyway, I feel very excited about Fibratus. At the moment of writing, it has <strong>205</strong> stars and <strong>23</strong> forks on Github. I didn’t expect much acceptance during these <strong>3</strong> weeks since I pushed the code to the repository! The production ready release should be out shortly. There are some minor issues to fix.</p>
+
+<p>I’m figuring out on how to avoid blocking the main thread when calling the <code>NtQueryObject</code> function on a synchronous kernel object. Since Windows doesn’t provide any facility to get the I/O status of an object opened for synchronous access, the famous work-around consists on calling the <code>NtQueryObject</code> in a new thread and terminating it if the timeout is reached. The support for <strong>Windows 10</strong> and a whole new set of filaments is also on the roadmap.</p>
+
+<p>I would like to thank my mate <a href="http://www.ildesign.es/">Ilde</a> (check out his portfolio) for an awesome Fibratus logo, the contributions, pull requests and encouragements from the community.</p>
 
       <hr />
       <footer role="contentinfo">
@@ -179,17 +187,17 @@ I finally decided to go digital with what I called <strong>Rabbit Stack</strong>
   <h4>Share on</h4>
   <ul>
     <li>
-      <a href="https://twitter.com/intent/tweet?text=http://rabbitstack.github.io/origins/" class="twitter" title="Share on Twitter"><i class="fa fa-twitter"></i><span> Twitter</span></a>
+      <a href="https://twitter.com/intent/tweet?text=http://rabbitstack.github.io/operating%20systems/fibratus-pre-release/" class="twitter" title="Share on Twitter"><i class="fa fa-twitter"></i><span> Twitter</span></a>
     </li>
     <li>
-      <a href="https://www.facebook.com/sharer/sharer.php?u=http://rabbitstack.github.io/origins/" class="facebook" title="Share on Facebook"><i class="fa fa-facebook"></i><span> Facebook</span></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=http://rabbitstack.github.io/operating%20systems/fibratus-pre-release/" class="facebook" title="Share on Facebook"><i class="fa fa-facebook"></i><span> Facebook</span></a>
     </li>
     <li>
-      <a href="https://plus.google.com/share?url=http://rabbitstack.github.io/origins/" class="google-plus" title="Share on Google Plus"><i class="fa fa-google-plus"></i><span> Google+</span></a>
+      <a href="https://plus.google.com/share?url=http://rabbitstack.github.io/operating%20systems/fibratus-pre-release/" class="google-plus" title="Share on Google Plus"><i class="fa fa-google-plus"></i><span> Google+</span></a>
     </li>
   </ul>
 </div><!-- /.social-share -->
-        <p class="byline"><strong>Origins</strong> was published on <time datetime="2015-01-29T17:53:53+01:00">January 29, 2015</time>.</p>
+        <p class="byline"><strong>Fibratus Pre-Release</strong> was published on <time datetime="2016-06-12T17:44:25+02:00">June 12, 2016</time>.</p>
       </footer>
     </div><!-- /.article-wrap -->
   
@@ -226,11 +234,11 @@ I finally decided to go digital with what I called <strong>Rabbit Stack</strong>
   <h4>You might also enjoy <small class="pull-right">(<a href="http://rabbitstack.github.io/posts/">View all posts</a>)</small></h4>
     <ul>
     
-      <li><a href="http://rabbitstack.github.io/operating%20systems/fibratus-pre-release/" title="Fibratus Pre-Release">Fibratus Pre-Release</a></li>
-    
       <li><a href="http://rabbitstack.github.io/operating%20systems/impressions-on-installation-of-coreos-on-a-bare-metal-server/" title="Impressions on installation of CoreOS on a bare metal server">Impressions on installation of CoreOS on a bare metal server</a></li>
     
       <li><a href="http://rabbitstack.github.io/operating%20systems/fibratus-video-teaser/" title="Fibratus Video Teaser">Fibratus Video Teaser</a></li>
+    
+      <li><a href="http://rabbitstack.github.io/virtualization/of-unikernels-and-containers/" title="Of Unikernels and Containers">Of Unikernels and Containers</a></li>
     
     </ul>
     <hr />

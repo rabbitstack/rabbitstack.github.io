@@ -4,13 +4,130 @@
 <generator uri="https://github.com/jekyll/jekyll">Jekyll</generator>
 <link rel="self" type="application/atom+xml" href="http://rabbitstack.github.io/feed.xml" />
 <link rel="alternate" type="text/html" href="http://rabbitstack.github.io" />
-<updated>2016-04-25T20:53:23+02:00</updated>
+<updated>2016-06-12T23:28:14+02:00</updated>
 <id>http://rabbitstack.github.io/</id>
 <author>
   <name>Nedim Šabić</name>
   <uri>http://rabbitstack.github.io/</uri>
   <email>bhnedo@hotmail.com</email>
 </author>
+
+
+  
+
+<entry>
+  <title type="html"><![CDATA[Fibratus Pre-Release]]></title>
+  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/operating%20systems/fibratus-pre-release/" />
+  <id>http://rabbitstack.github.io/operating%20systems/fibratus-pre-release</id>
+  <published>2016-06-12T17:44:25+02:00</published>
+  <updated>2016-06-12T17:44:25+02:00</updated>
+  <author>
+    <name>Nedim Šabić</name>
+    <uri>http://rabbitstack.github.io</uri>
+    <email>bhnedo@hotmail.com</email>
+  </author>
+  <content type="html">&lt;p&gt;Pardon me for not announcing the pre-release availability of &lt;a href=&quot;https://github.com/rabbitstack/fibratus&quot;&gt;&lt;strong&gt;Fibratus&lt;/strong&gt;&lt;/a&gt; here on the blog. It was a pretty busy month for me.&lt;/p&gt;
+
+&lt;p class=&quot;image-pull-right&quot;&gt;
+  &lt;img src=&quot;/images/fibratus.png&quot; /&gt;
+&lt;/p&gt;
+
+&lt;p&gt;Anyway, I feel very excited about Fibratus. At the moment of writing, it has &lt;strong&gt;205&lt;/strong&gt; stars and &lt;strong&gt;23&lt;/strong&gt; forks on Github. I didn’t expect much acceptance during these &lt;strong&gt;3&lt;/strong&gt; weeks since I pushed the code to the repository! The production ready release should be out shortly. There are some minor issues to fix.&lt;/p&gt;
+
+&lt;p&gt;I’m figuring out on how to avoid blocking the main thread when calling the &lt;code&gt;NtQueryObject&lt;/code&gt; function on a synchronous kernel object. Since Windows doesn’t provide any facility to get the I/O status of an object opened for synchronous access, the famous work-around consists on calling the &lt;code&gt;NtQueryObject&lt;/code&gt; in a new thread and terminating it if the timeout is reached. The support for &lt;strong&gt;Windows 10&lt;/strong&gt; and a whole new set of filaments is also on the roadmap.&lt;/p&gt;
+
+&lt;p&gt;I would like to thank my mate &lt;a href=&quot;http://www.ildesign.es/&quot;&gt;Ilde&lt;/a&gt; (check out his portfolio) for an awesome Fibratus logo, the contributions, pull requests and encouragements from the community.&lt;/p&gt;
+
+  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/operating%20systems/fibratus-pre-release/&quot;&gt;Fibratus Pre-Release&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on June 12, 2016.&lt;/p&gt;</content>
+</entry>
+
+
+  
+
+<entry>
+  <title type="html"><![CDATA[Impressions on installation of CoreOS on a bare metal server]]></title>
+  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/operating%20systems/impressions-on-installation-of-coreos-on-a-bare-metal-server/" />
+  <id>http://rabbitstack.github.io/operating%20systems/impressions-on-installation-of-coreos-on-a-bare-metal-server</id>
+  <published>2016-05-08T13:28:05+02:00</published>
+  <updated>2016-05-08T13:28:05+02:00</updated>
+  <author>
+    <name>Nedim Šabić</name>
+    <uri>http://rabbitstack.github.io</uri>
+    <email>bhnedo@hotmail.com</email>
+  </author>
+  <content type="html">&lt;p&gt;Yesterday I threw away the &lt;strong&gt;SmartOS&lt;/strong&gt; hypervisor from my home lab server. SmartOS is an excellent operating system (based on the &lt;strong&gt;Illumos&lt;/strong&gt;, an open source fork of Solaris) made for running very demanding cloud infrastructures. &lt;strong&gt;Zones&lt;/strong&gt;, &lt;strong&gt;ZFS&lt;/strong&gt;, &lt;strong&gt;DTrace&lt;/strong&gt;, the &lt;strong&gt;KVM&lt;/strong&gt; port are some of the kicking ass features built-in into SmartOS.&lt;/p&gt;
+
+&lt;p class=&quot;image-pull-right&quot;&gt;
+  &lt;img src=&quot;/images/coreos.png&quot; /&gt;
+&lt;/p&gt;
+
+&lt;p&gt;If you compare it to &lt;strong&gt;Xen&lt;/strong&gt; or &lt;strong&gt;ESX&lt;/strong&gt;, it’s pretty lightweight with the memory and doesn’t require disk based installation procedure because it usually boots from an USB image. When it comes to updates, if you screw it up you can easily rollback to an old USB image. Actually, I couldn’t find any drawbacks with SmartOS, but I still got rid of it. I’ll tell you why.&lt;/p&gt;
+
+&lt;p&gt;The rise of the containers is pushing away the boundaries of virtualization. The entire application stacks can be deployed much faster and with no virtualization overhead at all. &lt;em&gt;“Every single CPU cycle that goes to your hypervisor is money wasted”&lt;/em&gt;, a &lt;a href=&quot;http://conferences.oreilly.com/strata/big-data-conference-ca-2015/public/schedule/speaker/186329&quot;&gt;Nasser’s Manesh&lt;/a&gt; quote, summarizes pretty much the previous statements. Running containers at bare metal performance is a reality.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://coreos.com/&quot;&gt;&lt;strong&gt;CoreOS&lt;/strong&gt;&lt;/a&gt; is a distributed orchestration platform for Docker and Rkt containers. Everything on CoreOS runs in a container. CoreOS is now powering my &lt;strong&gt;HP ProLiant DL160 G6&lt;/strong&gt; server. If you are curious about the specifications, here is:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;2 x Intel Xeon E5645 hex core processors&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;32 GB DDR3 RAM&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;2 x 1 TB SATA disks&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;2 NIC adapters&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure&gt;
+  &lt;a href=&quot;/images/hp-rack1.jpg&quot; class=&quot;image-popup&quot;&gt;
+    &lt;img src=&quot;/images/hp-rack1.jpg&quot; /&gt;
+  &lt;/a&gt;
+&lt;/figure&gt;
+
+&lt;figure&gt;
+  &lt;a href=&quot;/images/hp-rack2.jpg&quot; class=&quot;image-popup&quot;&gt;
+    &lt;img src=&quot;/images/hp-rack2.jpg&quot; /&gt;
+  &lt;/a&gt;
+  &lt;figcaption&gt;Horsepower of the lab&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;CoreOS installation was straightforward. I had booted the server from the CoreOS ISO image. Next, I had generated a public/private key pair on my laptop:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ssh-keygen -t rsa -b 2048&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;The private key is used to ssh the CoreOS machine. After a small network issue, I was able to copy the public key to the server. One last thing was to create the minimal &lt;code&gt;cloud-config&lt;/code&gt; yaml configuration file.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span class=&quot;c1&quot;&gt;#cloud-config&lt;/span&gt;
+&lt;span class=&quot;l-Scalar-Plain&quot;&gt;hostname&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;rabbitstack&lt;/span&gt;
+&lt;span class=&quot;l-Scalar-Plain&quot;&gt;ssh_authorized_keys&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;
+   &lt;span class=&quot;p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;public key&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;I was ready to start the installation on &lt;code&gt;/dev/sda&lt;/code&gt; disk device by executing the &lt;code&gt;coreos-install&lt;/code&gt; script.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sudo su -
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;coreos-install -d /dev/sda -C stable -c cloud-config.yml&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;figure&gt;
+  &lt;a href=&quot;/images/coreos-installation-start.jpg&quot; class=&quot;image-popup&quot;&gt;
+    &lt;img src=&quot;/images/coreos-installation-start.jpg&quot; /&gt;
+  &lt;/a&gt;
+  &lt;figcaption&gt;Installing CoreOS&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;It took about 10 minutes to download the latest image and to setup the CoreOS. Really fast! I was eager to test the installation (note the user name is &lt;strong&gt;core&lt;/strong&gt;).&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ssh -i rabbitstack core@rabbitstack&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;It works like a charm! Having a CoreOS cluster is more fun, so I am planning to deploy the KVM instance on the laptop. That should be enough to try things out. I am looking forward to try &lt;a href=&quot;http://pachyderm.io/&quot;&gt;pachyderm&lt;/a&gt;, &lt;a href=&quot;http://spark.apache.org/&quot;&gt;spark&lt;/a&gt; or &lt;a href=&quot;http://storm.apache.org/&quot;&gt;storm&lt;/a&gt; in a containerized environment.
+Learning about &lt;strong&gt;etcd&lt;/strong&gt;, &lt;strong&gt;fleet&lt;/strong&gt; and &lt;strong&gt;flannel&lt;/strong&gt; is going to be an exciting journey. I’ll share about the experience here - on the place where bunnies dwell.&lt;/p&gt;
+
+&lt;p&gt;See you soon.&lt;/p&gt;
+
+&lt;figure&gt;
+  &lt;a href=&quot;/images/coreos-installation-end.jpg&quot; class=&quot;image-popup&quot;&gt;
+    &lt;img src=&quot;/images/coreos-installation-end.jpg&quot; /&gt;
+  &lt;/a&gt;
+  &lt;figcaption&gt;CoreOS is ready to boot&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/operating%20systems/impressions-on-installation-of-coreos-on-a-bare-metal-server/&quot;&gt;Impressions on installation of CoreOS on a bare metal server&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on May 08, 2016.&lt;/p&gt;</content>
+</entry>
 
 
   
