@@ -4,13 +4,58 @@
 <generator uri="https://github.com/jekyll/jekyll">Jekyll</generator>
 <link rel="self" type="application/atom+xml" href="http://rabbitstack.github.io/feed.xml" />
 <link rel="alternate" type="text/html" href="http://rabbitstack.github.io" />
-<updated>2016-06-12T23:28:14+02:00</updated>
+<updated>2016-08-21T17:09:44+02:00</updated>
 <id>http://rabbitstack.github.io/</id>
 <author>
   <name>Nedim Šabić</name>
   <uri>http://rabbitstack.github.io/</uri>
   <email>bhnedo@hotmail.com</email>
 </author>
+
+
+  
+
+<entry>
+  <title type="html"><![CDATA[Fibratus 0.2.3]]></title>
+  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/operating%20systems/fibratus-0-2-3/" />
+  <id>http://rabbitstack.github.io/operating%20systems/fibratus-0-2-3</id>
+  <published>2016-08-21T13:48:25+02:00</published>
+  <updated>2016-08-21T13:48:25+02:00</updated>
+  <author>
+    <name>Nedim Šabić</name>
+    <uri>http://rabbitstack.github.io</uri>
+    <email>bhnedo@hotmail.com</email>
+  </author>
+  <content type="html">&lt;p&gt;I’m pleased to announce the first production-ready release of Fibratus. The tool is now available via the &lt;strong&gt;pip&lt;/strong&gt; package manager by typing &lt;code&gt;pip install fibratus&lt;/code&gt; (the C compiler is required to build the kernel stream collector). The &lt;strong&gt;multiprocessing&lt;/strong&gt; and Python serialization don’t play well together when compiled with &lt;strong&gt;nuitka&lt;/strong&gt;. Until I figure out how to make it work I’ll not ship the compiled versions of Fibratus.&lt;/p&gt;
+
+&lt;h3 id=&quot;whats-new&quot;&gt;What’s new&lt;/h3&gt;
+
+&lt;p&gt;There are a bunch of new features and bug fixes in this release:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;filament’s execution model allows scheduling the execution of the filament in a new process&lt;/li&gt;
+  &lt;li&gt;streaming kernel events via output adapters (&lt;strong&gt;SMTP&lt;/strong&gt; and &lt;strong&gt;AMQP&lt;/strong&gt; are supported)&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;yaml&lt;/strong&gt; based configuration file&lt;/li&gt;
+  &lt;li&gt;interval based scheduling inside the filaments&lt;/li&gt;
+  &lt;li&gt;writing to console using the standard Windows API&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;asciiart&lt;/strong&gt; package to group the common table drawing functionality&lt;/li&gt;
+  &lt;li&gt;shipping new filaments (&lt;code&gt;top_in_packets&lt;/code&gt;, &lt;code&gt;top_out_packets&lt;/code&gt;, &lt;code&gt;top_hives_io&lt;/code&gt;)&lt;/li&gt;
+  &lt;li&gt;resolve filaments directory from the environment variable&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;--no-enum-handles&lt;/code&gt; command line flag to disable the system handles enumeration&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;setuptools&lt;/strong&gt; script for building the Fibratus distribution&lt;/li&gt;
+  &lt;li&gt;hosting Fibratus on &lt;a href=&quot;https://pypi.python.org/pypi/fibratus&quot;&gt;&lt;strong&gt;PyPi&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;check for the kernel event filters when calling the &lt;code&gt;process&lt;/code&gt; method on filament&lt;/li&gt;
+  &lt;li&gt;initialize the kernel event parameters when hive or key does not satisfy the condition in &lt;code&gt;RegSetValue&lt;/code&gt; or &lt;code&gt;RegQueryValue&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;fixed style violations and code smells&lt;/li&gt;
+  &lt;li&gt;migrated from &lt;em&gt;coveralls&lt;/em&gt; to &lt;em&gt;codecov&lt;/em&gt; platform&lt;/li&gt;
+  &lt;li&gt;improved code coverage&lt;/li&gt;
+  &lt;li&gt;code refactoring and comments&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;If you have any feedback, you can reach out via &lt;a href=&quot;https://github.com/rabbitstack/fibratus/issues&quot;&gt;Github&lt;/a&gt; or drop me an email.&lt;/p&gt;
+
+  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/operating%20systems/fibratus-0-2-3/&quot;&gt;Fibratus 0.2.3&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on August 21, 2016.&lt;/p&gt;</content>
+</entry>
 
 
   

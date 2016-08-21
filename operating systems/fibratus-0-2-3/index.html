@@ -5,15 +5,15 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
 <head>
 <meta charset="utf-8">
-<title>Introduction to CQRS &#8211; Rabbit Stack</title>
-<meta name="description" content="In the world dominated by the IoT and the increasingly demanding users, the applications and the developers itself need to adopt a new paradigm to satisfy those neccesities.">
-<meta name="keywords" content="CQRS, design patterns, event sourcing, DDD, domain events">
+<title>Fibratus 0.2.3 &#8211; Rabbit Stack</title>
+
+<meta name="keywords" content="operating systems, windows, kernel, system calls, exploration, python, cython, tracing">
 
 
 
 <!-- Twitter Cards -->
-<meta name="twitter:title" content="Introduction to CQRS">
-<meta name="twitter:description" content="In the world dominated by the IoT and the increasingly demanding users, the applications and the developers itself need to adopt a new paradigm to satisfy those neccesities.">
+<meta name="twitter:title" content="Fibratus 0.2.3">
+
 
 
 
@@ -23,16 +23,16 @@
 <!-- Open Graph -->
 <meta property="og:locale" content="en_US">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Introduction to CQRS">
-<meta property="og:description" content="In the world dominated by the IoT and the increasingly demanding users, the applications and the developers itself need to adopt a new paradigm to satisfy those neccesities.">
-<meta property="og:url" content="http://rabbitstack.github.io/cqrs/introduction-to-cqrs/">
+<meta property="og:title" content="Fibratus 0.2.3">
+
+<meta property="og:url" content="http://rabbitstack.github.io/operating%20systems/fibratus-0-2-3/">
 <meta property="og:site_name" content="Rabbit Stack">
 
 
 
 
 
-<link rel="canonical" href="http://rabbitstack.github.io/cqrs/introduction-to-cqrs/">
+<link rel="canonical" href="http://rabbitstack.github.io/operating%20systems/fibratus-0-2-3/">
 <link href="http://rabbitstack.github.io/feed.xml" type="application/atom+xml" rel="alternate" title="Rabbit Stack Feed">
 
 <!-- http://t.co/dKP3o1e -->
@@ -118,7 +118,7 @@
     
       "http://rabbitstack.github.io/images/rabbit-bkgd.jpg"
     
-  alt="Introduction to CQRS feature image">
+  alt="Fibratus 0.2.3 feature image">
   
        <div class="headline-wrap">
           <img src="http://rabbitstack.github.io/images/rabbitstack.png" />
@@ -165,91 +165,37 @@
   <article class="post">
     <div class="headline-wrap">
       
-        <h1><a href="http://rabbitstack.github.io/cqrs/introduction-to-cqrs/" rel="bookmark" title="Introduction to CQRS">Introduction to CQRS</a></h1>
+        <h1><a href="http://rabbitstack.github.io/operating%20systems/fibratus-0-2-3/" rel="bookmark" title="Fibratus 0.2.3">Fibratus 0.2.3</a></h1>
       
     </div><!--/ .headline-wrap -->
     <div class="article-wrap">
-      <p>
-In the world dominated by the IoT and the increasingly demanding users, the applications and the developers itself need to adopt a new paradigm to satisfy those needs. The users (customers) expectations are often very high as they want the contracted IT services highly available and the new feature requirements implemented as soon as possible. Besides that,
-project managers also want developers to complete the tasks in a time-constrained iterations guaranteeing the quality and good performance of the final product. Despite the increasing size and complexity of the applications, we still need to stay agile and deliver the product in established deadlines. Definitely, not a trivial task, at least not in a monolithic tightly coupled application architectures.
-</p>
-<p>
-It is where <strong>CQRS</strong> comes to the rescue. CQRS stands for <i>Command Query Responsibility Segregation</i>, a design pattern with a very simple foundation: seperate the application into two parts - one that is responsible for executing actions and other one providing a thin data layer for query execution. So we have two models, the <strong>write</strong> model and the <strong>read</strong> model. Although at first glance may seem irrelevant, this approach opens up a plethora of possibilities. To better understand the CQRS paradigm, we will explain each of its building blocks with the help of the diagram below.
-</p>
+      <p>I’m pleased to announce the first production-ready release of Fibratus. The tool is now available via the <strong>pip</strong> package manager by typing <code>pip install fibratus</code> (the C compiler is required to build the kernel stream collector). The <strong>multiprocessing</strong> and Python serialization don’t play well together when compiled with <strong>nuitka</strong>. Until I figure out how to make it work I’ll not ship the compiled versions of Fibratus.</p>
 
-<figure>
-	<a href="/images/cqrs.jpg" class="image-popup">
-		<img src="/images/cqrs.jpg" />
-	</a>
-	<figcaption>CQRS building blocks</figcaption>
-</figure>
+<h3 id="whats-new">What’s new</h3>
+
+<p>There are a bunch of new features and bug fixes in this release:</p>
 
 <ul>
-	<li>
-		<strong>Commands</strong> are the objects that encapsulate both the user's intention as the information necessary to perform the operation. For example, <code>CreateNewUserCommand</code> would hold a variety of attributes such as username, address, age, etc. Commands are sent to the command bus and later dispatched to its corresponding command handler. The state change in the system is started by executing the command.
-	</li>
-	<li>
-		<strong>Domain model</strong>  represents the heart of the system. Because the CQRS is based on its predecessor <strong>DDD</strong> (Domain Driven Design) the main design approach
-		resides on the rich domain model. What does this mean? In traditional design, the domain objects often play the role of entities that just keep the system state and lack any kind of behavior, and thus is often called as <i>anemic</i> domain model. This also tends to create ambiguity between the <strong>DTO</strong> (Data Transfer Objects) and model objects, making the domain model end up having information that must be rendered in the view, and therefore create coupling. The dedicated service layer alters the system state. CQRS promotes a strictly behavior based domain model.
-	</li>
-	<li>
-		<strong>Repositories</strong> provide access to domain objects and allow isolating the domain model from persistence mechanism. Repositories just have to be able to recover the aggregate (domain object) from its unique identifier, while any other type of query is performed against read model.
-	</li>
-	<li>
-		<strong>Events</strong> are the source of any state changes in the application. As mentioned above, executing commands on aggregate, initiates the state change in the system, which in turn will produce a series of domain events. We don't need to persist domain objects but the generated domain events. With this we are able to reconstruct the domain object to its last state, just by applying the stream of events on it. This pattern is known as <i>event sourcing</i>. Events are sent to the event bus, and dispatched to any component interested in consuming it.
-	</li>
-	<li>
-		<strong>Event store</strong> provides a backing store for domain events. Those are often relational databases and NoSQL databases, but for the proof of concepts they can be implemented as file system stores.
-	</li>
-	<li>
-		<strong>Queries</strong> are executed against simple read-only data layer. The information needed to be rendered in the view is reflected in the object which contains the results of the query. We can say that the object is tailored for what view needs to represent.
-	</li>
+  <li>filament’s execution model allows scheduling the execution of the filament in a new process</li>
+  <li>streaming kernel events via output adapters (<strong>SMTP</strong> and <strong>AMQP</strong> are supported)</li>
+  <li><strong>yaml</strong> based configuration file</li>
+  <li>interval based scheduling inside the filaments</li>
+  <li>writing to console using the standard Windows API</li>
+  <li><strong>asciiart</strong> package to group the common table drawing functionality</li>
+  <li>shipping new filaments (<code>top_in_packets</code>, <code>top_out_packets</code>, <code>top_hives_io</code>)</li>
+  <li>resolve filaments directory from the environment variable</li>
+  <li><code>--no-enum-handles</code> command line flag to disable the system handles enumeration</li>
+  <li><strong>setuptools</strong> script for building the Fibratus distribution</li>
+  <li>hosting Fibratus on <a href="https://pypi.python.org/pypi/fibratus"><strong>PyPi</strong></a></li>
+  <li>check for the kernel event filters when calling the <code>process</code> method on filament</li>
+  <li>initialize the kernel event parameters when hive or key does not satisfy the condition in <code>RegSetValue</code> or <code>RegQueryValue</code></li>
+  <li>fixed style violations and code smells</li>
+  <li>migrated from <em>coveralls</em> to <em>codecov</em> platform</li>
+  <li>improved code coverage</li>
+  <li>code refactoring and comments</li>
 </ul>
 
-<h3>Advantages of CQRS</h3>
-
-<ul>
-	<li>
-		Allows the application to be distributed across multiple physical or virtual machines (horizontal scalability).
-	</li>
-	<li>
-		High availability at the application level. If one component fails, the rest of the system can still works.
-	</li>
-	<li>
-		Audit / tracking / tracing of user actions out of the box. This type of audit is not comparable to any infrastructure log, since domain events add additional value to the business. It's easy to extract and ingest the domain events into machine-learning platforms or correlation engines, for example to predict user actions, detect anomalies, etc. By having the trace of everything that happens in the application, we have a single source of truth. It is also easier to reproduce the software failures.
-	</li>
-	<li>
-		Instead of binding domain objects with UI components, we have simple DTO that accurately reflect what we want to represent in the view and it can be retrieved directly from the database. Thus, we can obtain all necessary information in a single request to the data source.
-	</li>
-	<li>
-		CQRS help us to write an expressive domain model. It also puts the models on a "diet" since the models only need to have the attributes relevant for the business decision.
-	</li>
-	<li>
-		When the command is about to be processed, the repository will get the stream of events related to the object from the event store. The object state is reconstructed from the event stream. Thus, we get the object in its original state and there will not need to provide persistence to the domain model.
-	</li>
-	<li>
-		Separate data models. These remain consistent, synchronized and decoupled thanks to the domain events. For the read model you can use any technology, from JDBC, ORM systems through NoSQL solutions, since the only purpose is to populate the view with data as quickly as possible. We can have denormalized databases to optimize the reads and avoid complex queries with many unions.
-	</li>
-</ul>
-
-<h3>Disadvantages</h3>
-
-<p>As there is no silver bullet for every scenario, you should keep in mind these considerations:</p>
-
-<ul>
-	<li>
-		Use CQRS when the domain model is complex. A simple model is not going to benefit from this pattern.
-	</li>
-	<li>
-		The learning curve is relatively high and it requires the change of the point of view regarding traditional design.
-	</li>
-	<li>
-		Higher infrastructure requirements since we have two models (the read model and the write model).
-	</li>
-</ul>
-
-<h3>Conclusion</h3>
-<p>Perhaps the time has come to change the traditional approach to software development? At the end, it is up to you. The benefits of CQRS are tremendous. It keeps the software maintainable, easily extensible and ready to face new challenges that the future holds. If your next project’s requirements are going to be complex, or you just need high availability and scalability at the application level and you want to grow without losing the agility, don’t hesitate, use CQRS.</p>
+<p>If you have any feedback, you can reach out via <a href="https://github.com/rabbitstack/fibratus/issues">Github</a> or drop me an email.</p>
 
       <hr />
       <footer role="contentinfo">
@@ -257,17 +203,17 @@ It is where <strong>CQRS</strong> comes to the rescue. CQRS stands for <i>Comman
   <h4>Share on</h4>
   <ul>
     <li>
-      <a href="https://twitter.com/intent/tweet?text=http://rabbitstack.github.io/cqrs/introduction-to-cqrs/" class="twitter" title="Share on Twitter"><i class="fa fa-twitter"></i><span> Twitter</span></a>
+      <a href="https://twitter.com/intent/tweet?text=http://rabbitstack.github.io/operating%20systems/fibratus-0-2-3/" class="twitter" title="Share on Twitter"><i class="fa fa-twitter"></i><span> Twitter</span></a>
     </li>
     <li>
-      <a href="https://www.facebook.com/sharer/sharer.php?u=http://rabbitstack.github.io/cqrs/introduction-to-cqrs/" class="facebook" title="Share on Facebook"><i class="fa fa-facebook"></i><span> Facebook</span></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=http://rabbitstack.github.io/operating%20systems/fibratus-0-2-3/" class="facebook" title="Share on Facebook"><i class="fa fa-facebook"></i><span> Facebook</span></a>
     </li>
     <li>
-      <a href="https://plus.google.com/share?url=http://rabbitstack.github.io/cqrs/introduction-to-cqrs/" class="google-plus" title="Share on Google Plus"><i class="fa fa-google-plus"></i><span> Google+</span></a>
+      <a href="https://plus.google.com/share?url=http://rabbitstack.github.io/operating%20systems/fibratus-0-2-3/" class="google-plus" title="Share on Google Plus"><i class="fa fa-google-plus"></i><span> Google+</span></a>
     </li>
   </ul>
 </div><!-- /.social-share -->
-        <p class="byline"><strong>Introduction to CQRS</strong> was published on <time datetime="2015-02-21T19:11:46+01:00">February 21, 2015</time>.</p>
+        <p class="byline"><strong>Fibratus 0.2.3</strong> was published on <time datetime="2016-08-21T13:48:25+02:00">August 21, 2016</time>.</p>
       </footer>
     </div><!-- /.article-wrap -->
   
@@ -304,11 +250,11 @@ It is where <strong>CQRS</strong> comes to the rescue. CQRS stands for <i>Comman
   <h4>You might also enjoy <small class="pull-right">(<a href="http://rabbitstack.github.io/posts/">View all posts</a>)</small></h4>
     <ul>
     
-      <li><a href="http://rabbitstack.github.io/operating%20systems/fibratus-0-2-3/" title="Fibratus 0.2.3">Fibratus 0.2.3</a></li>
-    
       <li><a href="http://rabbitstack.github.io/operating%20systems/fibratus-pre-release/" title="Fibratus Pre-Release">Fibratus Pre-Release</a></li>
     
       <li><a href="http://rabbitstack.github.io/operating%20systems/impressions-on-installation-of-coreos-on-a-bare-metal-server/" title="Impressions on installation of CoreOS on a bare metal server">Impressions on installation of CoreOS on a bare metal server</a></li>
+    
+      <li><a href="http://rabbitstack.github.io/operating%20systems/fibratus-video-teaser/" title="Fibratus Video Teaser">Fibratus Video Teaser</a></li>
     
     </ul>
     <hr />
