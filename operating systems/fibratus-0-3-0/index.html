@@ -5,15 +5,15 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
 <head>
 <meta charset="utf-8">
-<title>Impressions on installation of CoreOS on a bare metal server &#8211; Rabbit Stack</title>
-<meta name="description" content="Yesterday I threw away the SmartOS hypervisor from my home lab server. SmartOS is an excellent operating system (based on the Illumos, an open source fork of Solaris) made for running very demanding cloud infrastructures. Zones, ZFS, DTrace, the KVM port are some of the kicking ass features built-in into SmartOS.">
-<meta name="keywords" content="coreos, bare metal server, coreos installation, containers, smartos">
+<title>Fibratus 0.3.0 &#8211; Rabbit Stack</title>
+<meta name="description" content="I'm pleased to announce the release of Fibratus 0.3.0. This version ships with support for context switch instrumentation through the ContextSwitch kernel event type.">
+<meta name="keywords" content="operating systems, windows, kernel, system calls, exploration, python, cython, tracing, context switch instrumentation, profiling">
 
 
 
 <!-- Twitter Cards -->
-<meta name="twitter:title" content="Impressions on installation of CoreOS on a bare metal server">
-<meta name="twitter:description" content="Yesterday I threw away the SmartOS hypervisor from my home lab server. SmartOS is an excellent operating system (based on the Illumos, an open source fork of Solaris) made for running very demanding cloud infrastructures. Zones, ZFS, DTrace, the KVM port are some of the kicking ass features built-in into SmartOS.">
+<meta name="twitter:title" content="Fibratus 0.3.0">
+<meta name="twitter:description" content="I'm pleased to announce the release of Fibratus 0.3.0. This version ships with support for context switch instrumentation through the ContextSwitch kernel event type.">
 
 
 
@@ -23,16 +23,16 @@
 <!-- Open Graph -->
 <meta property="og:locale" content="en_US">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Impressions on installation of CoreOS on a bare metal server">
-<meta property="og:description" content="Yesterday I threw away the SmartOS hypervisor from my home lab server. SmartOS is an excellent operating system (based on the Illumos, an open source fork of Solaris) made for running very demanding cloud infrastructures. Zones, ZFS, DTrace, the KVM port are some of the kicking ass features built-in into SmartOS.">
-<meta property="og:url" content="http://rabbitstack.github.io/operating%20systems/impressions-on-installation-of-coreos-on-a-bare-metal-server/">
+<meta property="og:title" content="Fibratus 0.3.0">
+<meta property="og:description" content="I'm pleased to announce the release of Fibratus 0.3.0. This version ships with support for context switch instrumentation through the ContextSwitch kernel event type.">
+<meta property="og:url" content="http://rabbitstack.github.io/operating%20systems/fibratus-0-3-0/">
 <meta property="og:site_name" content="Rabbit Stack">
 
 
 
 
 
-<link rel="canonical" href="http://rabbitstack.github.io/operating%20systems/impressions-on-installation-of-coreos-on-a-bare-metal-server/">
+<link rel="canonical" href="http://rabbitstack.github.io/operating%20systems/fibratus-0-3-0/">
 <link href="http://rabbitstack.github.io/feed.xml" type="application/atom+xml" rel="alternate" title="Rabbit Stack Feed">
 
 <!-- http://t.co/dKP3o1e -->
@@ -118,7 +118,7 @@
     
       "http://rabbitstack.github.io/images/rabbit-bkgd.jpg"
     
-  alt="Impressions on installation of CoreOS on a bare metal server feature image">
+  alt="Fibratus 0.3.0 feature image">
   
        <div class="headline-wrap">
           <img src="http://rabbitstack.github.io/images/rabbitstack.png" />
@@ -165,80 +165,43 @@
   <article class="post">
     <div class="headline-wrap">
       
-        <h1><a href="http://rabbitstack.github.io/operating%20systems/impressions-on-installation-of-coreos-on-a-bare-metal-server/" rel="bookmark" title="Impressions on installation of CoreOS on a bare metal server">Impressions on installation of CoreOS on a bare metal server</a></h1>
+        <h1><a href="http://rabbitstack.github.io/operating%20systems/fibratus-0-3-0/" rel="bookmark" title="Fibratus 0.3.0">Fibratus 0.3.0</a></h1>
       
     </div><!--/ .headline-wrap -->
     <div class="article-wrap">
-      <p>Yesterday I threw away the <strong>SmartOS</strong> hypervisor from my home lab server. SmartOS is an excellent operating system (based on the <strong>Illumos</strong>, an open source fork of Solaris) made for running very demanding cloud infrastructures. <strong>Zones</strong>, <strong>ZFS</strong>, <strong>DTrace</strong>, the <strong>KVM</strong> port are some of the kicking ass features built-in into SmartOS.</p>
+      <p>I’m pleased to announce the release of <strong>Fibratus 0.3.0</strong>. This version ships with support for context switch instrumentation through the <strong>ContextSwitch</strong> kernel event type.</p>
 
-<p class="image-pull-right">
-  <img src="/images/coreos.png" />
-</p>
+<h3 id="whats-new">What’s new</h3>
 
-<p>If you compare it to <strong>Xen</strong> or <strong>ESX</strong>, it’s pretty lightweight with the memory and doesn’t require disk based installation procedure because it usually boots from an USB image. When it comes to updates, if you screw it up you can easily rollback to an old USB image. Actually, I couldn’t find any drawbacks with SmartOS, but I still got rid of it. I’ll tell you why.</p>
+<p>Because the context switch instrumentation generates a <strong>massive</strong> volume of events, it is disabled by default. There is a new <code>--cswitch</code> command line flag to activate the stream of context switch events.</p>
 
-<p>The rise of the containers is pushing away the boundaries of virtualization. The entire application stacks can be deployed much faster and with no virtualization overhead at all. <em>“Every single CPU cycle that goes to your hypervisor is money wasted”</em>, a <a href="http://conferences.oreilly.com/strata/big-data-conference-ca-2015/public/schedule/speaker/186329">Nasser’s Manesh</a> quote, summarizes pretty much the previous statements. Running containers at bare metal performance is a reality.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>fibratus run --filters ContextSwitch --cswitch
 
-<p><a href="https://coreos.com/"><strong>CoreOS</strong></a> is a distributed orchestration platform for Docker and Rkt containers. Everything on CoreOS runs in a container. CoreOS is now powering my <strong>HP ProLiant DL160 G6</strong> server. If you are curious about the specifications, here is:</p>
+...
+<span class="m">4207</span> 16:15:38.790000 <span class="m">0</span> conemu.exe <span class="o">(</span>7368<span class="o">)</span> - ContextSwitch <span class="o">(</span><span class="nv">cpu</span><span class="o">=</span>0, <span class="nv">next_proc_name</span><span class="o">=</span>conemu.exe, <span class="nv">next_thread_id</span><span class="o">=</span>6108, <span class="nv">next_thread_prio</span><span class="o">=</span>11, <span class="nv">next_thread_wait_time</span><span class="o">=</span>0, <span class="nv">prev_proc_name</span><span class="o">=</span>ipodservice.exe, <span class="nv">prev_thread_id</span><span class="o">=</span>0, <span class="nv">prev_thread_prio</span><span class="o">=</span>0, <span class="nv">prev_thread_state</span><span class="o">=</span>RUNNING, <span class="nv">prev_thread_wait_mode</span><span class="o">=</span>KERNEL, <span class="nv">prev_thread_wait_reason</span><span class="o">=</span>EXECUTIVE<span class="o">)</span>
+<span class="m">4208</span> 16:15:38.790000 <span class="m">2</span> conemu.exe <span class="o">(</span>7368<span class="o">)</span> - ContextSwitch <span class="o">(</span><span class="nv">cpu</span><span class="o">=</span>2, <span class="nv">next_proc_name</span><span class="o">=</span>ConEmu.exe, <span class="nv">next_thread_id</span><span class="o">=</span>8076, <span class="nv">next_thread_prio</span><span class="o">=</span>11, <span class="nv">next_thread_wait_time</span><span class="o">=</span>0, <span class="nv">prev_proc_name</span><span class="o">=</span>ConEmuC64.exe, <span class="nv">prev_thread_id</span><span class="o">=</span>0, <span class="nv">prev_thread_prio</span><span class="o">=</span>0, <span class="nv">prev_thread_state</span><span class="o">=</span>RUNNING, <span class="nv">prev_thread_wait_mode</span><span class="o">=</span>KERNEL, <span class="nv">prev_thread_wait_reason</span><span class="o">=</span>EXECUTIVE<span class="o">)</span>
+<span class="m">4209</span> 16:15:38.790000 <span class="m">2</span> idle <span class="o">(</span>0<span class="o">)</span> - ContextSwitch <span class="o">(</span><span class="nv">cpu</span><span class="o">=</span>2, <span class="nv">next_proc_name</span><span class="o">=</span>idle, <span class="nv">next_thread_id</span><span class="o">=</span>0, <span class="nv">next_thread_prio</span><span class="o">=</span>0, <span class="nv">next_thread_wait_time</span><span class="o">=</span>52, <span class="nv">prev_proc_name</span><span class="o">=</span>python.exe, <span class="nv">prev_thread_id</span><span class="o">=</span>8076, <span class="nv">prev_thread_prio</span><span class="o">=</span>11, <span class="nv">prev_thread_state</span><span class="o">=</span>WAITING, <span class="nv">prev_thread_wait_mode</span><span class="o">=</span>USER, <span class="nv">prev_thread_wait_reason</span><span class="o">=</span>USER_REQUEST<span class="o">)</span>
+<span class="m">4210</span> 16:15:38.790000 <span class="m">3</span> chrome.exe <span class="o">(</span>8348<span class="o">)</span> - ContextSwitch <span class="o">(</span><span class="nv">cpu</span><span class="o">=</span>3, <span class="nv">next_proc_name</span><span class="o">=</span>chrome.exe, <span class="nv">next_thread_id</span><span class="o">=</span>8352, <span class="nv">next_thread_prio</span><span class="o">=</span>9, <span class="nv">next_thread_wait_time</span><span class="o">=</span>0, <span class="nv">prev_proc_name</span><span class="o">=</span>conemu.exe, <span class="nv">prev_thread_id</span><span class="o">=</span>0, <span class="nv">prev_thread_prio</span><span class="o">=</span>0, <span class="nv">prev_thread_state</span><span class="o">=</span>RUNNING, <span class="nv">prev_thread_wait_mode</span><span class="o">=</span>KERNEL, <span class="nv">prev_thread_wait_reason</span><span class="o">=</span>EXECUTIVE<span class="o">)</span>
+<span class="m">4211</span> 16:15:38.790000 <span class="m">1</span> svchost.exe <span class="o">(</span>820<span class="o">)</span> - ContextSwitch <span class="o">(</span><span class="nv">cpu</span><span class="o">=</span>1, <span class="nv">next_proc_name</span><span class="o">=</span>svchost.exe, <span class="nv">next_thread_id</span><span class="o">=</span>5832, <span class="nv">next_thread_prio</span><span class="o">=</span>9, <span class="nv">next_thread_wait_time</span><span class="o">=</span>2, <span class="nv">prev_proc_name</span><span class="o">=</span>svchost.exe, <span class="nv">prev_thread_id</span><span class="o">=</span>4388, <span class="nv">prev_thread_prio</span><span class="o">=</span>9, <span class="nv">prev_thread_state</span><span class="o">=</span>WAITING, <span class="nv">prev_thread_wait_mode</span><span class="o">=</span>USER, <span class="nv">prev_thread_wait_reason</span><span class="o">=</span>LPC_REPLY<span class="o">)</span>
+...</code></pre></div>
+
+<p>Let’s see what does those event’s parameters mean.</p>
 
 <ul>
-  <li><strong>2 x Intel Xeon E5645 hex core processors</strong></li>
-  <li><strong>32 GB DDR3 RAM</strong></li>
-  <li><strong>2 x 1 TB SATA disks</strong></li>
-  <li><strong>2 NIC adapters</strong></li>
+  <li><code>cpu</code> is the identifier of the CPU core where the new thread is running after the context switch has taken place</li>
+  <li><code>next_proc_name</code> identifies the process name of the thread which has been chosen by the scheduler</li>
+  <li><code>next_thread_id</code> is the identifier of the new thread</li>
+  <li><code>next_thread_prio</code> the priority of the new thread</li>
+  <li><code>next_thread_wait_time</code> is the time thread has spent waiting in the ready queue before receiving the slice of the CPU time</li>
+  <li><code>prev_proc_name</code> the process name of the thread which has been preempted by the kernel. The scheduler assigns the CPU to the new thread</li>
+  <li><code>prev_thread_id</code> is the identifier of the old thread</li>
+  <li><code>prev_thread_prio</code> the priority of the old thread</li>
+  <li><code>prev_thread_state</code> determines the state of the previous thread</li>
+  <li><code>prev_thread_wait_mode</code> indicates if the previous thread has been executing in the user space or in the kernel space</li>
+  <li><code>prev_thread_wait_reason</code> the action emitted by the thread right before the dispatcher has moved it from the running queue</li>
 </ul>
 
-<figure>
-  <a href="/images/hp-rack1.jpg" class="image-popup">
-    <img src="/images/hp-rack1.jpg" />
-  </a>
-</figure>
-
-<figure>
-  <a href="/images/hp-rack2.jpg" class="image-popup">
-    <img src="/images/hp-rack2.jpg" />
-  </a>
-  <figcaption>Horsepower of the lab</figcaption>
-</figure>
-
-<p>CoreOS installation was straightforward. I had booted the server from the CoreOS ISO image. Next, I had generated a public/private key pair on my laptop:</p>
-
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>ssh-keygen -t rsa -b 2048</code></pre></div>
-
-<p>The private key is used to ssh the CoreOS machine. After a small network issue, I was able to copy the public key to the server. One last thing was to create the minimal <code>cloud-config</code> yaml configuration file.</p>
-
-<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="c1">#cloud-config</span>
-<span class="l-Scalar-Plain">hostname</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">rabbitstack</span>
-<span class="l-Scalar-Plain">ssh_authorized_keys</span><span class="p-Indicator">:</span>
-   <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">public key</span></code></pre></div>
-
-<p>I was ready to start the installation on <code>/dev/sda</code> disk device by executing the <code>coreos-install</code> script.</p>
-
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>sudo su -
-<span class="nv">$ </span>coreos-install -d /dev/sda -C stable -c cloud-config.yml</code></pre></div>
-
-<figure>
-  <a href="/images/coreos-installation-start.jpg" class="image-popup">
-    <img src="/images/coreos-installation-start.jpg" />
-  </a>
-  <figcaption>Installing CoreOS</figcaption>
-</figure>
-
-<p>It took about 10 minutes to download the latest image and to setup the CoreOS. Really fast! I was eager to test the installation (note the user name is <strong>core</strong>).</p>
-
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>ssh -i rabbitstack core@rabbitstack</code></pre></div>
-
-<p>It works like a charm! Having a CoreOS cluster is more fun, so I am planning to deploy the KVM instance on the laptop. That should be enough to try things out. I am looking forward to try <a href="http://pachyderm.io/">pachyderm</a>, <a href="http://spark.apache.org/">spark</a> or <a href="http://storm.apache.org/">storm</a> in a containerized environment.
-Learning about <strong>etcd</strong>, <strong>fleet</strong> and <strong>flannel</strong> is going to be an exciting journey. I’ll share about the experience here - on the place where bunnies dwell.</p>
-
-<p>See you soon.</p>
-
-<figure>
-  <a href="/images/coreos-installation-end.jpg" class="image-popup">
-    <img src="/images/coreos-installation-end.jpg" />
-  </a>
-  <figcaption>CoreOS is ready to boot</figcaption>
-</figure>
+<p>If you have any feedback or want to contribute you can reach out via <a href="https://github.com/rabbitstack/fibratus/issues">Github</a> or drop me an email.</p>
 
       <hr />
       <footer role="contentinfo">
@@ -246,17 +209,17 @@ Learning about <strong>etcd</strong>, <strong>fleet</strong> and <strong>flannel
   <h4>Share on</h4>
   <ul>
     <li>
-      <a href="https://twitter.com/intent/tweet?text=http://rabbitstack.github.io/operating%20systems/impressions-on-installation-of-coreos-on-a-bare-metal-server/" class="twitter" title="Share on Twitter"><i class="fa fa-twitter"></i><span> Twitter</span></a>
+      <a href="https://twitter.com/intent/tweet?text=http://rabbitstack.github.io/operating%20systems/fibratus-0-3-0/" class="twitter" title="Share on Twitter"><i class="fa fa-twitter"></i><span> Twitter</span></a>
     </li>
     <li>
-      <a href="https://www.facebook.com/sharer/sharer.php?u=http://rabbitstack.github.io/operating%20systems/impressions-on-installation-of-coreos-on-a-bare-metal-server/" class="facebook" title="Share on Facebook"><i class="fa fa-facebook"></i><span> Facebook</span></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=http://rabbitstack.github.io/operating%20systems/fibratus-0-3-0/" class="facebook" title="Share on Facebook"><i class="fa fa-facebook"></i><span> Facebook</span></a>
     </li>
     <li>
-      <a href="https://plus.google.com/share?url=http://rabbitstack.github.io/operating%20systems/impressions-on-installation-of-coreos-on-a-bare-metal-server/" class="google-plus" title="Share on Google Plus"><i class="fa fa-google-plus"></i><span> Google+</span></a>
+      <a href="https://plus.google.com/share?url=http://rabbitstack.github.io/operating%20systems/fibratus-0-3-0/" class="google-plus" title="Share on Google Plus"><i class="fa fa-google-plus"></i><span> Google+</span></a>
     </li>
   </ul>
 </div><!-- /.social-share -->
-        <p class="byline"><strong>Impressions on installation of CoreOS on a bare metal server</strong> was published on <time datetime="2016-05-08T13:28:05+02:00">May 08, 2016</time>.</p>
+        <p class="byline"><strong>Fibratus 0.3.0</strong> was published on <time datetime="2016-10-03T13:48:25+02:00">October 03, 2016</time>.</p>
       </footer>
     </div><!-- /.article-wrap -->
   
@@ -293,11 +256,11 @@ Learning about <strong>etcd</strong>, <strong>fleet</strong> and <strong>flannel
   <h4>You might also enjoy <small class="pull-right">(<a href="http://rabbitstack.github.io/posts/">View all posts</a>)</small></h4>
     <ul>
     
-      <li><a href="http://rabbitstack.github.io/operating%20systems/fibratus-0-3-0/" title="Fibratus 0.3.0">Fibratus 0.3.0</a></li>
-    
       <li><a href="http://rabbitstack.github.io/operating%20systems/fibratus-0-2-3/" title="Fibratus 0.2.3">Fibratus 0.2.3</a></li>
     
       <li><a href="http://rabbitstack.github.io/operating%20systems/fibratus-pre-release/" title="Fibratus Pre-Release">Fibratus Pre-Release</a></li>
+    
+      <li><a href="http://rabbitstack.github.io/operating%20systems/impressions-on-installation-of-coreos-on-a-bare-metal-server/" title="Impressions on installation of CoreOS on a bare metal server">Impressions on installation of CoreOS on a bare metal server</a></li>
     
     </ul>
     <hr />

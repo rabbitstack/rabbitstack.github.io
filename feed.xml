@@ -4,13 +4,64 @@
 <generator uri="https://github.com/jekyll/jekyll">Jekyll</generator>
 <link rel="self" type="application/atom+xml" href="http://rabbitstack.github.io/feed.xml" />
 <link rel="alternate" type="text/html" href="http://rabbitstack.github.io" />
-<updated>2016-08-21T17:14:07+02:00</updated>
+<updated>2016-10-03T21:18:55+02:00</updated>
 <id>http://rabbitstack.github.io/</id>
 <author>
   <name>Nedim Šabić</name>
   <uri>http://rabbitstack.github.io/</uri>
   <email>bhnedo@hotmail.com</email>
 </author>
+
+
+  
+
+<entry>
+  <title type="html"><![CDATA[Fibratus 0.3.0]]></title>
+  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/operating%20systems/fibratus-0-3-0/" />
+  <id>http://rabbitstack.github.io/operating%20systems/fibratus-0-3-0</id>
+  <published>2016-10-03T13:48:25+02:00</published>
+  <updated>2016-10-03T13:48:25+02:00</updated>
+  <author>
+    <name>Nedim Šabić</name>
+    <uri>http://rabbitstack.github.io</uri>
+    <email>bhnedo@hotmail.com</email>
+  </author>
+  <content type="html">&lt;p&gt;I’m pleased to announce the release of &lt;strong&gt;Fibratus 0.3.0&lt;/strong&gt;. This version ships with support for context switch instrumentation through the &lt;strong&gt;ContextSwitch&lt;/strong&gt; kernel event type.&lt;/p&gt;
+
+&lt;h3 id=&quot;whats-new&quot;&gt;What’s new&lt;/h3&gt;
+
+&lt;p&gt;Because the context switch instrumentation generates a &lt;strong&gt;massive&lt;/strong&gt; volume of events, it is disabled by default. There is a new &lt;code&gt;--cswitch&lt;/code&gt; command line flag to activate the stream of context switch events.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;fibratus run --filters ContextSwitch --cswitch
+
+...
+&lt;span class=&quot;m&quot;&gt;4207&lt;/span&gt; 16:15:38.790000 &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; conemu.exe &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;7368&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; - ContextSwitch &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;cpu&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0, &lt;span class=&quot;nv&quot;&gt;next_proc_name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;conemu.exe, &lt;span class=&quot;nv&quot;&gt;next_thread_id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;6108, &lt;span class=&quot;nv&quot;&gt;next_thread_prio&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;11, &lt;span class=&quot;nv&quot;&gt;next_thread_wait_time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0, &lt;span class=&quot;nv&quot;&gt;prev_proc_name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;ipodservice.exe, &lt;span class=&quot;nv&quot;&gt;prev_thread_id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0, &lt;span class=&quot;nv&quot;&gt;prev_thread_prio&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0, &lt;span class=&quot;nv&quot;&gt;prev_thread_state&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;RUNNING, &lt;span class=&quot;nv&quot;&gt;prev_thread_wait_mode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;KERNEL, &lt;span class=&quot;nv&quot;&gt;prev_thread_wait_reason&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;EXECUTIVE&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;m&quot;&gt;4208&lt;/span&gt; 16:15:38.790000 &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; conemu.exe &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;7368&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; - ContextSwitch &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;cpu&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2, &lt;span class=&quot;nv&quot;&gt;next_proc_name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;ConEmu.exe, &lt;span class=&quot;nv&quot;&gt;next_thread_id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;8076, &lt;span class=&quot;nv&quot;&gt;next_thread_prio&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;11, &lt;span class=&quot;nv&quot;&gt;next_thread_wait_time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0, &lt;span class=&quot;nv&quot;&gt;prev_proc_name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;ConEmuC64.exe, &lt;span class=&quot;nv&quot;&gt;prev_thread_id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0, &lt;span class=&quot;nv&quot;&gt;prev_thread_prio&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0, &lt;span class=&quot;nv&quot;&gt;prev_thread_state&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;RUNNING, &lt;span class=&quot;nv&quot;&gt;prev_thread_wait_mode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;KERNEL, &lt;span class=&quot;nv&quot;&gt;prev_thread_wait_reason&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;EXECUTIVE&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;m&quot;&gt;4209&lt;/span&gt; 16:15:38.790000 &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; idle &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; - ContextSwitch &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;cpu&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2, &lt;span class=&quot;nv&quot;&gt;next_proc_name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;idle, &lt;span class=&quot;nv&quot;&gt;next_thread_id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0, &lt;span class=&quot;nv&quot;&gt;next_thread_prio&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0, &lt;span class=&quot;nv&quot;&gt;next_thread_wait_time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;52, &lt;span class=&quot;nv&quot;&gt;prev_proc_name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;python.exe, &lt;span class=&quot;nv&quot;&gt;prev_thread_id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;8076, &lt;span class=&quot;nv&quot;&gt;prev_thread_prio&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;11, &lt;span class=&quot;nv&quot;&gt;prev_thread_state&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;WAITING, &lt;span class=&quot;nv&quot;&gt;prev_thread_wait_mode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;USER, &lt;span class=&quot;nv&quot;&gt;prev_thread_wait_reason&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;USER_REQUEST&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;m&quot;&gt;4210&lt;/span&gt; 16:15:38.790000 &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; chrome.exe &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;8348&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; - ContextSwitch &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;cpu&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;3, &lt;span class=&quot;nv&quot;&gt;next_proc_name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;chrome.exe, &lt;span class=&quot;nv&quot;&gt;next_thread_id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;8352, &lt;span class=&quot;nv&quot;&gt;next_thread_prio&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;9, &lt;span class=&quot;nv&quot;&gt;next_thread_wait_time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0, &lt;span class=&quot;nv&quot;&gt;prev_proc_name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;conemu.exe, &lt;span class=&quot;nv&quot;&gt;prev_thread_id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0, &lt;span class=&quot;nv&quot;&gt;prev_thread_prio&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0, &lt;span class=&quot;nv&quot;&gt;prev_thread_state&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;RUNNING, &lt;span class=&quot;nv&quot;&gt;prev_thread_wait_mode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;KERNEL, &lt;span class=&quot;nv&quot;&gt;prev_thread_wait_reason&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;EXECUTIVE&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;m&quot;&gt;4211&lt;/span&gt; 16:15:38.790000 &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; svchost.exe &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;820&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; - ContextSwitch &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;cpu&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1, &lt;span class=&quot;nv&quot;&gt;next_proc_name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;svchost.exe, &lt;span class=&quot;nv&quot;&gt;next_thread_id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;5832, &lt;span class=&quot;nv&quot;&gt;next_thread_prio&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;9, &lt;span class=&quot;nv&quot;&gt;next_thread_wait_time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2, &lt;span class=&quot;nv&quot;&gt;prev_proc_name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;svchost.exe, &lt;span class=&quot;nv&quot;&gt;prev_thread_id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;4388, &lt;span class=&quot;nv&quot;&gt;prev_thread_prio&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;9, &lt;span class=&quot;nv&quot;&gt;prev_thread_state&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;WAITING, &lt;span class=&quot;nv&quot;&gt;prev_thread_wait_mode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;USER, &lt;span class=&quot;nv&quot;&gt;prev_thread_wait_reason&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;LPC_REPLY&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+...&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Let’s see what does those event’s parameters mean.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;cpu&lt;/code&gt; is the identifier of the CPU core where the new thread is running after the context switch has taken place&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;next_proc_name&lt;/code&gt; identifies the process name of the thread which has been chosen by the scheduler&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;next_thread_id&lt;/code&gt; is the identifier of the new thread&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;next_thread_prio&lt;/code&gt; the priority of the new thread&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;next_thread_wait_time&lt;/code&gt; is the time thread has spent waiting in the ready queue before receiving the slice of the CPU time&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;prev_proc_name&lt;/code&gt; the process name of the thread which has been preempted by the kernel. The scheduler assigns the CPU to the new thread&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;prev_thread_id&lt;/code&gt; is the identifier of the old thread&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;prev_thread_prio&lt;/code&gt; the priority of the old thread&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;prev_thread_state&lt;/code&gt; determines the state of the previous thread&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;prev_thread_wait_mode&lt;/code&gt; indicates if the previous thread has been executing in the user space or in the kernel space&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;prev_thread_wait_reason&lt;/code&gt; the action emitted by the thread right before the dispatcher has moved it from the running queue&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;If you have any feedback or want to contribute you can reach out via &lt;a href=&quot;https://github.com/rabbitstack/fibratus/issues&quot;&gt;Github&lt;/a&gt; or drop me an email.&lt;/p&gt;
+
+  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/operating%20systems/fibratus-0-3-0/&quot;&gt;Fibratus 0.3.0&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on October 03, 2016.&lt;/p&gt;</content>
+</entry>
 
 
   
