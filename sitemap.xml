@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://rabbitstack.github.io/operating%20systems/fibratus-0-4-0/</loc>
+    <lastmod>2016-11-01T15:31:35+01:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>http://rabbitstack.github.io/operating%20systems/fibratus-0-3-0/</loc>
     <lastmod>2016-10-03T13:48:25+02:00</lastmod>
     <priority>0.8</priority>
@@ -82,31 +87,31 @@
   </url>
   <url>
     <loc>http://rabbitstack.github.io/category.html</loc>
-    <lastmod>2016-10-03T21:18:55+02:00</lastmod>
+    <lastmod>2016-11-01T16:54:14+01:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>http://rabbitstack.github.io/about/</loc>
-    <lastmod>2016-10-03T21:18:55+02:00</lastmod>
+    <lastmod>2016-11-01T16:54:14+01:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>http://rabbitstack.github.io/posts/</loc>
-    <lastmod>2016-10-03T21:18:55+02:00</lastmod>
+    <lastmod>2016-11-01T16:54:14+01:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>http://rabbitstack.github.io/category/</loc>
-    <lastmod>2016-10-03T21:18:55+02:00</lastmod>
+    <lastmod>2016-11-01T16:54:14+01:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>http://rabbitstack.github.io/</loc>
-    <lastmod>2016-10-03T21:18:55+02:00</lastmod>
+    <lastmod>2016-11-01T16:54:14+01:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
