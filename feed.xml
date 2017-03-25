@@ -4,13 +4,88 @@
 <generator uri="https://github.com/jekyll/jekyll">Jekyll</generator>
 <link rel="self" type="application/atom+xml" href="http://rabbitstack.github.io/feed.xml" />
 <link rel="alternate" type="text/html" href="http://rabbitstack.github.io" />
-<updated>2017-01-23T21:34:24+01:00</updated>
+<updated>2017-03-25T09:26:35+01:00</updated>
 <id>http://rabbitstack.github.io/</id>
 <author>
   <name>Nedim Šabić</name>
   <uri>http://rabbitstack.github.io/</uri>
   <email>bhnedo@hotmail.com</email>
 </author>
+
+
+  
+
+<entry>
+  <title type="html"><![CDATA[Fibratus 0.7.0]]></title>
+  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/operating%20systems/fibratus-0-7-0/" />
+  <id>http://rabbitstack.github.io/operating%20systems/fibratus-0-7-0</id>
+  <published>2017-03-25T08:56:28+01:00</published>
+  <updated>2017-03-25T08:56:28+01:00</updated>
+  <author>
+    <name>Nedim Šabić</name>
+    <uri>http://rabbitstack.github.io</uri>
+    <email>bhnedo@hotmail.com</email>
+  </author>
+  <content type="html">&lt;p&gt;I’m thrilled to announce the release of Fibratus 0.7.0. Let’s see what’s new in this version.&lt;/p&gt;
+
+&lt;h4 id=&quot;yara-integration&quot;&gt;YARA integration&lt;/h4&gt;
+
+&lt;p&gt;This release stems a new set of features I’ve decided to call &lt;strong&gt;bindings&lt;/strong&gt;. They represent join-points between fibratus and other tools that can add additional insights to the data captured from kernel. The first of them is the integration with the &lt;a href=&quot;https://virustoal.github.io/yara/&quot;&gt;Yara&lt;/a&gt; tool. The rule matching phase is triggered when process creation kernel event is detected. The image path of the created process is evaluated against the available rule set. If a match occurs, the &lt;code&gt;CreateProcess&lt;/code&gt; event is enriched with rule context information (the matching rule, rule meta information, data strings etc). Here is the example of the produced JSON payload:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-json&quot; data-lang=&quot;json&quot;&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+   &lt;span class=&quot;nt&quot;&gt;&amp;quot;pid&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;8100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+   &lt;span class=&quot;nt&quot;&gt;&amp;quot;params&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:{&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;pid&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2628&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;exe&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;C:\\WINDOWS\\system32\\notepad.exe&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;name&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;notepad.exe&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;comm&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;\&amp;quot;C:\\WINDOWS\\system32\\notepad.exe\&amp;quot; &amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;ppid&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;8100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;rule_info&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:{&lt;/span&gt;
+         &lt;span class=&quot;nt&quot;&gt;&amp;quot;rule&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;test&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+         &lt;span class=&quot;nt&quot;&gt;&amp;quot;meta&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:{&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;quot;weight&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;quot;version&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;0.1&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;quot;author&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;rabbitstack&amp;quot;&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+         &lt;span class=&quot;nt&quot;&gt;&amp;quot;namespace&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;default&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+         &lt;span class=&quot;nt&quot;&gt;&amp;quot;strings&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:[&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+               &lt;span class=&quot;nt&quot;&gt;&amp;quot;data&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;notepad&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+               &lt;span class=&quot;nt&quot;&gt;&amp;quot;identifier&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;$magic&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+               &lt;span class=&quot;nt&quot;&gt;&amp;quot;offset&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;118820&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+               &lt;span class=&quot;nt&quot;&gt;&amp;quot;data&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;notepad&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+               &lt;span class=&quot;nt&quot;&gt;&amp;quot;identifier&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;$magic&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+               &lt;span class=&quot;nt&quot;&gt;&amp;quot;offset&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;137751&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+         &lt;span class=&quot;nt&quot;&gt;&amp;quot;tags&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:[&lt;/span&gt;
+            &lt;span class=&quot;s2&quot;&gt;&amp;quot;Notepad&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+            &lt;span class=&quot;s2&quot;&gt;&amp;quot;raw&amp;quot;&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+   &lt;span class=&quot;nt&quot;&gt;&amp;quot;cpuid&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+   &lt;span class=&quot;nt&quot;&gt;&amp;quot;proc&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;explorer.exe&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+   &lt;span class=&quot;nt&quot;&gt;&amp;quot;name&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;CreateProcess&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+   &lt;span class=&quot;nt&quot;&gt;&amp;quot;timestamp&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;2017-03-22 20:09:31.513000&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+   &lt;span class=&quot;nt&quot;&gt;&amp;quot;id&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;To enable the YARA binding , you need to edit &lt;code&gt;fibratus.yml&lt;/code&gt; configuration descriptor. Under the &lt;code&gt;yara&lt;/code&gt; binding section, the &lt;code&gt;path&lt;/code&gt; key has to point to a valid path with a directory containing rule definitions. I’m not sure if this is a bug or limitation of the yara cython extension, but if the root directory is traversed recursively with multiple directories containing the &lt;code&gt;yar&lt;/code&gt; files, the matching might not work as expected.&lt;/p&gt;
+
+&lt;h4 id=&quot;standalone-installer&quot;&gt;Standalone installer&lt;/h4&gt;
+
+&lt;p&gt;I have to be honest about the drawbacks of installing fibratus from &lt;strong&gt;PyPI&lt;/strong&gt;. The kernel stream collector needs to be compiled and in order to do it the C compiler has to be present on the local machine. Obviously, the python interpreter and the &lt;code&gt;cython&lt;/code&gt; package are also the required dependencies to install fibratus successfully. Over and above that, the installation of &lt;code&gt;yara-python&lt;/code&gt; package doesn’t go smoothly on Windows, so I ended up compiling &lt;code&gt;libyara&lt;/code&gt; from sources which produces the statically linked library required by &lt;code&gt;yara-python&lt;/code&gt;.
+To overcome all those after-mentioned tedious tasks, from this release on, I’ll be shipping the windows installer which embeds python interpreter, cython extensions and any extra dependency in a single binary, so installing fibratus becomes a matter of few clicks. Feel free to download the latest version &lt;a href=&quot;https://github.com/rabbitstack/fibratus/releases/download/v0.7.0/fibratus-0.7.0.exe&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;If you have any feedback or would like to contribute you can reach out via &lt;a href=&quot;https://github.com/rabbitstack/fibratus/issues&quot;&gt;Github&lt;/a&gt; or drop me an email.&lt;/p&gt;
+
+&lt;p&gt;Enjoy this new release!&lt;/p&gt;
+
+  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/operating%20systems/fibratus-0-7-0/&quot;&gt;Fibratus 0.7.0&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on March 25, 2017.&lt;/p&gt;</content>
+</entry>
 
 
   
