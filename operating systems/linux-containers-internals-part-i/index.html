@@ -136,7 +136,7 @@
       
     </div><!--/ .headline-wrap -->
     <div class="article-wrap">
-      <p><strong>Namespaces</strong> and <strong>control groups</strong> (cgroups) are responsible for the magic behind Linux containers. The support for namespaces initially appeared in <strong>2.4.19</strong> kernels (mount point/file system isolation), but there are now six different types of namespace abstractions in the mainline of the contemporary kernels. From the kernel’s perspective, container is just another process with it’s own set of resources - file descriptors, process address space and processor’s state. For instance, a containerized <strong>nginx</strong> web server exposes <strong>external PIDs</strong> for it’s master and worker processes:</p>
+      <p><strong>Namespaces</strong> and <strong>control groups</strong> (cgroups) are responsible for the magic behind Linux containers. The support for namespaces initially appeared in <strong>2.4.19</strong> kernels (mount point/file system isolation), but there are now six different types of namespace abstractions in the mainline of the contemporary kernels. From the kernel’s perspective, a container is just another process with its own set of resources - file descriptors, process address space and processor’s state. For instance, a containerized <strong>nginx</strong> web server exposes <strong>external PIDs</strong> for its master and worker processes:</p>
 
 <div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="o">[</span>nedo@archrabbit<span class="o">]</span><span class="nv">$ </span>ps  -eo pid,comm,cmd <span class="p">|</span> grep nginx
 <span class="m">4971</span> nginx           nginx: master process nginx -g daemon off<span class="p">;</span>

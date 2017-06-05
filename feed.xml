@@ -4,7 +4,7 @@
 <generator uri="https://github.com/jekyll/jekyll">Jekyll</generator>
 <link rel="self" type="application/atom+xml" href="http://rabbitstack.github.io/feed.xml" />
 <link rel="alternate" type="text/html" href="http://rabbitstack.github.io" />
-<updated>2017-05-29T22:36:55+02:00</updated>
+<updated>2017-06-05T20:25:48+02:00</updated>
 <id>http://rabbitstack.github.io/</id>
 <author>
   <name>Nedim Šabić</name>
@@ -26,7 +26,7 @@
     <uri>http://rabbitstack.github.io</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
-  <content type="html">&lt;p&gt;&lt;strong&gt;Namespaces&lt;/strong&gt; and &lt;strong&gt;control groups&lt;/strong&gt; (cgroups) are responsible for the magic behind Linux containers. The support for namespaces initially appeared in &lt;strong&gt;2.4.19&lt;/strong&gt; kernels (mount point/file system isolation), but there are now six different types of namespace abstractions in the mainline of the contemporary kernels. From the kernel’s perspective, container is just another process with it’s own set of resources - file descriptors, process address space and processor’s state. For instance, a containerized &lt;strong&gt;nginx&lt;/strong&gt; web server exposes &lt;strong&gt;external PIDs&lt;/strong&gt; for it’s master and worker processes:&lt;/p&gt;
+  <content type="html">&lt;p&gt;&lt;strong&gt;Namespaces&lt;/strong&gt; and &lt;strong&gt;control groups&lt;/strong&gt; (cgroups) are responsible for the magic behind Linux containers. The support for namespaces initially appeared in &lt;strong&gt;2.4.19&lt;/strong&gt; kernels (mount point/file system isolation), but there are now six different types of namespace abstractions in the mainline of the contemporary kernels. From the kernel’s perspective, a container is just another process with its own set of resources - file descriptors, process address space and processor’s state. For instance, a containerized &lt;strong&gt;nginx&lt;/strong&gt; web server exposes &lt;strong&gt;external PIDs&lt;/strong&gt; for its master and worker processes:&lt;/p&gt;
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;nedo@archrabbit&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ps  -eo pid,comm,cmd &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; grep nginx
 &lt;span class=&quot;m&quot;&gt;4971&lt;/span&gt; nginx           nginx: master process nginx -g daemon off&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
