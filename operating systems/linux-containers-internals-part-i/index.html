@@ -14,8 +14,8 @@
 <!-- Twitter Cards -->
 <meta name="twitter:title" content="Linux Containers Internals (Part I)">
 <meta name="twitter:description" content="Namespaces and control groups (cgroups) are responsible for the magic behind Linux containers. The support for namespaces initially appeared in 2.4.19 kernels (mount point/file system isolation), but there are now six different types of namespace abstractions...">
-
-
+<meta name="twitter:site" content="@rabbitstack">
+<meta name="twitter:creator" content="@rabbitstack">
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://rabbitstack.github.io/images/rabbit-bkgd.jpg">
@@ -219,7 +219,7 @@
 <h3 id="pid-and-ipc-namespaces">PID and IPC namespaces</h3>
 
 <p>Recall we mentioned the containerized <strong>nginx’s</strong> instance exposes its external PIDs on the host system. Besides that, every process inside container has an <strong>internal</strong> PID. This correspondes to a numeric value of <code>1</code> for the first process inside container which acts as the <code>init</code> process (waits for and reaps orphaned child processes). The isolation of the PID number space is the guarantee for different PID namespaces to be able to have processes with same PIDs. The PID namespace is created by passing the <code>CLONE_NEWPID</code> flag to the <code>clone</code> or <code>unshare</code> system calls.
-<strong>IPC namespace</strong> (which it’s name implies) isolate interprocess communication mechanisms such as <strong>POSIX message queues</strong> or <strong>System V IPC</strong> objects. Passing <code>CLONE_NEWIPC</code> flag to the <code>clone</code> system call creates an isolated IPC namespace.</p>
+<strong>IPC namespace</strong> (which it’s name implies) isolates interprocess communication mechanisms such as <strong>POSIX message queues</strong> or <strong>System V IPC</strong> objects. Passing <code>CLONE_NEWIPC</code> flag to the <code>clone</code> system call creates an isolated IPC namespace.</p>
 
 <p>Here is the full source code that illustrates the creation of new mount, PID and IPC namespaces. Note the code has been reduced to the minimum for simplicity reasons. It makes use of the <code>libc</code> crate to invoke the system calls through standard C library. If you are looking for a high level abstraction, check out <a href="https://github.com/nix-rust/nix">nix</a>.</p>
 
