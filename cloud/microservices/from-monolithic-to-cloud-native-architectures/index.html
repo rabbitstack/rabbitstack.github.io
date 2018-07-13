@@ -10,7 +10,6 @@
 <meta name="keywords" content="monolithic, cloud-native, contenerization, disruptive, distributed patterns, microservices, silos">
 
 
-
 <!-- Twitter Cards -->
 <meta name="twitter:title" content="From monolithic to cloud-native architectures">
 <meta name="twitter:description" content="The software industry is moving fast - that's crystal clear. What now is considered as the state of the art model for software development and deployment, in a few years it usually becomes business agility barrier for the most organizations.">
@@ -55,9 +54,10 @@
 <script src="http://rabbitstack.github.io/assets/js/vendor/modernizr-2.7.1.custom.min.js"></script>
 
 <link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'>
-
+<link href='https://fonts.googleapis.com/css?family=Rajdhani:400,600,700' rel='stylesheet' type='text/css'>
+<link href="https://fonts.googleapis.com/css?family=Exo+2" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
 <!-- Icons -->
 <!-- 16x16 -->
 <link rel="shortcut icon" href="http://rabbitstack.github.io/favicon.ico">
@@ -93,17 +93,11 @@
 		    <ul>
 		        
 				    
-				        
-				    
 				    <li><a href="http://rabbitstack.github.io#" >Home</a></li>
 				
 				    
-				        
-				    
 				    <li><a href="http://rabbitstack.github.io/posts/" >Archive</a></li>
 				
-				    
-				        
 				    
 				    <li><a href="http://rabbitstack.github.io/about/" >About</a></li>
 				
@@ -121,7 +115,7 @@
   alt="From monolithic to cloud-native architectures feature image">
   
        <div class="headline-wrap">
-          <img src="http://rabbitstack.github.io/images/rabbitstack.png" />
+          <img class="bunny" src="http://rabbitstack.github.io/images/rabbitstack.png" />
           <h1> The place where bunnies dwell </h1>
           <h2> And bits become colossal </h2>
       </div>
@@ -138,7 +132,7 @@
     <div class="article-wrap">
       <p>The software industry is moving fast - that fact should be crystal clear. What now is considered as the state of the art model for software development and deployment, in a few years it usually becomes business agility barrier for the most organizations. The lack of agility limits the innovation factor and response time needed for the organizations to react, correct or deliver the business values before their competitors. The era of cloud computing has brought a myriad of new choices for software delivery. Computing resources, storage and networks can be provisioned elastically and on demand. Application can be scaled in question of seconds and the most of the <strong>PaaS</strong> solutions also provide proactive application monitoring, recovery, load balancing and centralized log aggregation.</p>
 <p>When talking about scalability, cloud centric and monolithic architectures, there are few issues and discrepancies that stand out immediately. As they are being part of a large code base, monolithic architectures can't be partitioned into independent deployable components. When scaling the monolithic based application we must scale all of it's components, and not just the ones under heavy load. Moreover, the componentes often have different functional requirements - while some might be more CPU intensive, the other might be I/O bounded. Due to the lack of this autonomous and componentization capable nature, the fault isolation can't be achieved, so the partial failures will usually cause total service downtime.</p>
-<p>Cloud-native architectures attempt to solve the problems above by decomposing the monolithic systems into self-sufficient units called <strong>microservices</strong>. They encapsulate the minimal business  capability into single responsibility artifacts under assumption of performing that single capability in the optimal fashion. I had an opportunity to assist to the <a href="http://www.springio.net/" target="_blank">Spring I/O</a> conference in Barcelona, and almost all speakers had mentioned that ubiquitous word - microservice. They were some very prominent and interesting talks, but in the end all of them had tended to converge in an after-mentioned term. Projects like <b>Spring Boot</b> and <b>Spring Cloud</b> are already bringing the Spring programming model into the world of cloud based applications.
+<p>Cloud-native architectures attempt to solve the problems above by decomposing the monolithic systems into self-sufficient units called <strong>microservices</strong>. They encapsulate the minimal business  capability into single responsibility artifacts under assumption of performing that single capability in the optimal fashion. I had an opportunity to assist to the <a href="http://www.springio.net/" target="_blank">Spring I/O</a> conference in Barcelona, and almost all speakers had mentioned that ubiquitous word - microservice. They were some very prominent and interesting talks, but in the end all of them had tended to converge in an aforementioned term. Projects like <b>Spring Boot</b> and <b>Spring Cloud</b> are already bringing the Spring programming model into the world of cloud based applications.
 </p>
 <p>
 Cloud-native architectures and microservices seem to be the logical evolution of the software engineering and delivery. The benefits of microservices include other aspects like parallelizing the workflow of development life cycle by dividing the bounded contexts between developers instead of assigning the whole team to the same sandbox, decoupling from the technology stack (for instance we could have one microservice written in Java, another one in Ruby or Python, and so on), implementing new business requirements independently from the rest of the system (in a monolithic application it's required to redeploy the entire application when one part is changed). As we will see, the migration to the cloud implies more than purely technical changes.
@@ -161,7 +155,7 @@ To establish an analogy, think about the following quote I have borrowed from <a
 
 <h3>API Gateway</h3>
 
-<p>The diversity of clients that interact with the cloud based applications can vary from mobiles to desktop systems and gaming consoles. Some of the after-mentioned clients run in a constrained environment where aspects like battery life or network bandwidth are much appreciated. If a client needs to query a tons of microservices in order to satisfy the UI needs, that would cause a lot of problems like latency and exaggerated number of round trips. To address this issue, the API gateway pattern provides a single entry point for the specific clients, where requests are routed to one or propagated to multiple microservices. As the request travels down the pipeline the responses are aggregated concurrently  by each microservice and then returned to the client.</p>
+<p>The diversity of clients that interact with the cloud based applications can vary from mobiles to desktop systems and gaming consoles. Some of the aforementioned clients run in a constrained environment where aspects like battery life or network bandwidth are much appreciated. If a client needs to query a tons of microservices in order to satisfy the UI needs, that would cause a lot of problems like latency and exaggerated number of round trips. To address this issue, the API gateway pattern provides a single entry point for the specific clients, where requests are routed to one or propagated to multiple microservices. As the request travels down the pipeline the responses are aggregated concurrently  by each microservice and then returned to the client.</p>
 <figure>
   <a href="/images/api-gateway.png" class="image-popup">
     <img src="/images/api-gateway.png" />
@@ -250,7 +244,7 @@ To establish an analogy, think about the following quote I have borrowed from <a
   <h4>You might also enjoy <small class="pull-right">(<a href="http://rabbitstack.github.io/posts/">View all posts</a>)</small></h4>
     <ul>
     
-      <li><a href="http://rabbitstack.github.io/operating%20systems/linux-containers-internals-part-i/" title="Linux Containers Internals (Part I)">Linux Containers Internals (Part I)</a></li>
+      <li><a href="http://rabbitstack.github.io/operating%20systems/containers/linux-containers-internals-part-i/" title="Linux Container Internals (Part I)">Linux Container Internals (Part I)</a></li>
     
       <li><a href="http://rabbitstack.github.io/operating%20systems/fibratus-0-7-0/" title="Fibratus 0.7.0">Fibratus 0.7.0</a></li>
     
@@ -263,7 +257,7 @@ To establish an analogy, think about the following quote I have borrowed from <a
   <footer>
     
 
-<span>&copy; 2017 Nedim Šabić. Rabbit Stack blog is powered by Jekyll. Bunny icon is courtesy of <a href="http://www.freepik.com" title="Freepik">Freepik.</a>
+<span>&copy; 2018 Nedim Šabić. Rabbit Stack blog is powered by Jekyll. Bunny icon is courtesy of <a href="http://www.freepik.com" title="Freepik">Freepik.</a>
 
   </footer>
 </div><!-- /.footer-wrap -->

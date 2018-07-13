@@ -10,7 +10,6 @@
 <meta name="keywords" content="openstack, cloud foundry, xenserver, virtualization, node.js">
 
 
-
 <!-- Twitter Cards -->
 <meta name="twitter:title" content="Deploying Cloud Foundry on OpenStack Juno and XenServer (Part II)">
 <meta name="twitter:description" content="Let's move on. We should have our OpenStack instance prepared for Cloud Foundry. The most usual way of deploying Cloud Foundry is through BOSH. For the who still didn't hear about it, BOSH is the platform for automation and lifcycle management of software and distributed services. It is also capable of monitoring and failure recovery of processes and virtual machines.">
@@ -55,9 +54,10 @@
 <script src="http://rabbitstack.github.io/assets/js/vendor/modernizr-2.7.1.custom.min.js"></script>
 
 <link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'>
-
+<link href='https://fonts.googleapis.com/css?family=Rajdhani:400,600,700' rel='stylesheet' type='text/css'>
+<link href="https://fonts.googleapis.com/css?family=Exo+2" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
 <!-- Icons -->
 <!-- 16x16 -->
 <link rel="shortcut icon" href="http://rabbitstack.github.io/favicon.ico">
@@ -93,17 +93,11 @@
 		    <ul>
 		        
 				    
-				        
-				    
 				    <li><a href="http://rabbitstack.github.io#" >Home</a></li>
 				
 				    
-				        
-				    
 				    <li><a href="http://rabbitstack.github.io/posts/" >Archive</a></li>
 				
-				    
-				        
 				    
 				    <li><a href="http://rabbitstack.github.io/about/" >About</a></li>
 				
@@ -121,7 +115,7 @@
   alt="Deploying Cloud Foundry on OpenStack Juno and XenServer (Part II) feature image">
   
        <div class="headline-wrap">
-          <img src="http://rabbitstack.github.io/images/rabbitstack.png" />
+          <img class="bunny" src="http://rabbitstack.github.io/images/rabbitstack.png" />
           <h1> The place where bunnies dwell </h1>
           <h2> And bits become colossal </h2>
       </div>
@@ -145,7 +139,7 @@ One notable difference is that BOSH is able to perform the deployment from the s
 
 <p>MicroBOSH is a single VM which contains all the necessary components to boot BOSH, including the blobstore, nats, director, health manager etc. Once you have an instance of MicroBOSH running, you can deploy BOSH if you wish. Install BOSH CLI gems (Ruby &gt;= 1.9.3 is required).</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>gem install bosh_cli bosh_cli_plugin_micro</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>gem <span class="nb">install </span>bosh_cli bosh_cli_plugin_micro</code></pre></figure>
 
 <p>You will need to create a keypair in OpenStack and configure <code>bosh</code> security group with the rules shown in the table below. You can do it by accessing the Horizon dashboard or by using <code>nova</code> CLI.</p>
 <table rules="groups">
@@ -174,230 +168,743 @@ One notable difference is that BOSH is able to perform the deployment from the s
   </tbody>
 </table>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>nova keypair-add microbosh &gt; microbosh.pem
-<span class="nv">$ </span>chmod <span class="m">600</span> microbosh.pem</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>nova keypair-add microbosh <span class="o">&gt;</span> microbosh.pem
+<span class="nv">$ </span><span class="nb">chmod </span>600 microbosh.pem</code></pre></figure>
 
 <p>BOSH uses a variety of artifacts in order to complete the deployment life cycle. We can basically distinguish between stemcell, release and deployment. To deploy MicroBOSH we will only need a stemcell which can be downloaded using the bosh CLI. First get a list of available stemcells and download the <code>bosh-stemcell-2839-openstack-kvm-centos-go_agent-raw.tgz</code>.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>bosh public stemcells
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>bosh public stemcells
 +-----------------------------------------------------------------+
-<span class="p">|</span> Name                                                            <span class="p">|</span>
+| Name                                                            |
 +-----------------------------------------------------------------+
-<span class="p">|</span> bosh-stemcell-2427-aws-xen-ubuntu.tgz                           <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2652-aws-xen-centos.tgz                           <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2839-aws-xen-centos-go_agent.tgz                  <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2427-aws-xen-ubuntu-go_agent.tgz                  <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2710-aws-xen-ubuntu-lucid-go_agent.tgz            <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2652-aws-xen-ubuntu-lucid.tgz                     <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2839-aws-xen-ubuntu-trusty-go_agent.tgz           <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2690.6-aws-xen-ubuntu-trusty-go_agent.tgz         <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2719.1-aws-xen-centos-go_agent.tgz                <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2719.1-aws-xen-ubuntu-trusty-go_agent.tgz         <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2719.2-aws-xen-centos-go_agent.tgz                <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2719.2-aws-xen-ubuntu-trusty-go_agent.tgz         <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2719.3-aws-xen-ubuntu-trusty-go_agent.tgz         <span class="p">|</span>
-<span class="p">|</span> light-bosh-stemcell-2427-aws-xen-ubuntu.tgz                     <span class="p">|</span>
-<span class="p">|</span> light-bosh-stemcell-2652-aws-xen-centos.tgz                     <span class="p">|</span>
-<span class="p">|</span> light-bosh-stemcell-2839-aws-xen-centos-go_agent.tgz            <span class="p">|</span>
-<span class="p">|</span> light-bosh-stemcell-2427-aws-xen-ubuntu-go_agent.tgz            <span class="p">|</span>
-<span class="p">|</span> light-bosh-stemcell-2710-aws-xen-ubuntu-lucid-go_agent.tgz      <span class="p">|</span>
-<span class="p">|</span> light-bosh-stemcell-2652-aws-xen-ubuntu-lucid.tgz               <span class="p">|</span>
-<span class="p">|</span> light-bosh-stemcell-2839-aws-xen-ubuntu-trusty-go_agent.tgz     <span class="p">|</span>
-<span class="p">|</span> light-bosh-stemcell-2690.6-aws-xen-ubuntu-trusty-go_agent.tgz   <span class="p">|</span>
-<span class="p">|</span> light-bosh-stemcell-2719.1-aws-xen-centos-go_agent.tgz          <span class="p">|</span>
-<span class="p">|</span> light-bosh-stemcell-2719.1-aws-xen-ubuntu-trusty-go_agent.tgz   <span class="p">|</span>
-<span class="p">|</span> light-bosh-stemcell-2719.2-aws-xen-centos-go_agent.tgz          <span class="p">|</span>
-<span class="p">|</span> light-bosh-stemcell-2719.2-aws-xen-ubuntu-trusty-go_agent.tgz   <span class="p">|</span>
-<span class="p">|</span> light-bosh-stemcell-2719.3-aws-xen-ubuntu-trusty-go_agent.tgz   <span class="p">|</span>
-<span class="p">|</span> light-bosh-stemcell-2839-aws-xen-hvm-centos-go_agent.tgz        <span class="p">|</span>
-<span class="p">|</span> light-bosh-stemcell-2839-aws-xen-hvm-ubuntu-trusty-go_agent.tgz <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2427-openstack-kvm-ubuntu.tgz                     <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2624-openstack-kvm-centos.tgz                     <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2624-openstack-kvm-ubuntu-lucid.tgz               <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2839-openstack-kvm-centos-go_agent.tgz            <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2839-openstack-kvm-ubuntu-trusty-go_agent.tgz     <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2652-openstack-kvm-ubuntu-lucid-go_agent.tgz      <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2719.1-openstack-kvm-centos-go_agent.tgz          <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2719.1-openstack-kvm-ubuntu-trusty-go_agent.tgz   <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2719.2-openstack-kvm-centos-go_agent.tgz          <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2719.2-openstack-kvm-ubuntu-trusty-go_agent.tgz   <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2719.3-openstack-kvm-ubuntu-trusty-go_agent.tgz   <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2839-openstack-kvm-centos-go_agent-raw.tgz        <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2839-openstack-kvm-ubuntu-trusty-go_agent-raw.tgz <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2427-vcloud-esxi-ubuntu.tgz                       <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2652-vcloud-esxi-ubuntu-lucid.tgz                 <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2839-vcloud-esxi-ubuntu-trusty-go_agent.tgz       <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2690.5-vcloud-esxi-ubuntu-trusty-go_agent.tgz     <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2690.6-vcloud-esxi-ubuntu-trusty-go_agent.tgz     <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2710-vcloud-esxi-ubuntu-lucid-go_agent.tgz        <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2427-vsphere-esxi-ubuntu.tgz                      <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2624-vsphere-esxi-centos.tgz                      <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2839-vsphere-esxi-centos-go_agent.tgz             <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2427-vsphere-esxi-ubuntu-go_agent.tgz             <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2710-vsphere-esxi-ubuntu-lucid-go_agent.tgz       <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2624-vsphere-esxi-ubuntu-lucid.tgz                <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2839-vsphere-esxi-ubuntu-trusty-go_agent.tgz      <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2719.1-vsphere-esxi-centos-go_agent.tgz           <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2719.1-vsphere-esxi-ubuntu-trusty-go_agent.tgz    <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2719.2-vsphere-esxi-ubuntu-trusty-go_agent.tgz    <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2719.2-vsphere-esxi-centos-go_agent.tgz           <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2719.3-vsphere-esxi-ubuntu-trusty-go_agent.tgz    <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-2690.6-vsphere-esxi-ubuntu-trusty-go_agent.tgz    <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-389-warden-boshlite-ubuntu-trusty-go_agent.tgz    <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-53-warden-boshlite-ubuntu.tgz                     <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-389-warden-boshlite-centos-go_agent.tgz           <span class="p">|</span>
-<span class="p">|</span> bosh-stemcell-64-warden-boshlite-ubuntu-lucid-go_agent.tgz      <span class="p">|</span>
-+-----------------------------------------------------------------+</code></pre></div>
+| bosh-stemcell-2427-aws-xen-ubuntu.tgz                           |
+| bosh-stemcell-2652-aws-xen-centos.tgz                           |
+| bosh-stemcell-2839-aws-xen-centos-go_agent.tgz                  |
+| bosh-stemcell-2427-aws-xen-ubuntu-go_agent.tgz                  |
+| bosh-stemcell-2710-aws-xen-ubuntu-lucid-go_agent.tgz            |
+| bosh-stemcell-2652-aws-xen-ubuntu-lucid.tgz                     |
+| bosh-stemcell-2839-aws-xen-ubuntu-trusty-go_agent.tgz           |
+| bosh-stemcell-2690.6-aws-xen-ubuntu-trusty-go_agent.tgz         |
+| bosh-stemcell-2719.1-aws-xen-centos-go_agent.tgz                |
+| bosh-stemcell-2719.1-aws-xen-ubuntu-trusty-go_agent.tgz         |
+| bosh-stemcell-2719.2-aws-xen-centos-go_agent.tgz                |
+| bosh-stemcell-2719.2-aws-xen-ubuntu-trusty-go_agent.tgz         |
+| bosh-stemcell-2719.3-aws-xen-ubuntu-trusty-go_agent.tgz         |
+| light-bosh-stemcell-2427-aws-xen-ubuntu.tgz                     |
+| light-bosh-stemcell-2652-aws-xen-centos.tgz                     |
+| light-bosh-stemcell-2839-aws-xen-centos-go_agent.tgz            |
+| light-bosh-stemcell-2427-aws-xen-ubuntu-go_agent.tgz            |
+| light-bosh-stemcell-2710-aws-xen-ubuntu-lucid-go_agent.tgz      |
+| light-bosh-stemcell-2652-aws-xen-ubuntu-lucid.tgz               |
+| light-bosh-stemcell-2839-aws-xen-ubuntu-trusty-go_agent.tgz     |
+| light-bosh-stemcell-2690.6-aws-xen-ubuntu-trusty-go_agent.tgz   |
+| light-bosh-stemcell-2719.1-aws-xen-centos-go_agent.tgz          |
+| light-bosh-stemcell-2719.1-aws-xen-ubuntu-trusty-go_agent.tgz   |
+| light-bosh-stemcell-2719.2-aws-xen-centos-go_agent.tgz          |
+| light-bosh-stemcell-2719.2-aws-xen-ubuntu-trusty-go_agent.tgz   |
+| light-bosh-stemcell-2719.3-aws-xen-ubuntu-trusty-go_agent.tgz   |
+| light-bosh-stemcell-2839-aws-xen-hvm-centos-go_agent.tgz        |
+| light-bosh-stemcell-2839-aws-xen-hvm-ubuntu-trusty-go_agent.tgz |
+| bosh-stemcell-2427-openstack-kvm-ubuntu.tgz                     |
+| bosh-stemcell-2624-openstack-kvm-centos.tgz                     |
+| bosh-stemcell-2624-openstack-kvm-ubuntu-lucid.tgz               |
+| bosh-stemcell-2839-openstack-kvm-centos-go_agent.tgz            |
+| bosh-stemcell-2839-openstack-kvm-ubuntu-trusty-go_agent.tgz     |
+| bosh-stemcell-2652-openstack-kvm-ubuntu-lucid-go_agent.tgz      |
+| bosh-stemcell-2719.1-openstack-kvm-centos-go_agent.tgz          |
+| bosh-stemcell-2719.1-openstack-kvm-ubuntu-trusty-go_agent.tgz   |
+| bosh-stemcell-2719.2-openstack-kvm-centos-go_agent.tgz          |
+| bosh-stemcell-2719.2-openstack-kvm-ubuntu-trusty-go_agent.tgz   |
+| bosh-stemcell-2719.3-openstack-kvm-ubuntu-trusty-go_agent.tgz   |
+| bosh-stemcell-2839-openstack-kvm-centos-go_agent-raw.tgz        |
+| bosh-stemcell-2839-openstack-kvm-ubuntu-trusty-go_agent-raw.tgz |
+| bosh-stemcell-2427-vcloud-esxi-ubuntu.tgz                       |
+| bosh-stemcell-2652-vcloud-esxi-ubuntu-lucid.tgz                 |
+| bosh-stemcell-2839-vcloud-esxi-ubuntu-trusty-go_agent.tgz       |
+| bosh-stemcell-2690.5-vcloud-esxi-ubuntu-trusty-go_agent.tgz     |
+| bosh-stemcell-2690.6-vcloud-esxi-ubuntu-trusty-go_agent.tgz     |
+| bosh-stemcell-2710-vcloud-esxi-ubuntu-lucid-go_agent.tgz        |
+| bosh-stemcell-2427-vsphere-esxi-ubuntu.tgz                      |
+| bosh-stemcell-2624-vsphere-esxi-centos.tgz                      |
+| bosh-stemcell-2839-vsphere-esxi-centos-go_agent.tgz             |
+| bosh-stemcell-2427-vsphere-esxi-ubuntu-go_agent.tgz             |
+| bosh-stemcell-2710-vsphere-esxi-ubuntu-lucid-go_agent.tgz       |
+| bosh-stemcell-2624-vsphere-esxi-ubuntu-lucid.tgz                |
+| bosh-stemcell-2839-vsphere-esxi-ubuntu-trusty-go_agent.tgz      |
+| bosh-stemcell-2719.1-vsphere-esxi-centos-go_agent.tgz           |
+| bosh-stemcell-2719.1-vsphere-esxi-ubuntu-trusty-go_agent.tgz    |
+| bosh-stemcell-2719.2-vsphere-esxi-ubuntu-trusty-go_agent.tgz    |
+| bosh-stemcell-2719.2-vsphere-esxi-centos-go_agent.tgz           |
+| bosh-stemcell-2719.3-vsphere-esxi-ubuntu-trusty-go_agent.tgz    |
+| bosh-stemcell-2690.6-vsphere-esxi-ubuntu-trusty-go_agent.tgz    |
+| bosh-stemcell-389-warden-boshlite-ubuntu-trusty-go_agent.tgz    |
+| bosh-stemcell-53-warden-boshlite-ubuntu.tgz                     |
+| bosh-stemcell-389-warden-boshlite-centos-go_agent.tgz           |
+| bosh-stemcell-64-warden-boshlite-ubuntu-lucid-go_agent.tgz      |
++-----------------------------------------------------------------+</code></pre></figure>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>bosh download public stemcell bosh-stemcell-2839-openstack-kvm-centos-go_agent-raw.tgz
-bosh-stemcell:   4% <span class="p">|</span>ooo                              <span class="p">|</span>  24.4MB 753.0KB/s ETA:  00:11:43</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>bosh download public stemcell bosh-stemcell-2839-openstack-kvm-centos-go_agent-raw.tgz
+bosh-stemcell:   4% |ooo                              |  24.4MB 753.0KB/s ETA:  00:11:43</code></pre></figure>
 
 <p>Now we are ready to create the MicroBOSH deployment manifest <code>microbosh-openstack.yml</code> file. You will need to change <code>net_id</code> with your OpenStack instance network  identifier, <code>ip</code> with the ip address from the network pool. You can find out that information by executing the following commands.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>nova network-list
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>nova network-list
 +--------------------------------------+----------+----------------+
-<span class="p">|</span> ID                                   <span class="p">|</span> Label    <span class="p">|</span> Cidr           <span class="p">|</span>
+| ID                                   | Label    | Cidr           |
 +--------------------------------------+----------+----------------+
-<span class="p">|</span> 3f36d40e-1097-49a0-a023-4606dbf3a1f5 <span class="p">|</span> yuna-net <span class="p">|</span> 192.168.1.0/24 <span class="p">|</span>
+| 3f36d40e-1097-49a0-a023-4606dbf3a1f5 | yuna-net | 192.168.1.0/24 |
 +--------------------------------------+----------+----------------+
 
 <span class="nv">$ </span>nova network-show 3f36d40e-1097-49a0-a023-4606dbf3a1f5
 +---------------------+--------------------------------------+
-<span class="p">|</span> Property            <span class="p">|</span> Value                                <span class="p">|</span>
+| Property            | Value                                |
 +---------------------+--------------------------------------+
-<span class="p">|</span> bridge              <span class="p">|</span> xenbr0                               <span class="p">|</span>
-<span class="p">|</span> bridge_interface    <span class="p">|</span> eth0                                 <span class="p">|</span>
-<span class="p">|</span> broadcast           <span class="p">|</span> 192.168.1.255                        <span class="p">|</span>
-<span class="p">|</span> cidr                <span class="p">|</span> 192.168.1.0/24                       <span class="p">|</span>
-<span class="p">|</span> cidr_v6             <span class="p">|</span> -                                    <span class="p">|</span>
-<span class="p">|</span> created_at          <span class="p">|</span> 2014-12-28T17:18:14.000000           <span class="p">|</span>
-<span class="p">|</span> deleted             <span class="p">|</span> False                                <span class="p">|</span>
-<span class="p">|</span> deleted_at          <span class="p">|</span> -                                    <span class="p">|</span>
-<span class="p">|</span> dhcp_server         <span class="p">|</span> 192.168.1.50                         <span class="p">|</span>
-<span class="p">|</span> dhcp_start          <span class="p">|</span> 192.168.1.51                         <span class="p">|</span>
-<span class="p">|</span> dns1                <span class="p">|</span> 8.8.4.4                              <span class="p">|</span>
-<span class="p">|</span> dns2                <span class="p">|</span> -                                    <span class="p">|</span>
-<span class="p">|</span> enable_dhcp         <span class="p">|</span> True                                 <span class="p">|</span>
-<span class="p">|</span> gateway             <span class="p">|</span> 192.168.1.50                         <span class="p">|</span>
-<span class="p">|</span> gateway_v6          <span class="p">|</span> -                                    <span class="p">|</span>
-<span class="p">|</span> host                <span class="p">|</span> -                                    <span class="p">|</span>
-<span class="p">|</span> id                  <span class="p">|</span> 3f36d40e-1097-49a0-a023-4606dbf3a1f5 <span class="p">|</span>
-<span class="p">|</span> injected            <span class="p">|</span> False                                <span class="p">|</span>
-<span class="p">|</span> label               <span class="p">|</span> yuna-net                             <span class="p">|</span>
-<span class="p">|</span> mtu                 <span class="p">|</span> -                                    <span class="p">|</span>
-<span class="p">|</span> multi_host          <span class="p">|</span> True                                 <span class="p">|</span>
-<span class="p">|</span> netmask             <span class="p">|</span> 255.255.255.0                        <span class="p">|</span>
-<span class="p">|</span> netmask_v6          <span class="p">|</span> -                                    <span class="p">|</span>
-<span class="p">|</span> priority            <span class="p">|</span> -                                    <span class="p">|</span>
-<span class="p">|</span> project_id          <span class="p">|</span> -                                    <span class="p">|</span>
-<span class="p">|</span> rxtx_base           <span class="p">|</span> -                                    <span class="p">|</span>
-<span class="p">|</span> share_address       <span class="p">|</span> True                                 <span class="p">|</span>
-<span class="p">|</span> updated_at          <span class="p">|</span> -                                    <span class="p">|</span>
-<span class="p">|</span> vlan                <span class="p">|</span> -                                    <span class="p">|</span>
-<span class="p">|</span> vpn_private_address <span class="p">|</span> -                                    <span class="p">|</span>
-<span class="p">|</span> vpn_public_address  <span class="p">|</span> -                                    <span class="p">|</span>
-<span class="p">|</span> vpn_public_port     <span class="p">|</span> -                                    <span class="p">|</span>
-+---------------------+--------------------------------------+</code></pre></div>
+| bridge              | xenbr0                               |
+| bridge_interface    | eth0                                 |
+| broadcast           | 192.168.1.255                        |
+| cidr                | 192.168.1.0/24                       |
+| cidr_v6             | -                                    |
+| created_at          | 2014-12-28T17:18:14.000000           |
+| deleted             | False                                |
+| deleted_at          | -                                    |
+| dhcp_server         | 192.168.1.50                         |
+| dhcp_start          | 192.168.1.51                         |
+| dns1                | 8.8.4.4                              |
+| dns2                | -                                    |
+| enable_dhcp         | True                                 |
+| gateway             | 192.168.1.50                         |
+| gateway_v6          | -                                    |
+| host                | -                                    |
+| <span class="nb">id</span>                  | 3f36d40e-1097-49a0-a023-4606dbf3a1f5 |
+| injected            | False                                |
+| label               | yuna-net                             |
+| mtu                 | -                                    |
+| multi_host          | True                                 |
+| netmask             | 255.255.255.0                        |
+| netmask_v6          | -                                    |
+| priority            | -                                    |
+| project_id          | -                                    |
+| rxtx_base           | -                                    |
+| share_address       | True                                 |
+| updated_at          | -                                    |
+| vlan                | -                                    |
+| vpn_private_address | -                                    |
+| vpn_public_address  | -                                    |
+| vpn_public_port     | -                                    |
++---------------------+--------------------------------------+</code></pre></figure>
 
 <p>Under the <code>openstack</code> section change the Identity service endpoint, OpenStack credentials, the private key location, and optionally set the timeout for OpenStack resources.</p>
 
-<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="nn">---</span>
-<span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">microbosh-openstack</span>
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="s">---</span><span class="err">
+</span>
+<span class="na">name</span><span class="pi">:</span> <span class="s">microbosh-openstack</span><span class="err">
+</span>
 
-<span class="l-Scalar-Plain">logging</span><span class="p-Indicator">:</span>
-  <span class="l-Scalar-Plain">level</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">DEBUG</span>
+<span class="na">logging</span><span class="pi">:</span><span class="err">
+</span>
+  <span class="na">level</span><span class="pi">:</span> <span class="s">DEBUG</span><span class="err">
+</span>
 
-<span class="l-Scalar-Plain">network</span><span class="p-Indicator">:</span>
-  <span class="l-Scalar-Plain">type</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">manual</span>
-  <span class="l-Scalar-Plain">ip</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">192.168.1.55</span>
-  <span class="l-Scalar-Plain">cloud_properties</span><span class="p-Indicator">:</span>
-    <span class="l-Scalar-Plain">net_id</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">3f36d40e-1097-49a0-a023-4606dbf3a1f5</span>
+<span class="na">network</span><span class="pi">:</span><span class="err">
+</span>
+  <span class="na">type</span><span class="pi">:</span> <span class="s">manual</span><span class="err">
+</span>
+  <span class="na">ip</span><span class="pi">:</span> <span class="s">192.168.1.55</span><span class="err">
+</span>
+  <span class="na">cloud_properties</span><span class="pi">:</span><span class="err">
+</span>
+    <span class="na">net_id</span><span class="pi">:</span> <span class="s">3f36d40e-1097-49a0-a023-4606dbf3a1f5</span><span class="err">
+</span>
 
-<span class="l-Scalar-Plain">resources</span><span class="p-Indicator">:</span>
-  <span class="l-Scalar-Plain">persistent_disk</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">16384</span>
-  <span class="l-Scalar-Plain">cloud_properties</span><span class="p-Indicator">:</span>
-    <span class="l-Scalar-Plain">instance_type</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">m1.medium</span>
+<span class="na">resources</span><span class="pi">:</span><span class="err">
+</span>
+  <span class="na">persistent_disk</span><span class="pi">:</span> <span class="s">16384</span><span class="err">
+</span>
+  <span class="na">cloud_properties</span><span class="pi">:</span><span class="err">
+</span>
+    <span class="na">instance_type</span><span class="pi">:</span> <span class="s">m1.medium</span><span class="err">
+</span>
 
-<span class="l-Scalar-Plain">cloud</span><span class="p-Indicator">:</span>
-  <span class="l-Scalar-Plain">plugin</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">openstack</span>
-  <span class="l-Scalar-Plain">properties</span><span class="p-Indicator">:</span>
-    <span class="l-Scalar-Plain">openstack</span><span class="p-Indicator">:</span>
-      <span class="l-Scalar-Plain">auth_url</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">http://controller:5000/v2.0</span>
-      <span class="l-Scalar-Plain">username</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">admin</span>
-      <span class="l-Scalar-Plain">api_key</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">admin</span>
-      <span class="l-Scalar-Plain">tenant</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">admin</span>
-      <span class="l-Scalar-Plain">default_security_groups</span><span class="p-Indicator">:</span> <span class="p-Indicator">[</span><span class="s">&quot;bosh&quot;</span><span class="p-Indicator">]</span>
-      <span class="l-Scalar-Plain">default_key_name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">microbosh</span>
-      <span class="l-Scalar-Plain">private_key</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">/root/microbosh.pem</span>
-      <span class="l-Scalar-Plain">state_timeout</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">900</span>
+<span class="na">cloud</span><span class="pi">:</span><span class="err">
+</span>
+  <span class="na">plugin</span><span class="pi">:</span> <span class="s">openstack</span><span class="err">
+</span>
+  <span class="na">properties</span><span class="pi">:</span><span class="err">
+</span>
+    <span class="na">openstack</span><span class="pi">:</span><span class="err">
+</span>
+      <span class="na">auth_url</span><span class="pi">:</span> <span class="s">http://controller:5000/v2.0</span><span class="err">
+</span>
+      <span class="na">username</span><span class="pi">:</span> <span class="s">admin</span><span class="err">
+</span>
+      <span class="na">api_key</span><span class="pi">:</span> <span class="s">admin</span><span class="err">
+</span>
+      <span class="na">tenant</span><span class="pi">:</span> <span class="s">admin</span><span class="err">
+</span>
+      <span class="na">default_security_groups</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">bosh"</span><span class="pi">]</span><span class="err">
+</span>
+      <span class="na">default_key_name</span><span class="pi">:</span> <span class="s">microbosh</span><span class="err">
+</span>
+      <span class="na">private_key</span><span class="pi">:</span> <span class="s">/root/microbosh.pem</span><span class="err">
+</span>
+      <span class="na">state_timeout</span><span class="pi">:</span> <span class="s">900</span><span class="err">
+</span>
 
-<span class="l-Scalar-Plain">apply_spec</span><span class="p-Indicator">:</span>
-  <span class="l-Scalar-Plain">properties</span><span class="p-Indicator">:</span>
-    <span class="l-Scalar-Plain">director</span><span class="p-Indicator">:</span>
-      <span class="l-Scalar-Plain">max_threads</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">3</span>
-    <span class="l-Scalar-Plain">hm</span><span class="p-Indicator">:</span>
-      <span class="l-Scalar-Plain">resurrector_enabled</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">true</span>
-    <span class="l-Scalar-Plain">ntp</span><span class="p-Indicator">:</span>
-      <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">0.europe.pool.ntp.org</span>
-      <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">1.europe.pool.ntp.org</span></code></pre></div>
+<span class="na">apply_spec</span><span class="pi">:</span><span class="err">
+</span>
+  <span class="na">properties</span><span class="pi">:</span><span class="err">
+</span>
+    <span class="na">director</span><span class="pi">:</span><span class="err">
+</span>
+      <span class="na">max_threads</span><span class="pi">:</span> <span class="s">3</span><span class="err">
+</span>
+    <span class="na">hm</span><span class="pi">:</span><span class="err">
+</span>
+      <span class="na">resurrector_enabled</span><span class="pi">:</span> <span class="no">true</span><span class="err">
+</span>
+    <span class="na">ntp</span><span class="pi">:</span><span class="err">
+</span>
+      <span class="pi">-</span> <span class="s">0.europe.pool.ntp.org</span><span class="err">
+</span>
+      <span class="pi">-</span> <span class="s">1.europe.pool.ntp.org</span></code></pre></figure>
 
 <p>Finally, set the current deployment manifest file and deploy MicroBOSH.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>bosh micro deployment microbosh-openstack.yml
-<span class="nv">$ </span>bosh micro deploy bosh-stemcell-2839-openstack-kvm-centos-go_agent-raw.tgz</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>bosh micro deployment microbosh-openstack.yml
+<span class="nv">$ </span>bosh micro deploy bosh-stemcell-2839-openstack-kvm-centos-go_agent-raw.tgz</code></pre></figure>
 
 <p>If everything goes well you should login into the MicroBOSH instance (use <code>admin</code>, for both username and password).</p>
 
-<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="l-Scalar-Plain">$ bosh target 192.168.1.55</span>
-<span class="l-Scalar-Plain">Target set to &#39;microbosh-openstack&#39;</span>
-<span class="l-Scalar-Plain">Your username</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">admin</span>
-<span class="l-Scalar-Plain">Enter password</span><span class="p-Indicator">:</span> <span class="err">*****</span>
-<span class="l-Scalar-Plain">Logged in as &#39;admin&#39;</span></code></pre></div>
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="s">$ bosh target 192.168.1.55</span><span class="err">
+</span>
+<span class="s">Target set to 'microbosh-openstack'</span><span class="err">
+</span>
+<span class="na">Your username</span><span class="pi">:</span> <span class="s">admin</span><span class="err">
+</span>
+<span class="na">Enter password</span><span class="pi">:</span> <span class="err">*****
+</span>
+<span class="s">Logged in as 'admin'</span></code></pre></figure>
 
 <h3>Deploying Cloud Foundry</h3>
 
 <p>Start by cloning the Cloud Foundry repository. Enter the newly created <code>cf-release</code> directory and execute the <code>update</code> script to update all submodules.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>git clone https://github.com/cloudfoundry/cf-release.git
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>git clone https://github.com/cloudfoundry/cf-release.git
 <span class="nv">$ </span><span class="nb">cd </span>cf-release
-<span class="nv">$ </span>./update</code></pre></div>
+<span class="nv">$ </span>./update</code></pre></figure>
 
 <p>Upload the stemcell to the BOSH Director.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>bosh upload stemcell bosh-stemcell-2839-openstack-kvm-centos-go_agent-raw.tgz</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>bosh upload stemcell bosh-stemcell-2839-openstack-kvm-centos-go_agent-raw.tgz</code></pre></figure>
 
 <p>In BOSH terminology, <strong>release</strong> is a collection of packages and source code, dependencies, configuration properties, and any other components required to perform a deployment. To create a Cloud Foundry release, use this command from <code>cf-release</code> directory.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>bosh create release</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>bosh create release</code></pre></figure>
 
 <p>This will download the required blobs from the S3 storage service and generate a release tarball. You should end up with the similar directory structures.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>ls blobs
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span><span class="nb">ls </span>blobs
 buildpack_cache    git           haproxy         mysql             php-buildpack     rootfs      ruby-buildpack
 cli                go-buildpack  java-buildpack  nginx             postgres          ruby        sqlite
 debian_nfs_server  golang        libyaml         nodejs-buildpack  python-buildpack  ruby-2.1.4  uaa
 
-<span class="nv">$ </span>ls packages
+<span class="nv">$ </span><span class="nb">ls </span>packages
 acceptance-tests        buildpack_python     dea_next             golang     loggregator_trafficcontroller  postgres        warden
 buildpack_cache         buildpack_ruby       debian_nfs_server    golang1.3  login                          rootfs_lucid64
 buildpack_go            cli                  doppler              gorouter   metron_agent                   ruby
 buildpack_java          cloud_controller_ng  etcd                 haproxy    mysqlclient                    ruby-2.1.4
 buildpack_java_offline  collector            etcd_metrics_server  hm9000     nats                           smoke-tests
 buildpack_nodejs        common               git                  libpq      nginx                          sqlite
-buildpack_php           dea_logging_agent    gnatsd               libyaml    nginx_newrelic_plugin          uaa</code></pre></div>
+buildpack_php           dea_logging_agent    gnatsd               libyaml    nginx_newrelic_plugin          uaa</code></pre></figure>
 
 <p>Now you can upload the release to the BOSH Director.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>bosh upload release</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>bosh upload release</code></pre></figure>
 
 <p>The most complex part of Cloud Foundry BOSH deployment is the manifest file where all components are tied together - computing resource specifications, VMs, software releases, and configuration properties. You can use the deployment which worked great on my environment. Don’t forget to create <code>cf.small</code> and <code>cf.medium</code> flavors in OpenStack.</p>
 
+<noscript><pre>&lt;%
+director_uuid = &#39;YOUR_DIRECTOR_UUID&#39;
+static_ip = &#39;YOUR_FLOATING_IP&#39;
+root_domain = &quot;#{static_ip}.xip.io&quot;
+deployment_name = &#39;cf&#39;
+cf_release = &#39;194+dev.2&#39;
+protocol = &#39;http&#39;
+common_password = &#39;YOUR_PASSWORD&#39;
+%&gt;
+---
+name: &lt;%= deployment_name %&gt;
+director_uuid: &lt;%= director_uuid %&gt;
+
+releases:
+ - name: cf
+   version: &lt;%= cf_release %&gt;
+
+compilation:
+  workers: 2
+  network: default
+  reuse_compilation_vms: true
+  cloud_properties:
+    instance_type: cf.medium
+
+update:
+  canaries: 0
+  canary_watch_time: 30000-600000
+  update_watch_time: 30000-600000
+  max_in_flight: 32
+  serial: false
+
+networks:
+  - name: default
+    type: dynamic
+    cloud_properties:
+      net_id: 3f36d40e-1097-49a0-a023-4606dbf3a1f5 
+      security_groups:
+        - default
+        - bosh
+        - cf-private
+
+  - name: external 
+    type: dynamic
+    cloud_properties:
+      net_id: 3f36d40e-1097-49a0-a023-4606dbf3a1f5
+      security_groups:
+        - default
+        - bosh
+        - cf-private
+        - cf-public
+
+  - name: float 
+    type: vip
+    cloud_properties:
+      net_id: 3f36d40e-1097-49a0-a023-4606dbf3a1f5
+
+resource_pools:
+  - name: common
+    network: default
+    stemcell:
+      name: bosh-openstack-kvm-ubuntu-trusty-go_agent-ft
+      version: latest
+    cloud_properties:
+      instance_type: cf.small
+
+  - name: large
+    network: default
+    stemcell:
+      name: bosh-openstack-kvm-ubuntu-trusty-go_agent-ft
+      version: latest
+    cloud_properties:
+      instance_type: cf.medium
+jobs:
+  - name: nats
+    templates:
+      - name: nats
+      - name: nats_stream_forwarder
+    instances: 1
+    resource_pool: common
+    networks:
+      - name: default
+        default: [dns, gateway]
+
+  - name: nfs_server
+    templates:
+      - name: debian_nfs_server
+    instances: 1
+    resource_pool: common
+    persistent_disk: 65535
+    networks:
+      - name: default
+        default: [dns, gateway]
+
+  - name: postgres
+    templates:
+      - name: postgres
+    instances: 1
+    resource_pool: common
+    persistent_disk: 65536
+    networks:
+      - name: default
+        default: [dns, gateway]
+    properties:
+      db: databases
+
+  - name: uaa
+    templates:
+      - name: uaa
+    instances: 1
+    resource_pool: common
+    networks:
+      - name: default
+        default: [dns, gateway]
+
+  - name: trafficcontroller
+    templates:
+      - name: loggregator_trafficcontroller
+    instances: 1
+    resource_pool: common
+    networks:
+      - name: default
+        default: [dns, gateway]
+
+  - name: cloud_controller
+    templates:
+      - name: nfs_mounter
+      - name: cloud_controller_ng
+    instances: 1
+    resource_pool: large
+    networks:
+      - name: default
+        default: [dns, gateway]
+    properties:
+      db: ccdb
+
+  - name: health_manager
+    templates:
+      - name: hm9000
+    instances: 1
+    resource_pool: common
+    networks:
+      - name: default
+        default: [dns, gateway]
+
+  - name: dea
+    templates:
+      - name: dea_logging_agent
+      - name: dea_next
+    instances: 2
+    resource_pool: large
+    networks:
+      - name: default
+        default: [dns, gateway]
+
+  - name: router
+    templates:
+      - name: gorouter
+    instances: 1
+    resource_pool: common
+    networks:
+      - name: external
+        default: [dns, gateway]
+      - name: float
+        static_ips:
+           - &lt;%= static_ip %&gt;
+    properties:
+       networks:
+         apps: external
+
+properties:
+  domain: &lt;%= root_domain %&gt;
+  system_domain: &lt;%= root_domain %&gt;
+  system_domain_organization: &#39;admin&#39;
+  app_domains:
+    - &lt;%= root_domain %&gt;
+
+  haproxy: {}
+
+  networks: 
+    apps: default 
+
+  nats:
+    user: nats
+    password: &lt;%= common_password %&gt;
+    address: 0.nats.default.&lt;%= deployment_name %&gt;.microbosh
+    port: 4222
+    machines:
+      - 0.nats.default.&lt;%= deployment_name %&gt;.microbosh
+
+  nfs_server:
+    address: 0.nfs-server.default.&lt;%= deployment_name %&gt;.microbosh
+    network: &quot;*.&lt;%= deployment_name %&gt;.microbosh&quot;
+    allow_from_entries:
+      - 192.168.1.0/24 # change according to your subnet
+
+  debian_nfs_server:
+    no_root_squash: true
+  
+  metron_agent:
+    zone: z1
+  metron_endpoint:
+    zone: z1
+    shared_secret: &lt;%= common_password %&gt; 
+
+  loggregator_endpoint:
+    shared_secret: &lt;%= common_password %&gt;
+    host: 0.trafficcontroller.default.&lt;%= deployment_name %&gt;.microbosh
+
+  loggregator:
+    zone: z1
+    servers:
+      zone:
+        -  0.loggregator.default.&lt;%= deployment_name %&gt;.microbosh
+
+  traffic_controller:
+    zone: &#39;zone&#39;
+
+  logger_endpoint:
+    use_ssl: &lt;%= protocol == &#39;https&#39; %&gt;
+    port: 80
+
+  ssl:
+    skip_cert_verify: true
+
+  router:
+    endpoint_timeout: 60
+    status:
+      port: 8080
+      user: gorouter
+      password: &lt;%= common_password %&gt;
+    servers:
+      z1:
+        - 0.router.default.&lt;%= deployment_name %&gt;.microbosh
+      z2: []
+
+  etcd:
+    machines:
+      - 0.etcd.default.&lt;%= deployment_name %&gt;.microbosh
+
+  dea: &amp;dea
+    disk_mb: 102400
+    disk_overcommit_factor: 2
+    memory_mb: 15000
+    memory_overcommit_factor: 3    
+    directory_server_protocol: &lt;%= protocol %&gt;
+    mtu: 1460
+    deny_networks:
+      - 169.254.0.0/16 # Google Metadata endpoint
+
+    advertise_interval_in_seconds: 10
+    heartbeat_interval_in_seconds: 10
+   
+
+  dea_next: *dea
+  
+  disk_quota_enabled: false
+
+  dea_logging_agent:
+    status:
+      user: admin
+      password: &lt;%= common_password %&gt;
+
+  databases: &amp;databases
+    db_scheme: postgres
+    address: 0.postgres.default.&lt;%= deployment_name %&gt;.microbosh
+    port: 5524
+    roles:
+      - tag: admin
+        name: ccadmin
+        password: &lt;%= common_password %&gt;
+      - tag: admin
+        name: uaaadmin
+        password: &lt;%= common_password %&gt;
+    databases:
+      - tag: cc
+        name: ccdb
+        citext: true
+      - tag: uaa
+        name: uaadb
+        citext: true
+
+  ccdb: &amp;ccdb
+    db_scheme: postgres
+    address: 0.postgres.default.&lt;%= deployment_name %&gt;.microbosh
+    port: 5524
+    roles:
+      - tag: admin
+        name: ccadmin
+        password: &lt;%= common_password %&gt;
+    databases:
+      - tag: cc
+        name: ccdb
+        citext: true
+
+  ccdb_ng: *ccdb
+
+  uaadb:
+    db_scheme: postgresql
+    address: 0.postgres.default.&lt;%= deployment_name %&gt;.microbosh
+    port: 5524
+    roles:
+      - tag: admin
+        name: uaaadmin
+        password: &lt;%= common_password %&gt;
+    databases:
+      - tag: uaa
+        name: uaadb
+        citext: true
+
+  cc: &amp;cc
+    internal_api_password: &lt;%= common_password %&gt;
+    security_group_definitions:
+      - name: public_networks
+        rules:
+          - protocol: all
+            destination: 0.0.0.0-9.255.255.255
+          - protocol: all
+            destination: 11.0.0.0-169.253.255.255
+          - protocol: all
+            destination: 169.255.0.0-172.15.255.255
+          - protocol: all
+            destination: 172.32.0.0-192.167.255.255
+          - protocol: all
+            destination: 192.169.0.0-255.255.255.25
+      - name: internal_network
+        rules:
+          - protocol: all
+            destination: 10.0.0.0-10.255.255.255
+      - name: dns
+        rules:
+          - destination: 0.0.0.0/0
+            ports: &#39;53&#39;
+            protocol: tcp
+          - destination: 0.0.0.0/0
+            ports: &#39;53&#39;
+            protocol: udp
+    default_running_security_groups:
+      - public_networks
+      - internal_network      
+      - dns
+    default_staging_security_groups:
+      - public_networks
+      - internal_network
+      - dns
+    srv_api_uri: &lt;%= protocol %&gt;://api.&lt;%= root_domain %&gt;    
+    jobs:
+      local:
+        number_of_workers: 2
+      generic:
+        number_of_workers: 2
+      global:
+        timeout_in_seconds: 14400
+      app_bits_packer:
+        timeout_in_seconds: null
+      app_events_cleanup:
+        timeout_in_seconds: null
+      app_usage_events_cleanup:
+        timeout_in_seconds: null
+      blobstore_delete:
+        timeout_in_seconds: null
+      blobstore_upload:
+        timeout_in_seconds: null
+      droplet_deletion:
+        timeout_in_seconds: null
+      droplet_upload:
+        timeout_in_seconds: null
+      model_deletion:
+        timeout_in_seconds: null
+    bulk_api_password: &lt;%= common_password %&gt;
+    staging_upload_user: upload
+    staging_upload_password: &lt;%= common_password %&gt;
+    quota_definitions:
+      default:
+        memory_limit: 10240
+        total_services: 100
+        non_basic_services_allowed: true
+        total_routes: 1000
+        trial_db_allowed: true
+    resource_pool:
+      resource_directory_key: cloudfoundry-resources
+      fog_connection:
+        provider: Local
+        local_root: /var/vcap/nfs/shared
+    packages:
+      app_package_directory_key: cloudfoundry-packages
+      fog_connection:
+        provider: Local
+        local_root: /var/vcap/nfs/shared
+    droplets:
+      droplet_directory_key: cloudfoundry-droplets
+      fog_connection:
+        provider: Local
+        local_root: /var/vcap/nfs/shared
+    buildpacks:
+      buildpack_directory_key: cloudfoundry-buildpacks
+      fog_connection:
+        provider: Local
+        local_root: /var/vcap/nfs/shared        
+    install_buildpacks:
+      - name: java_buildpack
+        package: buildpack_java
+      - name: ruby_buildpack
+        package: buildpack_ruby
+      - name: nodejs_buildpack
+        package: buildpack_nodejs
+      - name: go_buildpack
+        package: buildpack_go
+    db_encryption_key: &lt;%= common_password %&gt;
+    hm9000_noop: false
+    diego: 
+       staging: disabled
+       running: disabled
+    newrelic:
+      license_key: null
+      environment_name: &lt;%= deployment_name %&gt;       
+
+  ccng: *cc
+
+  login:
+    enabled: false
+
+  uaa:
+    url: &lt;%= protocol %&gt;://uaa.&lt;%= root_domain %&gt;
+    no_ssl: &lt;%= protocol == &#39;http&#39; %&gt;
+    login:
+      client_secret: &lt;%= common_password %&gt;
+    cc:
+      client_secret: &lt;%= common_password %&gt;
+    admin:
+      client_secret: &lt;%= common_password %&gt;
+    batch:
+      username: batch
+      password: &lt;%= common_password %&gt;
+    clients:
+      cf:
+        override: true
+        authorized-grant-types: password,implicit,refresh_token
+        authorities: uaa.none
+        scope: cloud_controller.read,cloud_controller.write,openid,password.write,cloud_controller.admin,scim.read,scim.write
+        access-token-validity: 7200
+        refresh-token-validity: 1209600
+      admin:
+        secret: &lt;%= common_password %&gt;
+        authorized-grant-types: client_credentials
+        authorities: clients.read,clients.write,clients.secret,password.write,scim.read,uaa.admin
+      doppler:
+        secret: &lt;%= common_password %&gt;
+    scim:
+      users:
+      - admin|&lt;%= common_password %&gt;|scim.write,scim.read,openid,cloud_controller.admin,uaa.admin,password.write
+      - services|&lt;%= common_password %&gt;|scim.write,scim.read,openid,cloud_controller.admin
+    jwt:
+      signing_key: |
+        -----BEGIN RSA PRIVATE KEY-----
+        MIICXAIBAAKBgQDHFr+KICms+tuT1OXJwhCUmR2dKVy7psa8xzElSyzqx7oJyfJ1
+        JZyOzToj9T5SfTIq396agbHJWVfYphNahvZ/7uMXqHxf+ZH9BL1gk9Y6kCnbM5R6
+        0gfwjyW1/dQPjOzn9N394zd2FJoFHwdq9Qs0wBugspULZVNRxq7veq/fzwIDAQAB
+        AoGBAJ8dRTQFhIllbHx4GLbpTQsWXJ6w4hZvskJKCLM/o8R4n+0W45pQ1xEiYKdA
+        Z/DRcnjltylRImBD8XuLL8iYOQSZXNMb1h3g5/UGbUXLmCgQLOUUlnYt34QOQm+0
+        KvUqfMSFBbKMsYBAoQmNdTHBaz3dZa8ON9hh/f5TT8u0OWNRAkEA5opzsIXv+52J
+        duc1VGyX3SwlxiE2dStW8wZqGiuLH142n6MKnkLU4ctNLiclw6BZePXFZYIK+AkE
+        xQ+k16je5QJBAN0TIKMPWIbbHVr5rkdUqOyezlFFWYOwnMmw/BKa1d3zp54VP/P8
+        +5aQ2d4sMoKEOfdWH7UqMe3FszfYFvSu5KMCQFMYeFaaEEP7Jn8rGzfQ5HQd44ek
+        lQJqmq6CE2BXbY/i34FuvPcKU70HEEygY6Y9d8J3o6zQ0K9SYNu+pcXt4lkCQA3h
+        jJQQe5uEGJTExqed7jllQ0khFJzLMx0K6tj0NeeIzAaGCQz13oo2sCdeGRHO4aDh
+        HH6Qlq/6UOV5wP8+GAcCQFgRCcB+hrje8hfEEefHcFpyKH+5g1Eu1k0mLrxK2zd+
+        4SlotYRHgPCEubokb2S1zfZDWIXW3HmggnGgM949TlY=
+        -----END RSA PRIVATE KEY-----
+      verification_key: |
+        -----BEGIN PUBLIC KEY-----
+        MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDHFr+KICms+tuT1OXJwhCUmR2d
+        KVy7psa8xzElSyzqx7oJyfJ1JZyOzToj9T5SfTIq396agbHJWVfYphNahvZ/7uMX
+        qHxf+ZH9BL1gk9Y6kCnbM5R60gfwjyW1/dQPjOzn9N394zd2FJoFHwdq9Qs0wBug
+        spULZVNRxq7veq/fzwIDAQAB
+        -----END PUBLIC KEY-----
+</pre></noscript>
 <script src="https://gist.github.com/bhnedo/3026f62119705d239863.js"> </script>
 
 <p>Set and initiate the deploy. This process can take a few hours. Relax.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>bosh deployment cf-deployment.yml
-<span class="nv">$ </span>bosh deploy</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>bosh deployment cf-deployment.yml
+<span class="nv">$ </span>bosh deploy</code></pre></figure>
 
 <h3>Pushing an application</h3>
 
@@ -406,26 +913,31 @@ buildpack_php           dea_logging_agent    gnatsd               libyaml    ngi
 Make sure you can access the API endpoint of the Cloud Foundry instance. If so, use <code>cf login</code> with your username, organization and space.
 </p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>curl http://api.192.168.1.249.xip.io/info
-<span class="nv">$ </span>cf login -a api.192.168.1.249.xip.io -u user -o rabbitstack -s qa</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>curl http://api.192.168.1.249.xip.io/info
+<span class="nv">$ </span>cf login <span class="nt">-a</span> api.192.168.1.249.xip.io <span class="nt">-u</span> user <span class="nt">-o</span> rabbitstack <span class="nt">-s</span> qa</code></pre></figure>
 
 <p>To test our instance we are going to push a very simple <code>node.js</code> app. Create a new directory and place <code>server.js</code> and the application <code>manifest.yml</code> file in it.</p>
 
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">http</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;http&quot;</span><span class="p">);</span>
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">http</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">"http"</span><span class="p">);</span>
 
 <span class="kd">var</span> <span class="nx">server</span> <span class="o">=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">createServer</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">res</span><span class="p">.</span><span class="nx">writeHeader</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="p">{</span>
-        <span class="s2">&quot;Content-Type&quot;</span><span class="o">:</span><span class="s2">&quot;text/html&quot;</span>
+        <span class="s2">"Content-Type"</span><span class="p">:</span><span class="s2">"text/html"</span>
     <span class="p">});</span>
-    <span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="s2">&quot;Bunnies on Cloud Foundry. Port is &quot;</span> <span class="o">+</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">VCAP_APP_PORT</span><span class="p">);</span>
-<span class="p">}).</span><span class="nx">listen</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">VCAP_APP_PORT</span><span class="p">);</span></code></pre></div>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="s2">"Bunnies on Cloud Foundry. Port is "</span> <span class="o">+</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">VCAP_APP_PORT</span><span class="p">);</span>
+<span class="p">}).</span><span class="nx">listen</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">VCAP_APP_PORT</span><span class="p">);</span></code></pre></figure>
 
-<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="nn">---</span>
-<span class="l-Scalar-Plain">applications</span><span class="p-Indicator">:</span>
-<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">rabbitstack</span>
-  <span class="l-Scalar-Plain">path</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">.</span>
-  <span class="l-Scalar-Plain">memory</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">256M</span>
-  <span class="l-Scalar-Plain">instances</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">1</span></code></pre></div>
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="s">---</span><span class="err">
+</span>
+<span class="na">applications</span><span class="pi">:</span><span class="err">
+</span>
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">rabbitstack</span><span class="err">
+</span>
+  <span class="na">path</span><span class="pi">:</span> <span class="s">.</span><span class="err">
+</span>
+  <span class="na">memory</span><span class="pi">:</span> <span class="s">256M</span><span class="err">
+</span>
+  <span class="na">instances</span><span class="pi">:</span> <span class="s">1</span></code></pre></figure>
 
 <p>From within the directory run <code>cf push</code> and access <code>http://rabbitstack.192.168.1.249.xip.io</code> from the browser. Play with <code>cf scale</code> and see how port number changes on every request.</p>
 <p><br />
@@ -484,7 +996,7 @@ Congratulations! You now have a fully functional private Cloud Foundry.</p>
   <h4>You might also enjoy <small class="pull-right">(<a href="http://rabbitstack.github.io/posts/">View all posts</a>)</small></h4>
     <ul>
     
-      <li><a href="http://rabbitstack.github.io/operating%20systems/linux-containers-internals-part-i/" title="Linux Containers Internals (Part I)">Linux Containers Internals (Part I)</a></li>
+      <li><a href="http://rabbitstack.github.io/operating%20systems/containers/linux-containers-internals-part-i/" title="Linux Container Internals (Part I)">Linux Container Internals (Part I)</a></li>
     
       <li><a href="http://rabbitstack.github.io/operating%20systems/fibratus-0-7-0/" title="Fibratus 0.7.0">Fibratus 0.7.0</a></li>
     
@@ -497,7 +1009,7 @@ Congratulations! You now have a fully functional private Cloud Foundry.</p>
   <footer>
     
 
-<span>&copy; 2017 Nedim Šabić. Rabbit Stack blog is powered by Jekyll. Bunny icon is courtesy of <a href="http://www.freepik.com" title="Freepik">Freepik.</a>
+<span>&copy; 2018 Nedim Šabić. Rabbit Stack blog is powered by Jekyll. Bunny icon is courtesy of <a href="http://www.freepik.com" title="Freepik">Freepik.</a>
 
   </footer>
 </div><!-- /.footer-wrap -->

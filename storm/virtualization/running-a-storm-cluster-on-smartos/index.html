@@ -10,7 +10,6 @@
 <meta name="keywords" content="cluster, SmartOS, Apache Storm, big data, zookeeper, nimbus, supervisor">
 
 
-
 <!-- Twitter Cards -->
 <meta name="twitter:title" content="Running a Storm cluster on SmartOS">
 <meta name="twitter:description" content="In a time when Storm was still developed and maintained by Twitter, I was working on small experiments in local cluster mode by processing social data from Facebook. It rained a lot since then, and Storm is now an active project under Apache umbrella.">
@@ -55,9 +54,10 @@
 <script src="http://rabbitstack.github.io/assets/js/vendor/modernizr-2.7.1.custom.min.js"></script>
 
 <link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'>
-
+<link href='https://fonts.googleapis.com/css?family=Rajdhani:400,600,700' rel='stylesheet' type='text/css'>
+<link href="https://fonts.googleapis.com/css?family=Exo+2" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
 <!-- Icons -->
 <!-- 16x16 -->
 <link rel="shortcut icon" href="http://rabbitstack.github.io/favicon.ico">
@@ -93,17 +93,11 @@
 		    <ul>
 		        
 				    
-				        
-				    
 				    <li><a href="http://rabbitstack.github.io#" >Home</a></li>
 				
 				    
-				        
-				    
 				    <li><a href="http://rabbitstack.github.io/posts/" >Archive</a></li>
 				
-				    
-				        
 				    
 				    <li><a href="http://rabbitstack.github.io/about/" >About</a></li>
 				
@@ -121,7 +115,7 @@
   alt="Running a Storm cluster on SmartOS feature image">
   
        <div class="headline-wrap">
-          <img src="http://rabbitstack.github.io/images/rabbitstack.png" />
+          <img class="bunny" src="http://rabbitstack.github.io/images/rabbitstack.png" />
           <h1> The place where bunnies dwell </h1>
           <h2> And bits become colossal </h2>
       </div>
@@ -136,7 +130,7 @@
       
     </div><!--/ .headline-wrap -->
     <div class="article-wrap">
-      <p>In a time when Storm was still developed and maintained by Twitter, I was working on small experiments in local cluster mode by processing social data from Facebook. It rained a lot since then, and Storm is now an active project under Apache umbrella. The curiosity of mine was eager to see how would the Storm operate in multi node deployment, so I decided to build a cluster on SmartOS hypervisor. I really adore SmartOS. It is so lightweight and it loads from the USB media. While the other hypervisors I've tried (XenServer, ESX) reserved the "huge" amount of RAM (on my 24 GB server XenServer was taking almost 4GB for the Dom0), SmartOS needs 200-300 MB of RAM. The provisioning of new virtual machines is really fast. You can run an OS level virtualization units called zones, or the KVM based virtual machines to run almost any legacy operating system (Linux, Windows, FreeBSD). You can learn more about SmartOS <a href="https://wiki.smartos.org/display/DOC/Home" target="_blank">here</a>. </p>
+      <p>In a time when Storm was still developed and maintained by Twitter, I was working on small experiments in local cluster mode by processing social data from Facebook. It rained a lot since then, and Storm is now an active project under Apache umbrella. The curiosity of mine was eager to see how would the Storm operate in multi node deployment, so I decided to build a cluster on SmartOS hypervisor. I really adore SmartOS. It is so lightweight and it loads from the USB media. While the other hypervisors I've tried (XenServer, ESX) reserved the "huge" amount of RAM (on my 24 GB server XenServer was taking almost 4GB for the Dom0), SmartOS needs 200-300 MB of RAM. The provisioning of new virtual machines is really fast. You can run an OS level virtualization units called zones, or the KVM based virtual machines to run almost any modern operating system (Linux, Windows, FreeBSD). You can learn more about SmartOS <a href="https://wiki.smartos.org/display/DOC/Home" target="_blank">here</a>. </p>
 <p class="image-pull-right">
 	<img src="/images/smartos+storm.png" />
 </p>
@@ -155,14 +149,14 @@ Are you new to Storm and you don't know what this is all about? Well apart from 
 
 <p>Let’s first prepare the specifications for our SmartOS KVM virtual machines. I’ll use the Centos7 dataset to spawn Storm nodes. Find and import the image that corresponds to <code>centos-7</code> dataset.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>imgadm avail
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>imgadm avail
 ...
 c8c59f3c-a343-11e4-8e39-9360169bcaae  steelapp-developer      14.3.0      smartos  2015-01-23T21:07:03Z
-02dbab66-a70a-11e4-819b-b3dc41b361d6  centos-7                <span class="m">20150128</span>    linux    2015-01-28T16:23:36Z
-5becfd74-a70d-11e4-93a6-470507be237c  centos-6                <span class="m">20150128</span>    linux    2015-01-28T16:47:34Z
-5f41692e-a70d-11e4-8c2d-afc6735144dc  debian-7                <span class="m">20150128</span>    linux    2015-01-28T16:47:40Z
+02dbab66-a70a-11e4-819b-b3dc41b361d6  centos-7                20150128    linux    2015-01-28T16:23:36Z
+5becfd74-a70d-11e4-93a6-470507be237c  centos-6                20150128    linux    2015-01-28T16:47:34Z
+5f41692e-a70d-11e4-8c2d-afc6735144dc  debian-7                20150128    linux    2015-01-28T16:47:40Z
 ...
-<span class="nv">$ </span>imgadm import 02dbab66-a70a-11e4-819b-b3dc41b361d6</code></pre></div>
+<span class="nv">$ </span>imgadm import 02dbab66-a70a-11e4-819b-b3dc41b361d6</code></pre></figure>
 
 <p>The cluster will consist of these nodes:</p>
 <ul>
@@ -173,112 +167,112 @@ c8c59f3c-a343-11e4-8e39-9360169bcaae  steelapp-developer      14.3.0      smarto
 
 <p>Here is a specification file for ZooKeeper node (you will need to change the network settings to match your environment). Save it as <code>centos7-zookeeper.json</code>.</p>
 
-<div class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span>
-  <span class="nt">&quot;brand&quot;</span><span class="p">:</span> <span class="s2">&quot;kvm&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;resolvers&quot;</span><span class="p">:</span> <span class="p">[</span>
-    <span class="s2">&quot;8.8.4.4&quot;</span>
-  <span class="p">],</span>
-  <span class="nt">&quot;ram&quot;</span><span class="p">:</span> <span class="s2">&quot;1024&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;vcpus&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;zookeeper/0&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;nics&quot;</span><span class="p">:</span> <span class="p">[</span>
-    <span class="p">{</span>
-      <span class="nt">&quot;nic_tag&quot;</span><span class="p">:</span> <span class="s2">&quot;admin&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.1.11&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;netmask&quot;</span><span class="p">:</span> <span class="s2">&quot;255.255.255.0&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;gateway&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.1.1&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;virtio&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;primary&quot;</span><span class="p">:</span> <span class="kc">true</span>
-    <span class="p">}</span>
-  <span class="p">],</span>
-  <span class="nt">&quot;disks&quot;</span><span class="p">:</span> <span class="p">[</span>
-    <span class="p">{</span>
-      <span class="nt">&quot;image_uuid&quot;</span><span class="p">:</span> <span class="s2">&quot;02dbab66-a70a-11e4-819b-b3dc41b361d6&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;boot&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-      <span class="nt">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;virtio&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;size&quot;</span><span class="p">:</span> <span class="mi">10000</span>
-    <span class="p">}</span>
-  <span class="p">]</span>
-<span class="p">}</span></code></pre></div>
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
+  </span><span class="s2">"brand"</span><span class="p">:</span><span class="w"> </span><span class="s2">"kvm"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"resolvers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"8.8.4.4"</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"ram"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1024"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"vcpus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"alias"</span><span class="p">:</span><span class="w"> </span><span class="s2">"zookeeper/0"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"nics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"nic_tag"</span><span class="p">:</span><span class="w"> </span><span class="s2">"admin"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"ip"</span><span class="p">:</span><span class="w"> </span><span class="s2">"192.168.1.11"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"netmask"</span><span class="p">:</span><span class="w"> </span><span class="s2">"255.255.255.0"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"gateway"</span><span class="p">:</span><span class="w"> </span><span class="s2">"192.168.1.1"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"model"</span><span class="p">:</span><span class="w"> </span><span class="s2">"virtio"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"primary"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"disks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"image_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02dbab66-a70a-11e4-819b-b3dc41b361d6"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"boot"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"model"</span><span class="p">:</span><span class="w"> </span><span class="s2">"virtio"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"size"</span><span class="p">:</span><span class="w"> </span><span class="mi">10000</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
 
 <p>The specifications for the Nimbus node is as follow. For the supervisor nodes we will basically use the same spec with some minor modifications.</p>
 
-<div class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span>
-  <span class="nt">&quot;brand&quot;</span><span class="p">:</span> <span class="s2">&quot;kvm&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;resolvers&quot;</span><span class="p">:</span> <span class="p">[</span>
-    <span class="s2">&quot;8.8.4.4&quot;</span>
-  <span class="p">],</span>
-  <span class="nt">&quot;ram&quot;</span><span class="p">:</span> <span class="s2">&quot;3048&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;nimbus/0&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;vcpus&quot;</span><span class="p">:</span> <span class="s2">&quot;2&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;nics&quot;</span><span class="p">:</span> <span class="p">[</span>
-    <span class="p">{</span>
-      <span class="nt">&quot;nic_tag&quot;</span><span class="p">:</span> <span class="s2">&quot;admin&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.1.12&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;netmask&quot;</span><span class="p">:</span> <span class="s2">&quot;255.255.255.0&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;gateway&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.1.1&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;virtio&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;primary&quot;</span><span class="p">:</span> <span class="kc">true</span>
-    <span class="p">}</span>
-  <span class="p">],</span>
-  <span class="nt">&quot;disks&quot;</span><span class="p">:</span> <span class="p">[</span>
-    <span class="p">{</span>
-      <span class="nt">&quot;image_uuid&quot;</span><span class="p">:</span> <span class="s2">&quot;02dbab66-a70a-11e4-819b-b3dc41b361d6&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;boot&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-      <span class="nt">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;virtio&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;size&quot;</span><span class="p">:</span> <span class="mi">30000</span>
-    <span class="p">}</span>
-  <span class="p">]</span>
-<span class="p">}</span></code></pre></div>
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
+  </span><span class="s2">"brand"</span><span class="p">:</span><span class="w"> </span><span class="s2">"kvm"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"resolvers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"8.8.4.4"</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"ram"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3048"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"alias"</span><span class="p">:</span><span class="w"> </span><span class="s2">"nimbus/0"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"vcpus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"nics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"nic_tag"</span><span class="p">:</span><span class="w"> </span><span class="s2">"admin"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"ip"</span><span class="p">:</span><span class="w"> </span><span class="s2">"192.168.1.12"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"netmask"</span><span class="p">:</span><span class="w"> </span><span class="s2">"255.255.255.0"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"gateway"</span><span class="p">:</span><span class="w"> </span><span class="s2">"192.168.1.1"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"model"</span><span class="p">:</span><span class="w"> </span><span class="s2">"virtio"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"primary"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"disks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"image_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02dbab66-a70a-11e4-819b-b3dc41b361d6"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"boot"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"model"</span><span class="p">:</span><span class="w"> </span><span class="s2">"virtio"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"size"</span><span class="p">:</span><span class="w"> </span><span class="mi">30000</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
 
 <h3>Installing ZooKeeper node</h3>
 
 <p>Create a ZooKeeper VM from the spec file.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>vmadm create -f centos7-zookeeper.json</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>vmadm create <span class="nt">-f</span> centos7-zookeeper.json</code></pre></figure>
 
 <p>Make sure you can login into your newly created VM. Now we will install the required dependencies. First, download and install JDK 7.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span><span class="nb">cd</span> /tmp
-<span class="nv">$ </span>wget --no-check-certificate --no-cookies --header <span class="s2">&quot;Cookie: oraclelicense=accept-securebackup-cookie&quot;</span> http://download.oracle.com/otn-pub/java/jdk/7u75-b13/jdk-7u75-linux-x64.tar.gz
-<span class="nv">$ </span>tar -xvf jdk-7u75-linux-x64.tar.gz
-<span class="nv">$ </span>mv /usr/lib/jvm/java-7-oracle
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span><span class="nb">cd</span> /tmp
+<span class="nv">$ </span>wget <span class="nt">--no-check-certificate</span> <span class="nt">--no-cookies</span> <span class="nt">--header</span> <span class="s2">"Cookie: oraclelicense=accept-securebackup-cookie"</span> http://download.oracle.com/otn-pub/java/jdk/7u75-b13/jdk-7u75-linux-x64.tar.gz
+<span class="nv">$ </span><span class="nb">tar</span> <span class="nt">-xvf</span> jdk-7u75-linux-x64.tar.gz
+<span class="nv">$ </span><span class="nb">mv</span> /usr/lib/jvm/java-7-oracle
 
 <span class="nv">$ </span>vi /etc/profile
 <span class="nv">$ </span><span class="nb">export </span><span class="nv">JAVA_HOME</span><span class="o">=</span>/usr/lib/jvm/java-7-oracle
 <span class="nv">$ </span><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:/usr/lib/jvm/java-7-oracle/bin
 
-<span class="nv">$ </span><span class="nb">source</span> /etc/profile</code></pre></div>
+<span class="nv">$ </span><span class="nb">source</span> /etc/profile</code></pre></figure>
 
 <p>Next, install ZooKeeper packages from the Cloudera repository.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>vi /etc/yum.repos.d/Cloudera.repo
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>vi /etc/yum.repos.d/Cloudera.repo
 
-<span class="o">[</span>cloudera-cdh4<span class="o">]</span>
+<span class="o">[</span>cloudera-cdh4]
 <span class="nv">name</span><span class="o">=</span>cloudera-cdh4
 <span class="nv">baseurl</span><span class="o">=</span>http://archive.cloudera.com/cdh4/redhat/6/x86_64/cdh/4/
-<span class="nv">gpgkey</span> <span class="o">=</span> http://archive.cloudera.com/cdh4/redhat/6/x86_64/cdh/RPM-GPG-KEY-cloudera
-<span class="nv">gpgcheck</span> <span class="o">=</span> 1
+gpgkey <span class="o">=</span> http://archive.cloudera.com/cdh4/redhat/6/x86_64/cdh/RPM-GPG-KEY-cloudera
+gpgcheck <span class="o">=</span> 1
 
-<span class="nv">$ </span>yum install zookeeper zookeeper-server</code></pre></div>
+<span class="nv">$ </span>yum <span class="nb">install </span>zookeeper zookeeper-server</code></pre></figure>
 
 <p>If the installation went successful we are ready to configure ZooKeeper. It is important to enable the regular purging of old data and transaction logs, otherwise ZooKeeper will eat all of your disk space. Edit the configuration file.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>vi /etc/zookeeper/conf/zoo.cfg
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>vi /etc/zookeeper/conf/zoo.cfg
 
 autopurge.purgeInterval<span class="o">=</span>12
-autopurge.snapRetainCount<span class="o">=</span>5</code></pre></div>
+autopurge.snapRetainCount<span class="o">=</span>5</code></pre></figure>
 
 <p>Update the <code>/etc/hosts</code> file to include ZooKeeper’s hostname.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>vi /etc/hosts
-192.168.1.11 zookeeper0</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>vi /etc/hosts
+192.168.1.11 zookeeper0</code></pre></figure>
 
 <p>Finally we can start the ZooKeeper and verify it’s working as expected. Run these commands.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>/usr/lib/zookeeper/bin/zkServer.sh start
-<span class="nv">$ </span><span class="nb">echo </span>ruok <span class="p">|</span> nc zookeeper0 2181
-imok</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>/usr/lib/zookeeper/bin/zkServer.sh start
+<span class="nv">$ </span><span class="nb">echo </span>ruok | nc zookeeper0 2181
+imok</code></pre></figure>
 
 <p>It is of crucial importance to run ZooKeeper under supervision, since ZooKeeper will terminate if it encounters any error. To achieve it you can use a number of process monitoring tools like <a href="http://mmonit.com/monit/" target="_blank">monit</a>, <a href="http://supervisord.org/" target="_blank">supervisord</a>, or <a href="http://godrb.com/" target="_blank">god</a>.</p>
 
@@ -286,30 +280,30 @@ imok</code></pre></div>
 
 <p>First, provision a new virtual machine for the Nimbus node.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>vmadm create -f centos7-nimbus.json</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>vmadm create <span class="nt">-f</span> centos7-nimbus.json</code></pre></figure>
 
 <p>The following steps apply for both, the Nimbus and the Supervisor nodes, so once we had the required dependencies installed, we will create the snapshot that later on can be used to provision the Supervisor nodes. Note that here is also important to run Nimbus and Supervisor daemons under supervision.</p>
 
 <h4>Download and install JDK 7</h4>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span><span class="nb">cd</span> /tmp
-<span class="nv">$ </span>wget --no-check-certificate --no-cookies --header <span class="s2">&quot;Cookie: oraclelicense=accept-securebackup-cookie&quot;</span> http://download.oracle.com/otn-pub/java/jdk/7u75-b13/jdk-7u75-linux-x64.tar.gz
-<span class="nv">$ </span>tar -xvf jdk-7u75-linux-x64.tar.gz
-<span class="nv">$ </span>mv /usr/lib/jvm/java-7-oracle
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span><span class="nb">cd</span> /tmp
+<span class="nv">$ </span>wget <span class="nt">--no-check-certificate</span> <span class="nt">--no-cookies</span> <span class="nt">--header</span> <span class="s2">"Cookie: oraclelicense=accept-securebackup-cookie"</span> http://download.oracle.com/otn-pub/java/jdk/7u75-b13/jdk-7u75-linux-x64.tar.gz
+<span class="nv">$ </span><span class="nb">tar</span> <span class="nt">-xvf</span> jdk-7u75-linux-x64.tar.gz
+<span class="nv">$ </span><span class="nb">mv</span> /usr/lib/jvm/java-7-oracle
 
 <span class="nv">$ </span>vi /etc/profile
 <span class="nv">$ </span><span class="nb">export </span><span class="nv">JAVA_HOME</span><span class="o">=</span>/usr/lib/jvm/java-7-oracle
 <span class="nv">$ </span><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:/usr/lib/jvm/java-7-oracle/bin
 
-<span class="nv">$ </span><span class="nb">source</span> /etc/profile</code></pre></div>
+<span class="nv">$ </span><span class="nb">source</span> /etc/profile</code></pre></figure>
 
 <h4>Install ZeroMQ</h4>
 
 <p> Add the following repository to install the ZeroMQ package. </p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>vi /etc/yum.repos.d/ZeroMQ.repo
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>vi /etc/yum.repos.d/ZeroMQ.repo
 
-<span class="o">[</span>home_fengshuo_zeromq<span class="o">]</span>
+<span class="o">[</span>home_fengshuo_zeromq]
 <span class="nv">name</span><span class="o">=</span>The latest stable of zeromq builds <span class="o">(</span>CentOS_CentOS-6<span class="o">)</span>
 <span class="nb">type</span><span class="o">=</span>rpm-md
 <span class="nv">baseurl</span><span class="o">=</span>http://download.opensuse.org/repositories/home:/fengshuo:/zeromq/CentOS_CentOS-6/
@@ -317,46 +311,46 @@ imok</code></pre></div>
 <span class="nv">gpgkey</span><span class="o">=</span>http://download.opensuse.org/repositories/home:/fengshuo:/zeromq/CentOS_CentOS-6/repodata/repomd.xml.key
 <span class="nv">enabled</span><span class="o">=</span>1
 
-<span class="nv">$ </span>yum install zeromq zeromq-devel</code></pre></div>
+<span class="nv">$ </span>yum <span class="nb">install </span>zeromq zeromq-devel</code></pre></figure>
 
 <h4>Install JZMQ</h4>
 
 <p>JZMQ are the Java bindings for the ZeroMQ messaging framework. As we are going to compile and build JZMQ from sources, some dependencies are needed. Install them first.
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>yum install libtool gcc autoconf automake gcc-c++</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>yum <span class="nb">install </span>libtool gcc autoconf automake gcc-c++</code></pre></figure>
 
 
 <p>Now we can download and install JZMQ.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span><span class="nb">cd</span> /tmp
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span><span class="nb">cd</span> /tmp
 <span class="nv">$ </span>wget https://github.com/zeromq/jzmq/archive/master.zip
 <span class="nv">$ </span><span class="nb">cd </span>jzmq-master
 
 <span class="nv">$ </span>./autogen.sh
 <span class="nv">$ </span>./configure
 <span class="nv">$ </span>make
-<span class="nv">$ </span>make install</code></pre></div>
+<span class="nv">$ </span>make <span class="nb">install</span></code></pre></figure>
 
 
 <h4>Create Storm system user and group</h4>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>groupadd -g <span class="m">53001</span> storm
-<span class="nv">$ </span>mkdir /var/lib/storm
-<span class="nv">$ </span>useradd -u <span class="m">53001</span> -g <span class="m">53001</span> -d /var/lib/storm/ -s /bin/bash storm -c <span class="s2">&quot;Storm user&quot;</span>
-<span class="nv">$ </span>chown -R storm:storm /var/lib/storm/
-<span class="nv">$ </span>chmod <span class="m">750</span> /var/lib/storm</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>groupadd <span class="nt">-g</span> 53001 storm
+<span class="nv">$ </span><span class="nb">mkdir</span> /var/lib/storm
+<span class="nv">$ </span>useradd <span class="nt">-u</span> 53001 <span class="nt">-g</span> 53001 <span class="nt">-d</span> /var/lib/storm/ <span class="nt">-s</span> /bin/bash storm <span class="nt">-c</span> <span class="s2">"Storm user"</span>
+<span class="nv">$ </span><span class="nb">chown</span> <span class="nt">-R</span> storm:storm /var/lib/storm/
+<span class="nv">$ </span><span class="nb">chmod </span>750 /var/lib/storm</code></pre></figure>
 
 
 <h4>Download and install Apache Storm</h4>
 
 <p>Download the latest version of Storm - <strong>0.9.3</strong> at the time of writing. Decompress the tarball and move it to the <code>/usr/local</code> directory.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>wget http://ftp.cixug.es/apache/storm/apache-storm-0.9.3/apache-storm-0.9.3.tar.gz
-<span class="nv">$ </span>tar -xvf apache-storm-0.9.3.tar.gz
-<span class="nv">$ </span>mv apache-storm-0.9.3 /usr/local/
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>wget http://ftp.cixug.es/apache/storm/apache-storm-0.9.3/apache-storm-0.9.3.tar.gz
+<span class="nv">$ </span><span class="nb">tar</span> <span class="nt">-xvf</span> apache-storm-0.9.3.tar.gz
+<span class="nv">$ </span><span class="nb">mv </span>apache-storm-0.9.3 /usr/local/
 <span class="nv">$ </span><span class="nb">cd</span> /usr/local
-<span class="nv">$ </span>mv apache-storm-0.9.3 storm
-<span class="nv">$ </span>chown -R storm:storm /usr/local/storm/</code></pre></div>
+<span class="nv">$ </span><span class="nb">mv </span>apache-storm-0.9.3 storm
+<span class="nv">$ </span><span class="nb">chown</span> <span class="nt">-R</span> storm:storm /usr/local/storm/</code></pre></figure>
 
 
 <h4>Configure Storm</h4>
@@ -364,25 +358,25 @@ imok</code></pre></div>
 <p>Add ZooKeeper and Nimbus nodes to the <code>hosts</code> file.</p>
 
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>vi /etc/hosts
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>vi /etc/hosts
 192.168.1.11 zookeeper0
-192.168.1.12 nimbus/0</code></pre></div>
+192.168.1.12 nimbus/0</code></pre></figure>
 
 <p>Now edit the Storm configuration file. You need to add the ZooKeeper server/s, the Nimbus node, and change the path where Storm will store a small amount of state data.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>vi /usr/local/storm/conf/storm.yaml
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>vi /usr/local/storm/conf/storm.yaml
 
 storm.zookeeper.servers:
-      - <span class="s2">&quot;zookeeper0&quot;</span>
+      - <span class="s2">"zookeeper0"</span>
 
-nimbus.host: <span class="s2">&quot;nimbus/0&quot;</span>
+nimbus.host: <span class="s2">"nimbus/0"</span>
 
-nimbus.childopts: <span class="s2">&quot;-Xmx1024m -Djava.net.preferIPv4Stack=true&quot;</span>
-ui.childopts: <span class="s2">&quot;-Xmx768m -Djava.net.preferIPv4Stack=true&quot;</span>
-supervisor.childopts: <span class="s2">&quot;-Djava.net.preferIPv4Stack=true&quot;</span>
-worker.childopts: <span class="s2">&quot;-Xmx768m -Djava.net.preferIPv4Stack=true&quot;</span>
+nimbus.childopts: <span class="s2">"-Xmx1024m -Djava.net.preferIPv4Stack=true"</span>
+ui.childopts: <span class="s2">"-Xmx768m -Djava.net.preferIPv4Stack=true"</span>
+supervisor.childopts: <span class="s2">"-Djava.net.preferIPv4Stack=true"</span>
+worker.childopts: <span class="s2">"-Xmx768m -Djava.net.preferIPv4Stack=true"</span>
 
-storm.local.dir: <span class="s2">&quot;/var/lib/storm&quot;</span></code></pre></div>
+storm.local.dir: <span class="s2">"/var/lib/storm"</span></code></pre></figure>
 
 
 <h4>Build the snapshot</h4>
@@ -390,67 +384,67 @@ storm.local.dir: <span class="s2">&quot;/var/lib/storm&quot;</span></code></pre>
 <p>Before we proceed with snapshotting, halt the Nimbus virtual machine.</p>
 
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>vmadm stop ab09289c-c05a-4c41-92ec-025b367bc860</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>vmadm stop ab09289c-c05a-4c41-92ec-025b367bc860</code></pre></figure>
 
 
 <p>Now make the snapshot of disk0 <i>zvol</i> which pertains to Nimbus dataset. Dump and compress the dataset.</p>
 
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>zfs snapshot zones/ab09289c-c05a-4c41-92ec-025b367bc860-disk0@image
-<span class="nv">$ </span>zfs send zones/ab09289c-c05a-4c41-92ec-025b367bc860-disk0@image <span class="p">|</span> gzip &gt; supervisor.zvol.gz</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>zfs snapshot zones/ab09289c-c05a-4c41-92ec-025b367bc860-disk0@image
+<span class="nv">$ </span>zfs send zones/ab09289c-c05a-4c41-92ec-025b367bc860-disk0@image | <span class="nb">gzip</span> <span class="o">&gt;</span> supervisor.zvol.gz</code></pre></figure>
 
 
 <p>To import the dataset that can be used as the template for the Supervisor node provisioning it is necessary to build the image manifest. Generate a random UUID and get the SHA1 hash of the supervisor dataset by running these commands.</p>
 
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>uuid
-<span class="nv">$ </span>digest -v -a sha1 supervisor.zvol.gz</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>uuid
+<span class="nv">$ </span>digest <span class="nt">-v</span> <span class="nt">-a</span> sha1 supervisor.zvol.gz</code></pre></figure>
 
 
 <p>We will also need the size of the dataset expressed in bytes.</p>
 
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>ls -ltr <span class="p">|</span> grep supervisor.zvol.gz <span class="p">|</span> awk <span class="s1">&#39;{print $5}&#39;</span>
-859618398</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span><span class="nb">ls</span> <span class="nt">-ltr</span> | <span class="nb">grep </span>supervisor.zvol.gz | <span class="nb">awk</span> <span class="s1">'{print $5}'</span>
+859618398</code></pre></figure>
 
 
 <p>With that information in hand we can create an image manifest file and import the dataset.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>vi /var/manifests/supervisor.dsmanifest</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>vi /var/manifests/supervisor.dsmanifest</code></pre></figure>
 
 
-<div class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span>
-    <span class="nt">&quot;uuid&quot;</span><span class="p">:</span> <span class="s2">&quot;1d94a2ec-cfe0-11e4-a9be-9b1c2d718bba&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;centos7-supervisor&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Base template to provision Storm supervisor nodes&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;v&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
+    </span><span class="s2">"uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1d94a2ec-cfe0-11e4-a9be-9b1c2d718bba"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"centos7-supervisor"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.0"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Base template to provision Storm supervisor nodes"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"v"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
 
-    <span class="nt">&quot;os&quot;</span><span class="p">:</span> <span class="s2">&quot;linux&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;zvol&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;platform_type&quot;</span><span class="p">:</span> <span class="s2">&quot;smartos&quot;</span><span class="p">,</span>
+    </span><span class="s2">"os"</span><span class="p">:</span><span class="w"> </span><span class="s2">"linux"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"zvol"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"platform_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"smartos"</span><span class="p">,</span><span class="w">
 
-    <span class="nt">&quot;created_at&quot;</span><span class="p">:</span> <span class="s2">&quot;2015-03-21T09:09Z&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;updated_at&quot;</span><span class="p">:</span> <span class="s2">&quot;2015-03-21T09:09Z&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;published_at&quot;</span><span class="p">:</span> <span class="s2">&quot;2015-03-21T09:09Z&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;files&quot;</span><span class="p">:</span> <span class="p">[</span>
-      <span class="p">{</span>
-        <span class="nt">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;/var/supervisor.zvol.gz&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;sha1&quot;</span><span class="p">:</span> <span class="s2">&quot;12b6ae88372eab0697f0bba3038a4c9fc0a94a7f&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;size&quot;</span><span class="p">:</span> <span class="mi">859618398</span><span class="p">,</span>
-        <span class="nt">&quot;compression&quot;</span><span class="p">:</span> <span class="s2">&quot;gzip&quot;</span>
-     <span class="p">}</span>
-    <span class="p">],</span>
-    <span class="nt">&quot;disk_driver&quot;</span><span class="p">:</span> <span class="s2">&quot;virtio&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;image_size&quot;</span><span class="p">:</span> <span class="s2">&quot;10240&quot;</span>
-<span class="p">}</span></code></pre></div>
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-03-21T09:09Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-03-21T09:09Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"published_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-03-21T09:09Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"files"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/var/supervisor.zvol.gz"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"sha1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12b6ae88372eab0697f0bba3038a4c9fc0a94a7f"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"size"</span><span class="p">:</span><span class="w"> </span><span class="mi">859618398</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"compression"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gzip"</span><span class="w">
+     </span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"disk_driver"</span><span class="p">:</span><span class="w"> </span><span class="s2">"virtio"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"image_size"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10240"</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
 
 
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>imgadm install -m /var/manifests/supervisor.dsmanifest -f /var/supervisor.zvol.gz
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>imgadm <span class="nb">install</span> <span class="nt">-m</span> /var/manifests/supervisor.dsmanifest <span class="nt">-f</span> /var/supervisor.zvol.gz
 Installing image 1d94a2ec-cfe0-11e4-a9be-9b1c2d718bba <span class="o">(</span>centos7-supervisor@1.0.0<span class="o">)</span>
-<span class="o">[=======================================================</span>&gt;<span class="o">]</span> 100% 819.80MB  31.36MB/s    26s
-Installed image 1d94a2ec-cfe0-11e4-a9be-9b1c2d718bba <span class="o">(</span>centos7-supervisor@1.0.0<span class="o">)</span></code></pre></div>
+<span class="o">[=======================================================&gt;]</span> 100% 819.80MB  31.36MB/s    26s
+Installed image 1d94a2ec-cfe0-11e4-a9be-9b1c2d718bba <span class="o">(</span>centos7-supervisor@1.0.0<span class="o">)</span></code></pre></figure>
 
 
 <h3>Provisioning Supervisor nodes</h3>
@@ -458,51 +452,51 @@ Installed image 1d94a2ec-cfe0-11e4-a9be-9b1c2d718bba <span class="o">(</span>cen
 <p>With the dataset imported we can start provisioning the Supervisor nodes using the slightly modified version of the Nimbus node specification file.</p>
 
 
-<div class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span>
-  <span class="nt">&quot;brand&quot;</span><span class="p">:</span> <span class="s2">&quot;kvm&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;resolvers&quot;</span><span class="p">:</span> <span class="p">[</span>
-    <span class="s2">&quot;8.8.4.4&quot;</span>
-  <span class="p">],</span>
-  <span class="nt">&quot;ram&quot;</span><span class="p">:</span> <span class="s2">&quot;4096&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;supervisor/0&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;vcpus&quot;</span><span class="p">:</span> <span class="s2">&quot;3&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;nics&quot;</span><span class="p">:</span> <span class="p">[</span>
-    <span class="p">{</span>
-      <span class="nt">&quot;nic_tag&quot;</span><span class="p">:</span> <span class="s2">&quot;admin&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.1.14&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;netmask&quot;</span><span class="p">:</span> <span class="s2">&quot;255.255.255.0&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;gateway&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.1.1&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;virtio&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;primary&quot;</span><span class="p">:</span> <span class="kc">true</span>
-    <span class="p">}</span>
-  <span class="p">],</span>
-  <span class="nt">&quot;disks&quot;</span><span class="p">:</span> <span class="p">[</span>
-    <span class="p">{</span>
-      <span class="nt">&quot;image_uuid&quot;</span><span class="p">:</span> <span class="s2">&quot;1d94a2ec-cfe0-11e4-a9be-9b1c2d718bba&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;boot&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-      <span class="nt">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;virtio&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;size&quot;</span><span class="p">:</span> <span class="mi">50000</span>
-    <span class="p">}</span>
-  <span class="p">]</span>
-<span class="p">}</span></code></pre></div>
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
+  </span><span class="s2">"brand"</span><span class="p">:</span><span class="w"> </span><span class="s2">"kvm"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"resolvers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"8.8.4.4"</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"ram"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4096"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"alias"</span><span class="p">:</span><span class="w"> </span><span class="s2">"supervisor/0"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"vcpus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"nics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"nic_tag"</span><span class="p">:</span><span class="w"> </span><span class="s2">"admin"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"ip"</span><span class="p">:</span><span class="w"> </span><span class="s2">"192.168.1.14"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"netmask"</span><span class="p">:</span><span class="w"> </span><span class="s2">"255.255.255.0"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"gateway"</span><span class="p">:</span><span class="w"> </span><span class="s2">"192.168.1.1"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"model"</span><span class="p">:</span><span class="w"> </span><span class="s2">"virtio"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"primary"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"disks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"image_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1d94a2ec-cfe0-11e4-a9be-9b1c2d718bba"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"boot"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"model"</span><span class="p">:</span><span class="w"> </span><span class="s2">"virtio"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"size"</span><span class="p">:</span><span class="w"> </span><span class="mi">50000</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
 
 
 <p>Note that we have changed the <code>image_uuid</code> to point to our imported dataset, and we have assigned the Supervisor node more memory, disk and one additional CPU. Now we can easily deploy and scale the worker nodes.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>vmadm create -f centos7-supervisor.json</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>vmadm create <span class="nt">-f</span> centos7-supervisor.json</code></pre></figure>
 
 
 <p>This is the output of <code>vmadm list</code> on my SmartOS instance.</p>
 
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>vmadm list
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>vmadm list
 
 UUID                                  TYPE  RAM      STATE             ALIAS
-05af15b2-f8ae-4918-807c-ed9a3a57d522  KVM   <span class="m">1024</span>     running           zookeeper/0
-8d8bb235-3826-46bb-88e4-f96cdc182faa  KVM   <span class="m">3048</span>     running           nimbus/0
-8b4dce58-4fdc-45f5-8439-389e7b095b45  KVM   <span class="m">4096</span>     running           supervisor/1
-ab09289c-c05a-4c41-92ec-025b367bc860  KVM   <span class="m">4096</span>     running           supervisor/0
-eb5c80fd-1174-4c40-8818-38565fc09d5a  KVM   <span class="m">4096</span>     running           supervisor/2</code></pre></div>
+05af15b2-f8ae-4918-807c-ed9a3a57d522  KVM   1024     running           zookeeper/0
+8d8bb235-3826-46bb-88e4-f96cdc182faa  KVM   3048     running           nimbus/0
+8b4dce58-4fdc-45f5-8439-389e7b095b45  KVM   4096     running           supervisor/1
+ab09289c-c05a-4c41-92ec-025b367bc860  KVM   4096     running           supervisor/0
+eb5c80fd-1174-4c40-8818-38565fc09d5a  KVM   4096     running           supervisor/2</code></pre></figure>
 
 
 <h3>Submitting the topology</h3>
@@ -510,39 +504,39 @@ eb5c80fd-1174-4c40-8818-38565fc09d5a  KVM   <span class="m">4096</span>     runn
 <p>I assume you've run <code>/usr/local/storm/bin/storm nimbus</code> and <code>/usr/local/storm/bin/storm supervisor</code> daemons under supervision. To test the cluster, we are going to deploy a simple topology from the <code>storm-starter</code> project. Run these commands on the Nimbus node. Start by cloning the Storm repository.</p>
 
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span><span class="nb">cd</span> /root
-<span class="nv">$ </span>git clone git://github.com/apache/storm.git</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span><span class="nb">cd</span> /root
+<span class="nv">$ </span>git clone git://github.com/apache/storm.git</code></pre></figure>
 
 
 <p>Go to <code>storm/examples/storm-starter</code> directory and build the topology jar using Maven.</p>
 
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span><span class="nb">cd </span>storm/examples/storm-starter
-<span class="nv">$ </span>mvn clean install -DskipTests<span class="o">=</span><span class="nb">true</span></code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span><span class="nb">cd </span>storm/examples/storm-starter
+<span class="nv">$ </span>mvn clean <span class="nb">install</span> <span class="nt">-DskipTests</span><span class="o">=</span><span class="nb">true</span></code></pre></figure>
 
 
 <p>Finally, submit the topology to the Storm cluster.</p>
 
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span><span class="nb">cd </span>target
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span><span class="nb">cd </span>target
 <span class="nv">$ </span>/usr/local/storm/bin/storm jar storm-starter-0.10.0-SNAPSHOT.jar storm.starter.ExclamationTopology exclamation-topology
 
-Running: /usr/lib/jvm/java-7-oracle/bin/java -client -Dstorm.options<span class="o">=</span> -Dstorm.home<span class="o">=</span>/usr/local/storm -Dstorm.log.dir<span class="o">=</span>/usr/local/storm/logs
+Running: /usr/lib/jvm/java-7-oracle/bin/java <span class="nt">-client</span> <span class="nt">-Dstorm</span>.options<span class="o">=</span> <span class="nt">-Dstorm</span>.home<span class="o">=</span>/usr/local/storm <span class="nt">-Dstorm</span>.log.dir<span class="o">=</span>/usr/local/storm/logs
 ...
-<span class="m">2539</span> <span class="o">[</span>main<span class="o">]</span> INFO  backtype.storm.StormSubmitter - Jar not uploaded to master yet. Submitting jar...
-<span class="m">2553</span> <span class="o">[</span>main<span class="o">]</span> INFO  backtype.storm.StormSubmitter - Uploading topology jar storm-starter-0.10.0-SNAPSHOT.jar to assigned location: /var/lib/storm/nimbus/inbox/stormjar-30afcd84-fd2e-4463-8275-8ff0133eff15.jar
-Start uploading file <span class="s1">&#39;storm-starter-0.10.0-SNAPSHOT.jar&#39;</span> to <span class="s1">&#39;/var/lib/storm/nimbus/inbox/stormjar-30afcd84-fd2e-4463-8275-8ff0133eff15.jar&#39;</span> <span class="o">(</span><span class="m">152705</span> bytes<span class="o">)</span>
-<span class="o">[==================================================]</span> <span class="m">152705</span> / 152705
-File <span class="s1">&#39;storm-starter-0.10.0-SNAPSHOT.jar&#39;</span> uploaded to <span class="s1">&#39;/var/lib/storm/nimbus/inbox/stormjar-30afcd84-fd2e-4463-8275-8ff0133eff15.jar&#39;</span> <span class="o">(</span><span class="m">152705</span> bytes<span class="o">)</span>
-<span class="m">2576</span> <span class="o">[</span>main<span class="o">]</span> INFO  backtype.storm.StormSubmitter - Successfully uploaded topology jar to assigned location: /var/lib/storm/nimbus/inbox/stormjar-30afcd84-fd2e-4463-8275-8ff0133eff15.jar
-<span class="m">2576</span> <span class="o">[</span>main<span class="o">]</span> INFO  backtype.storm.StormSubmitter - Submitting topology exclamation-topology in distributed mode with conf <span class="o">{</span><span class="s2">&quot;topology.workers&quot;</span>:3,<span class="s2">&quot;topology.debug&quot;</span>:true<span class="o">}</span>
-<span class="m">2716</span> <span class="o">[</span>main<span class="o">]</span> INFO  backtype.storm.StormSubmitter - Finished submitting topology: exclamation-topology</code></pre></div>
+2539 <span class="o">[</span>main] INFO  backtype.storm.StormSubmitter - Jar not uploaded to master yet. Submitting jar...
+2553 <span class="o">[</span>main] INFO  backtype.storm.StormSubmitter - Uploading topology jar storm-starter-0.10.0-SNAPSHOT.jar to assigned location: /var/lib/storm/nimbus/inbox/stormjar-30afcd84-fd2e-4463-8275-8ff0133eff15.jar
+Start uploading file <span class="s1">'storm-starter-0.10.0-SNAPSHOT.jar'</span> to <span class="s1">'/var/lib/storm/nimbus/inbox/stormjar-30afcd84-fd2e-4463-8275-8ff0133eff15.jar'</span> <span class="o">(</span>152705 bytes<span class="o">)</span>
+<span class="o">[==================================================]</span> 152705 / 152705
+File <span class="s1">'storm-starter-0.10.0-SNAPSHOT.jar'</span> uploaded to <span class="s1">'/var/lib/storm/nimbus/inbox/stormjar-30afcd84-fd2e-4463-8275-8ff0133eff15.jar'</span> <span class="o">(</span>152705 bytes<span class="o">)</span>
+2576 <span class="o">[</span>main] INFO  backtype.storm.StormSubmitter - Successfully uploaded topology jar to assigned location: /var/lib/storm/nimbus/inbox/stormjar-30afcd84-fd2e-4463-8275-8ff0133eff15.jar
+2576 <span class="o">[</span>main] INFO  backtype.storm.StormSubmitter - Submitting topology exclamation-topology <span class="k">in </span>distributed mode with conf <span class="o">{</span><span class="s2">"topology.workers"</span>:3,<span class="s2">"topology.debug"</span>:true<span class="o">}</span>
+2716 <span class="o">[</span>main] INFO  backtype.storm.StormSubmitter - Finished submitting topology: exclamation-topology</code></pre></figure>
 
 
 <p> You can get detailed stats about the cluster infrastructure, configuration, topology execution, etc. from the Storm UI. Start the server.</p>
 
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">/usr/local/storm/bin/storm ui</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">/usr/local/storm/bin/storm ui</code></pre></figure>
 
 
 <p>Direct your browser to <code>http://numbus_node_ip:8080</code>.</p>
@@ -608,7 +602,7 @@ File <span class="s1">&#39;storm-starter-0.10.0-SNAPSHOT.jar&#39;</span> uploade
   <h4>You might also enjoy <small class="pull-right">(<a href="http://rabbitstack.github.io/posts/">View all posts</a>)</small></h4>
     <ul>
     
-      <li><a href="http://rabbitstack.github.io/operating%20systems/linux-containers-internals-part-i/" title="Linux Containers Internals (Part I)">Linux Containers Internals (Part I)</a></li>
+      <li><a href="http://rabbitstack.github.io/operating%20systems/containers/linux-containers-internals-part-i/" title="Linux Container Internals (Part I)">Linux Container Internals (Part I)</a></li>
     
       <li><a href="http://rabbitstack.github.io/operating%20systems/fibratus-0-7-0/" title="Fibratus 0.7.0">Fibratus 0.7.0</a></li>
     
@@ -621,7 +615,7 @@ File <span class="s1">&#39;storm-starter-0.10.0-SNAPSHOT.jar&#39;</span> uploade
   <footer>
     
 
-<span>&copy; 2017 Nedim Šabić. Rabbit Stack blog is powered by Jekyll. Bunny icon is courtesy of <a href="http://www.freepik.com" title="Freepik">Freepik.</a>
+<span>&copy; 2018 Nedim Šabić. Rabbit Stack blog is powered by Jekyll. Bunny icon is courtesy of <a href="http://www.freepik.com" title="Freepik">Freepik.</a>
 
   </footer>
 </div><!-- /.footer-wrap -->

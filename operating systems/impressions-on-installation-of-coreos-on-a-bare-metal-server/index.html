@@ -10,7 +10,6 @@
 <meta name="keywords" content="coreos, bare metal server, coreos installation, containers, smartos">
 
 
-
 <!-- Twitter Cards -->
 <meta name="twitter:title" content="Impressions on installation of CoreOS on a bare metal server">
 <meta name="twitter:description" content="Yesterday I threw away the SmartOS hypervisor from my home lab server. SmartOS is an excellent operating system (based on the Illumos, an open source fork of Solaris) made for running very demanding cloud infrastructures. Zones, ZFS, DTrace, the KVM port are some of the kicking ass features built-in into SmartOS.">
@@ -55,9 +54,10 @@
 <script src="http://rabbitstack.github.io/assets/js/vendor/modernizr-2.7.1.custom.min.js"></script>
 
 <link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'>
-
+<link href='https://fonts.googleapis.com/css?family=Rajdhani:400,600,700' rel='stylesheet' type='text/css'>
+<link href="https://fonts.googleapis.com/css?family=Exo+2" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
 <!-- Icons -->
 <!-- 16x16 -->
 <link rel="shortcut icon" href="http://rabbitstack.github.io/favicon.ico">
@@ -93,17 +93,11 @@
 		    <ul>
 		        
 				    
-				        
-				    
 				    <li><a href="http://rabbitstack.github.io#" >Home</a></li>
 				
 				    
-				        
-				    
 				    <li><a href="http://rabbitstack.github.io/posts/" >Archive</a></li>
 				
-				    
-				        
 				    
 				    <li><a href="http://rabbitstack.github.io/about/" >About</a></li>
 				
@@ -121,7 +115,7 @@
   alt="Impressions on installation of CoreOS on a bare metal server feature image">
   
        <div class="headline-wrap">
-          <img src="http://rabbitstack.github.io/images/rabbitstack.png" />
+          <img class="bunny" src="http://rabbitstack.github.io/images/rabbitstack.png" />
           <h1> The place where bunnies dwell </h1>
           <h2> And bits become colossal </h2>
       </div>
@@ -168,21 +162,21 @@
   <figcaption>Horsepower of the lab</figcaption>
 </figure>
 
-<p>CoreOS installation was straightforward. I had booted the server from the CoreOS ISO image. Next, I had generated a public/private key pair on my laptop:</p>
+<p>CoreOS installation was straightforward. I booted the server from the CoreOS ISO image. Next, I generated a public/private key pair on my laptop:</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>ssh-keygen -t rsa -b 2048</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>ssh-keygen <span class="nt">-t</span> rsa <span class="nt">-b</span> 2048</code></pre></figure>
 
-<p>The private key is used to ssh the CoreOS machine. After a small network issue, I was able to copy the public key to the server. One last thing was to create the minimal <code>cloud-config</code> yaml configuration file.</p>
+<p>The private key is used to ssh the CoreOS machine. After a small network issue, I was able to copy the public key to the server. One last thing was to create the minimal <code class="highlighter-rouge">cloud-config</code> yaml configuration file.</p>
 
-<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="c1">#cloud-config</span>
-<span class="l-Scalar-Plain">hostname</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">rabbitstack</span>
-<span class="l-Scalar-Plain">ssh_authorized_keys</span><span class="p-Indicator">:</span>
-   <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">public key</span></code></pre></div>
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="c1">#cloud-config</span>
+<span class="na">hostname</span><span class="pi">:</span> <span class="s">rabbitstack</span>
+<span class="na">ssh_authorized_keys</span><span class="pi">:</span>
+   <span class="pi">-</span> <span class="s">public key</span></code></pre></figure>
 
-<p>I was ready to start the installation on <code>/dev/sda</code> disk device by executing the <code>coreos-install</code> script.</p>
+<p>I was ready to start the installation on <code class="highlighter-rouge">/dev/sda</code> disk device by executing the <code class="highlighter-rouge">coreos-install</code> script.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>sudo su -
-<span class="nv">$ </span>coreos-install -d /dev/sda -C stable -c cloud-config.yml</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span><span class="nb">sudo </span>su -
+<span class="nv">$ </span>coreos-install <span class="nt">-d</span> /dev/sda <span class="nt">-C</span> stable <span class="nt">-c</span> cloud-config.yml</code></pre></figure>
 
 <figure>
   <a href="/images/coreos-installation-start.jpg" class="image-popup">
@@ -193,7 +187,7 @@
 
 <p>It took about 10 minutes to download the latest image and to setup the CoreOS. Really fast! I was eager to test the installation (note the user name is <strong>core</strong>).</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>ssh -i rabbitstack core@rabbitstack</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>ssh <span class="nt">-i</span> rabbitstack core@rabbitstack</code></pre></figure>
 
 <p>It works like a charm! Having a CoreOS cluster is more fun, so I am planning to deploy the KVM instance on the laptop. That should be enough to try things out. I am looking forward to try <a href="http://pachyderm.io/">pachyderm</a>, <a href="http://spark.apache.org/">spark</a> or <a href="http://storm.apache.org/">storm</a> in a containerized environment.
 Learning about <strong>etcd</strong>, <strong>fleet</strong> and <strong>flannel</strong> is going to be an exciting journey. I’ll share about the experience here - on the place where bunnies dwell.</p>
@@ -260,7 +254,7 @@ Learning about <strong>etcd</strong>, <strong>fleet</strong> and <strong>flannel
   <h4>You might also enjoy <small class="pull-right">(<a href="http://rabbitstack.github.io/posts/">View all posts</a>)</small></h4>
     <ul>
     
-      <li><a href="http://rabbitstack.github.io/operating%20systems/linux-containers-internals-part-i/" title="Linux Containers Internals (Part I)">Linux Containers Internals (Part I)</a></li>
+      <li><a href="http://rabbitstack.github.io/operating%20systems/containers/linux-containers-internals-part-i/" title="Linux Container Internals (Part I)">Linux Container Internals (Part I)</a></li>
     
       <li><a href="http://rabbitstack.github.io/operating%20systems/fibratus-0-7-0/" title="Fibratus 0.7.0">Fibratus 0.7.0</a></li>
     
@@ -273,7 +267,7 @@ Learning about <strong>etcd</strong>, <strong>fleet</strong> and <strong>flannel
   <footer>
     
 
-<span>&copy; 2017 Nedim Šabić. Rabbit Stack blog is powered by Jekyll. Bunny icon is courtesy of <a href="http://www.freepik.com" title="Freepik">Freepik.</a>
+<span>&copy; 2018 Nedim Šabić. Rabbit Stack blog is powered by Jekyll. Bunny icon is courtesy of <a href="http://www.freepik.com" title="Freepik">Freepik.</a>
 
   </footer>
 </div><!-- /.footer-wrap -->

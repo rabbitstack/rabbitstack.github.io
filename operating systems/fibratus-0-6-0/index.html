@@ -10,7 +10,6 @@
 <meta name="keywords" content="operating systems, windows, kernel, system calls, exploration, python, cython, tracing, portable executable">
 
 
-
 <!-- Twitter Cards -->
 <meta name="twitter:title" content="Fibratus 0.6.0">
 <meta name="twitter:description" content="I'm happy to announce the release of Fibratus 0.6.0. Let's see what's new in this version.">
@@ -55,9 +54,10 @@
 <script src="http://rabbitstack.github.io/assets/js/vendor/modernizr-2.7.1.custom.min.js"></script>
 
 <link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'>
-
+<link href='https://fonts.googleapis.com/css?family=Rajdhani:400,600,700' rel='stylesheet' type='text/css'>
+<link href="https://fonts.googleapis.com/css?family=Exo+2" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
 <!-- Icons -->
 <!-- 16x16 -->
 <link rel="shortcut icon" href="http://rabbitstack.github.io/favicon.ico">
@@ -93,17 +93,11 @@
 		    <ul>
 		        
 				    
-				        
-				    
 				    <li><a href="http://rabbitstack.github.io#" >Home</a></li>
 				
 				    
-				        
-				    
 				    <li><a href="http://rabbitstack.github.io/posts/" >Archive</a></li>
 				
-				    
-				        
 				    
 				    <li><a href="http://rabbitstack.github.io/about/" >About</a></li>
 				
@@ -121,7 +115,7 @@
   alt="Fibratus 0.6.0 feature image">
   
        <div class="headline-wrap">
-          <img src="http://rabbitstack.github.io/images/rabbitstack.png" />
+          <img class="bunny" src="http://rabbitstack.github.io/images/rabbitstack.png" />
           <h1> The place where bunnies dwell </h1>
           <h2> And bits become colossal </h2>
       </div>
@@ -143,52 +137,52 @@
 <h4 id="high-performance-kernel-event-stream-collector">High performance kernel event stream collector</h4>
 
 <p>The kernel event stream collector has been rewritten from ground up. It now operates without <strong>GIL</strong> (Global Interpreter Lock) limitations which makes the Python interpreter capable of executing the byte code in parallel. The result is an ultra fast kernel event processing component!
-The tricky part about releasing the GIL is that you can’t use any Python constructs before acquiring the GIL again. Such a simple operation as comparing strings has to be done by calling the function from the standard C library. Standard Python’s containers like <code>list</code> or <code>dict</code> had been replaced with analogous C++ <code>vector</code> and <code>unordered_map</code> containers.
+The tricky part about releasing the GIL is that you can’t use any Python constructs before acquiring the GIL again. Such a simple operation as comparing strings has to be done by calling the function from the standard C library. Standard Python’s containers like <code class="highlighter-rouge">list</code> or <code class="highlighter-rouge">dict</code> had been replaced with analogous C++ <code class="highlighter-rouge">vector</code> and <code class="highlighter-rouge">unordered_map</code> containers.
 If you look at the source tree, you should notice the <strong>kstream</strong> directory has changed dramatically. This refactoring will make it easier adding new features to the kernel event stream collector.</p>
 
 <h4 id="image-meta-information">Image meta information</h4>
 
-<p>Fibratus now supports querying the executable binary files for the <strong>PE</strong> (Portable Executable) headers. The <code>CreateProcess</code> kernel events can be enriched with a plethora of interesting info like binary sections, the imported symbols, file information, linkage time stamp, etc. Here is the JSON representation of the image meta information for the <code>cmd.exe</code> binary:</p>
+<p>Fibratus now supports querying the executable binary files for the <strong>PE</strong> (Portable Executable) headers. The <code class="highlighter-rouge">CreateProcess</code> kernel events can be enriched with a plethora of interesting info like binary sections, the imported symbols, file information, linkage time stamp, etc. Here is the JSON representation of the image meta information for the <code class="highlighter-rouge">cmd.exe</code> binary:</p>
 
-<div class="highlight"><pre><code class="language-json" data-lang="json"><span class="s2">&quot;image_meta&quot;</span><span class="err">:</span><span class="p">{</span>  
-         <span class="nt">&quot;internal_name&quot;</span><span class="p">:</span><span class="s2">&quot;cmd&quot;</span><span class="p">,</span>
-         <span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="s2">&quot;0x57899A99 [Sat Jul 16 02:23:21 2016 UTC]&quot;</span><span class="p">,</span>
-         <span class="nt">&quot;imports&quot;</span><span class="p">:{</span>  
-            <span class="nt">&quot;api-ms-win-core-libraryloader-l1-2-0.dll&quot;</span><span class="p">:[</span>  
-               <span class="s2">&quot;GetModuleFileNameW&quot;</span><span class="p">,</span>
-               <span class="s2">&quot;GetModuleHandleW&quot;</span><span class="p">,</span>
-               <span class="s2">&quot;LoadLibraryExW&quot;</span><span class="p">,</span>
-               <span class="s2">&quot;GetProcAddress&quot;</span>
-            <span class="p">],</span>
-            <span class="nt">&quot;api-ms-win-core-timezone-l1-1-0.dll&quot;</span><span class="p">:[</span>  
-               <span class="s2">&quot;SystemTimeToFileTime&quot;</span><span class="p">,</span>
-               <span class="s2">&quot;FileTimeToSystemTime&quot;</span>
-            <span class="p">],</span>
-            <span class="err">...</span>
-         <span class="p">},</span>
-         <span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="s2">&quot;Windows Command Processor&quot;</span><span class="p">,</span>
-         <span class="nt">&quot;copyright&quot;</span><span class="p">:</span><span class="s2">&quot;\\xa9 Microsoft Corporation. All rights reserved.&quot;</span><span class="p">,</span>
-         <span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="s2">&quot;10.0.14393.0 (rs1_release.160715-1616)&quot;</span><span class="p">,</span>
-         <span class="nt">&quot;org&quot;</span><span class="p">:</span><span class="s2">&quot;Microsoft Corporation&quot;</span><span class="p">,</span>
-         <span class="nt">&quot;arch&quot;</span><span class="p">:</span><span class="s2">&quot;x86-64&quot;</span><span class="p">,</span>
-         <span class="nt">&quot;sections&quot;</span><span class="p">:[</span>  
-            <span class="p">{</span>  
-               <span class="nt">&quot;md5&quot;</span><span class="p">:</span><span class="s2">&quot;64a67cc3d9162fc0e8f3e342498b5521&quot;</span><span class="p">,</span>
-               <span class="nt">&quot;sha512&quot;</span><span class="p">:</span><span class="s2">&quot;a0f211244eb057bd57100a2bba4010a71b675f47571198004c66597f2d833086bf3aa1c3c4d97635185880f1ef42b45ce2d351f0d3f2bbe24a5b9e9841f38422&quot;</span><span class="p">,</span>
-               <span class="nt">&quot;sha256&quot;</span><span class="p">:</span><span class="s2">&quot;90bdb2677504f970636f313b32963a7fb6e4a95fefa19a2fae97a783ee3bd24d&quot;</span><span class="p">,</span>
-               <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;.text&quot;</span><span class="p">,</span>
-               <span class="nt">&quot;sha1&quot;</span><span class="p">:</span><span class="s2">&quot;59bef951b3e13ddf53778ad0eae69b32c65cebbf&quot;</span><span class="p">,</span>
-               <span class="nt">&quot;entropy&quot;</span><span class="p">:</span><span class="mf">6.414245618720535</span>
-            <span class="p">},</span>
-            <span class="p">{</span>  
-               <span class="nt">&quot;md5&quot;</span><span class="p">:</span><span class="s2">&quot;1e99e85eb32e35b18a9741e2b83f75fd&quot;</span><span class="p">,</span>
-               <span class="nt">&quot;sha512&quot;</span><span class="p">:</span><span class="s2">&quot;ceedd390297dbcea20dd9065567fcf7138cd421007f7f57793e4f2b043c9137720d55ad7fee8ca5a687bb308759df48e001b2258578e69494a0661ee189a504c&quot;</span><span class="p">,</span>
-               <span class="nt">&quot;sha256&quot;</span><span class="p">:</span><span class="s2">&quot;0a17d6c0cdc1a52ea16364787979c1fc4145e82e56ae59620fe7fdc04cc7eec7&quot;</span><span class="p">,</span>
-               <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;.rdata&quot;</span><span class="p">,</span>
-            <span class="err">...</span>
-         <span class="err">],</span>
-         <span class="nt">&quot;num_sections&quot;</span><span class="p">:</span><span class="mi">7</span>
-      <span class="p">}</span></code></pre></div>
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="s2">"image_meta"</span><span class="p">:{</span><span class="w">  
+         </span><span class="s2">"internal_name"</span><span class="p">:</span><span class="s2">"cmd"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"timestamp"</span><span class="p">:</span><span class="s2">"0x57899A99 [Sat Jul 16 02:23:21 2016 UTC]"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"imports"</span><span class="p">:{</span><span class="w">  
+            </span><span class="s2">"api-ms-win-core-libraryloader-l1-2-0.dll"</span><span class="p">:[</span><span class="w">  
+               </span><span class="s2">"GetModuleFileNameW"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"GetModuleHandleW"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"LoadLibraryExW"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"GetProcAddress"</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="s2">"api-ms-win-core-timezone-l1-1-0.dll"</span><span class="p">:[</span><span class="w">  
+               </span><span class="s2">"SystemTimeToFileTime"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"FileTimeToSystemTime"</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="err">...</span><span class="w">
+         </span><span class="p">},</span><span class="w">
+         </span><span class="s2">"description"</span><span class="p">:</span><span class="s2">"Windows Command Processor"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"copyright"</span><span class="p">:</span><span class="s2">"</span><span class="se">\\</span><span class="s2">xa9 Microsoft Corporation. All rights reserved."</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"version"</span><span class="p">:</span><span class="s2">"10.0.14393.0 (rs1_release.160715-1616)"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"org"</span><span class="p">:</span><span class="s2">"Microsoft Corporation"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"arch"</span><span class="p">:</span><span class="s2">"x86-64"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"sections"</span><span class="p">:[</span><span class="w">  
+            </span><span class="p">{</span><span class="w">  
+               </span><span class="s2">"md5"</span><span class="p">:</span><span class="s2">"64a67cc3d9162fc0e8f3e342498b5521"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"sha512"</span><span class="p">:</span><span class="s2">"a0f211244eb057bd57100a2bba4010a71b675f47571198004c66597f2d833086bf3aa1c3c4d97635185880f1ef42b45ce2d351f0d3f2bbe24a5b9e9841f38422"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"sha256"</span><span class="p">:</span><span class="s2">"90bdb2677504f970636f313b32963a7fb6e4a95fefa19a2fae97a783ee3bd24d"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"name"</span><span class="p">:</span><span class="s2">".text"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"sha1"</span><span class="p">:</span><span class="s2">"59bef951b3e13ddf53778ad0eae69b32c65cebbf"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"entropy"</span><span class="p">:</span><span class="mf">6.414245618720535</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="p">{</span><span class="w">  
+               </span><span class="s2">"md5"</span><span class="p">:</span><span class="s2">"1e99e85eb32e35b18a9741e2b83f75fd"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"sha512"</span><span class="p">:</span><span class="s2">"ceedd390297dbcea20dd9065567fcf7138cd421007f7f57793e4f2b043c9137720d55ad7fee8ca5a687bb308759df48e001b2258578e69494a0661ee189a504c"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"sha256"</span><span class="p">:</span><span class="s2">"0a17d6c0cdc1a52ea16364787979c1fc4145e82e56ae59620fe7fdc04cc7eec7"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"name"</span><span class="p">:</span><span class="s2">".rdata"</span><span class="p">,</span><span class="w">
+            </span><span class="err">...</span><span class="w">
+         </span><span class="p">],</span><span class="w">
+         </span><span class="s2">"num_sections"</span><span class="p">:</span><span class="mi">7</span><span class="w">
+      </span><span class="p">}</span></code></pre></figure>
 
 <h4 id="multiple-output-sinks">Multiple output sinks</h4>
 
@@ -196,13 +190,13 @@ If you look at the source tree, you should notice the <strong>kstream</strong> d
 
 <p>Beside this relevant features, there been done a ton of code refactoring and other improvements. For example, the bootstrap stage logs a lot of useful information, like the <strong>skips</strong> being applied, the <strong>outputs</strong> and its configuration, total boot time, etc.</p>
 
-<div class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">[</span><span class="mi">2017-01-22</span> <span class="mi">20</span><span class="err">:</span><span class="mi">11</span><span class="err">:</span><span class="mf">29.423254</span><span class="p">]</span> <span class="err">INFO:</span> <span class="err">Fibratus:</span> <span class="err">Starting</span> <span class="err">Fibratus...</span>
-<span class="p">[</span><span class="mi">2017-01-22</span> <span class="mi">20</span><span class="err">:</span><span class="mi">11</span><span class="err">:</span><span class="mf">29.423254</span><span class="p">]</span> <span class="err">INFO:</span> <span class="err">Fibratus:</span> <span class="err">Enumerating</span> <span class="err">system</span> <span class="err">handles...</span>
-<span class="p">[</span><span class="mi">2017-01-22</span> <span class="mi">20</span><span class="err">:</span><span class="mi">11</span><span class="err">:</span><span class="mf">31.628521</span><span class="p">]</span> <span class="err">INFO:</span> <span class="err">Fibratus:</span> <span class="mi">6352</span> <span class="err">handles</span> <span class="err">found</span>
-<span class="p">[</span><span class="mi">2017-01-22</span> <span class="mi">20</span><span class="err">:</span><span class="mi">11</span><span class="err">:</span><span class="mf">31.644142</span><span class="p">]</span> <span class="err">INFO:</span> <span class="err">Fibratus:</span> <span class="err">Adding</span> <span class="err">skips</span> <span class="err">for</span> <span class="err">images</span> <span class="p">[</span><span class="err">&#39;svchost.exe&#39;</span><span class="p">,</span> <span class="err">&#39;smss.exe&#39;</span><span class="p">,</span> <span class="err">&#39;services.exe&#39;</span><span class="p">,</span> <span class="err">&#39;taskmgr.exe&#39;</span><span class="p">,</span> <span class="err">&#39;dwm.exe&#39;</span><span class="p">,</span> <span class="err">&#39;vprot.exe&#39;</span><span class="p">,</span> <span class="err">&#39;lsass.exe&#39;</span><span class="p">,</span> <span class="err">&#39;sihost.exe&#39;</span><span class="p">,</span> <span class="err">&#39;system&#39;</span><span class="p">]</span>
-<span class="p">[</span><span class="mi">2017-01-22</span> <span class="mi">20</span><span class="err">:</span><span class="mi">11</span><span class="err">:</span><span class="mf">31.659769</span><span class="p">]</span> <span class="err">INFO:</span> <span class="err">Fibratus:</span> <span class="err">Deploying</span> <span class="p">[</span><span class="err">console</span><span class="p">]</span> <span class="err">output</span> <span class="err">-</span> <span class="p">[{</span><span class="err">&#39;format&#39;:</span> <span class="err">&#39;json&#39;</span><span class="p">}]</span>
-<span class="p">[</span><span class="mi">2017-01-22</span> <span class="mi">20</span><span class="err">:</span><span class="mi">11</span><span class="err">:</span><span class="mf">31.659769</span><span class="p">]</span> <span class="err">INFO:</span> <span class="err">Fibratus:</span> <span class="err">Deploying</span> <span class="p">[</span><span class="err">elasticsearch</span><span class="p">]</span> <span class="err">output</span> <span class="err">-</span> <span class="p">[{</span><span class="err">&#39;bulk&#39;:</span> <span class="err">False,</span> <span class="err">&#39;hosts&#39;:</span> <span class="err">[&#39;localhost:9200&#39;],</span> <span class="err">&#39;ssl&#39;:</span> <span class="err">False,</span> <span class="err">&#39;document&#39;:</span> <span class="err">&#39;threads&#39;,</span> <span class="err">&#39;username&#39;:</span> <span class="err">None,</span> <span class="err">&#39;index&#39;:</span> <span class="err">&#39;fibratus&#39;</span><span class="p">}]</span>
-<span class="p">[</span><span class="mi">2017-01-22</span> <span class="mi">20</span><span class="err">:</span><span class="mi">11</span><span class="err">:</span><span class="mf">31.728789</span><span class="p">]</span> <span class="err">INFO:</span> <span class="err">Fibratus:</span> <span class="err">Started</span> <span class="err">in</span> <span class="mi">0</span><span class="err">m:</span><span class="mi">02</span><span class="err">s.</span><span class="mi">2321</span></code></pre></div>
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">[</span><span class="mi">2017-01-22</span><span class="w"> </span><span class="mi">20</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">29.423254</span><span class="p">]</span><span class="w"> </span><span class="err">INFO</span><span class="p">:</span><span class="w"> </span><span class="err">Fibratus</span><span class="p">:</span><span class="w"> </span><span class="err">Starting</span><span class="w"> </span><span class="err">Fibratus...</span><span class="w">
+</span><span class="p">[</span><span class="mi">2017-01-22</span><span class="w"> </span><span class="mi">20</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">29.423254</span><span class="p">]</span><span class="w"> </span><span class="err">INFO</span><span class="p">:</span><span class="w"> </span><span class="err">Fibratus</span><span class="p">:</span><span class="w"> </span><span class="err">Enumerating</span><span class="w"> </span><span class="err">system</span><span class="w"> </span><span class="err">handles...</span><span class="w">
+</span><span class="p">[</span><span class="mi">2017-01-22</span><span class="w"> </span><span class="mi">20</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">31.628521</span><span class="p">]</span><span class="w"> </span><span class="err">INFO</span><span class="p">:</span><span class="w"> </span><span class="err">Fibratus</span><span class="p">:</span><span class="w"> </span><span class="mi">6352</span><span class="w"> </span><span class="err">handles</span><span class="w"> </span><span class="err">found</span><span class="w">
+</span><span class="p">[</span><span class="mi">2017-01-22</span><span class="w"> </span><span class="mi">20</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">31.644142</span><span class="p">]</span><span class="w"> </span><span class="err">INFO</span><span class="p">:</span><span class="w"> </span><span class="err">Fibratus</span><span class="p">:</span><span class="w"> </span><span class="err">Adding</span><span class="w"> </span><span class="err">skips</span><span class="w"> </span><span class="err">for</span><span class="w"> </span><span class="err">images</span><span class="w"> </span><span class="p">[</span><span class="err">'svchost.exe'</span><span class="p">,</span><span class="w"> </span><span class="err">'smss.exe'</span><span class="p">,</span><span class="w"> </span><span class="err">'services.exe'</span><span class="p">,</span><span class="w"> </span><span class="err">'taskmgr.exe'</span><span class="p">,</span><span class="w"> </span><span class="err">'dwm.exe'</span><span class="p">,</span><span class="w"> </span><span class="err">'vprot.exe'</span><span class="p">,</span><span class="w"> </span><span class="err">'lsass.exe'</span><span class="p">,</span><span class="w"> </span><span class="err">'sihost.exe'</span><span class="p">,</span><span class="w"> </span><span class="err">'system'</span><span class="p">]</span><span class="w">
+</span><span class="p">[</span><span class="mi">2017-01-22</span><span class="w"> </span><span class="mi">20</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">31.659769</span><span class="p">]</span><span class="w"> </span><span class="err">INFO</span><span class="p">:</span><span class="w"> </span><span class="err">Fibratus</span><span class="p">:</span><span class="w"> </span><span class="err">Deploying</span><span class="w"> </span><span class="p">[</span><span class="err">console</span><span class="p">]</span><span class="w"> </span><span class="err">output</span><span class="w"> </span><span class="err">-</span><span class="w"> </span><span class="p">[{</span><span class="err">'format'</span><span class="p">:</span><span class="w"> </span><span class="err">'json'</span><span class="p">}]</span><span class="w">
+</span><span class="p">[</span><span class="mi">2017-01-22</span><span class="w"> </span><span class="mi">20</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">31.659769</span><span class="p">]</span><span class="w"> </span><span class="err">INFO</span><span class="p">:</span><span class="w"> </span><span class="err">Fibratus</span><span class="p">:</span><span class="w"> </span><span class="err">Deploying</span><span class="w"> </span><span class="p">[</span><span class="err">elasticsearch</span><span class="p">]</span><span class="w"> </span><span class="err">output</span><span class="w"> </span><span class="err">-</span><span class="w"> </span><span class="p">[{</span><span class="err">'bulk'</span><span class="p">:</span><span class="w"> </span><span class="err">False</span><span class="p">,</span><span class="w"> </span><span class="err">'hosts'</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="err">'localhost</span><span class="p">:</span><span class="mi">9200</span><span class="err">'</span><span class="p">],</span><span class="w"> </span><span class="err">'ssl'</span><span class="p">:</span><span class="w"> </span><span class="err">False</span><span class="p">,</span><span class="w"> </span><span class="err">'document'</span><span class="p">:</span><span class="w"> </span><span class="err">'threads'</span><span class="p">,</span><span class="w"> </span><span class="err">'username'</span><span class="p">:</span><span class="w"> </span><span class="err">None</span><span class="p">,</span><span class="w"> </span><span class="err">'index'</span><span class="p">:</span><span class="w"> </span><span class="err">'fibratus'</span><span class="p">}]</span><span class="w">
+</span><span class="p">[</span><span class="mi">2017-01-22</span><span class="w"> </span><span class="mi">20</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">31.728789</span><span class="p">]</span><span class="w"> </span><span class="err">INFO</span><span class="p">:</span><span class="w"> </span><span class="err">Fibratus</span><span class="p">:</span><span class="w"> </span><span class="err">Started</span><span class="w"> </span><span class="err">in</span><span class="w"> </span><span class="mi">0</span><span class="err">m</span><span class="p">:</span><span class="mi">02</span><span class="err">s.</span><span class="mi">2321</span></code></pre></figure>
 
 <p>If you have any feedback or would like to contribute you can reach out via <a href="https://github.com/rabbitstack/fibratus/issues">Github</a> or drop me an email.</p>
 
@@ -259,7 +253,7 @@ If you look at the source tree, you should notice the <strong>kstream</strong> d
   <h4>You might also enjoy <small class="pull-right">(<a href="http://rabbitstack.github.io/posts/">View all posts</a>)</small></h4>
     <ul>
     
-      <li><a href="http://rabbitstack.github.io/operating%20systems/linux-containers-internals-part-i/" title="Linux Containers Internals (Part I)">Linux Containers Internals (Part I)</a></li>
+      <li><a href="http://rabbitstack.github.io/operating%20systems/containers/linux-containers-internals-part-i/" title="Linux Container Internals (Part I)">Linux Container Internals (Part I)</a></li>
     
       <li><a href="http://rabbitstack.github.io/operating%20systems/fibratus-0-7-0/" title="Fibratus 0.7.0">Fibratus 0.7.0</a></li>
     
@@ -272,7 +266,7 @@ If you look at the source tree, you should notice the <strong>kstream</strong> d
   <footer>
     
 
-<span>&copy; 2017 Nedim Šabić. Rabbit Stack blog is powered by Jekyll. Bunny icon is courtesy of <a href="http://www.freepik.com" title="Freepik">Freepik.</a>
+<span>&copy; 2018 Nedim Šabić. Rabbit Stack blog is powered by Jekyll. Bunny icon is courtesy of <a href="http://www.freepik.com" title="Freepik">Freepik.</a>
 
   </footer>
 </div><!-- /.footer-wrap -->

@@ -10,7 +10,6 @@
 <meta name="keywords" content="openstack, cloud foundry, xenserver, virtualization">
 
 
-
 <!-- Twitter Cards -->
 <meta name="twitter:title" content="Deploying Cloud Foundry on OpenStack Juno and XenServer (Part I)">
 <meta name="twitter:description" content="Cloud Foundry ecosystem had been blowing my mind for a long time, and I think it really has made an IT disruption, letting us focus on applications as the essential unit of  business process.">
@@ -55,9 +54,10 @@
 <script src="http://rabbitstack.github.io/assets/js/vendor/modernizr-2.7.1.custom.min.js"></script>
 
 <link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'>
-
+<link href='https://fonts.googleapis.com/css?family=Rajdhani:400,600,700' rel='stylesheet' type='text/css'>
+<link href="https://fonts.googleapis.com/css?family=Exo+2" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
 <!-- Icons -->
 <!-- 16x16 -->
 <link rel="shortcut icon" href="http://rabbitstack.github.io/favicon.ico">
@@ -93,17 +93,11 @@
 		    <ul>
 		        
 				    
-				        
-				    
 				    <li><a href="http://rabbitstack.github.io#" >Home</a></li>
 				
 				    
-				        
-				    
 				    <li><a href="http://rabbitstack.github.io/posts/" >Archive</a></li>
 				
-				    
-				        
 				    
 				    <li><a href="http://rabbitstack.github.io/about/" >About</a></li>
 				
@@ -121,7 +115,7 @@
   alt="Deploying Cloud Foundry on OpenStack Juno and XenServer (Part I) feature image">
   
        <div class="headline-wrap">
-          <img src="http://rabbitstack.github.io/images/rabbitstack.png" />
+          <img class="bunny" src="http://rabbitstack.github.io/images/rabbitstack.png" />
           <h1> The place where bunnies dwell </h1>
           <h2> And bits become colossal </h2>
       </div>
@@ -150,24 +144,24 @@ are doing it for the first time. So, let's see how to proceed step by step, and 
 <p> OpenStack compute node needs a paravirtualized virtual machine running on each XenServer instance. Paravirtualized VM basically has a recompiled kernel so it can talk directly to the hypervisor API. If Centos is your distribution of choice then the easiest way to set up a PV virtual machine is by using this <a href="https://gist.githubusercontent.com/bhnedo/4648499f5680207e86ec/raw/4239fd8d0e10f7f2759d600b28b52f1744d9b5ad/kickstart-centos-minimal.cfg" target="_blank">kickstart</a> file.</p>
 <p>Let’s first create the VM. Please note we have to use Red Hat 6 template, even if we are going to install Centos 7 distribution. For XenServer 6.5 this is not necessary.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">TEMPLATE_UUID</span><span class="o">=</span><span class="k">$(</span>xe template-list <span class="p">|</span> grep -B1 <span class="s1">&#39;name-label.*Red Hat.* 6.*64-bit&#39;</span> <span class="p">|</span> awk -F: <span class="s1">&#39;/uuid/{print $2}&#39;</span><span class="p">|</span> tr -d <span class="s2">&quot; &quot;</span><span class="k">)</span>
-<span class="nv">VMUUID</span><span class="o">=</span><span class="k">$(</span>xe vm-install new-name-label<span class="o">=</span><span class="s2">&quot;compute&quot;</span> <span class="nv">template</span><span class="o">=</span><span class="k">${</span><span class="nv">TEMPLATE_UUID</span><span class="k">})</span>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">TEMPLATE_UUID</span><span class="o">=</span><span class="k">$(</span>xe template-list | <span class="nb">grep</span> <span class="nt">-B1</span> <span class="s1">'name-label.*Red Hat.* 6.*64-bit'</span> | <span class="nb">awk</span> <span class="nt">-F</span>: <span class="s1">'/uuid/{print $2}'</span>| <span class="nb">tr</span> <span class="nt">-d</span> <span class="s2">" "</span><span class="k">)</span>
+<span class="nv">VMUUID</span><span class="o">=</span><span class="k">$(</span>xe vm-install new-name-label<span class="o">=</span><span class="s2">"compute"</span> <span class="nv">template</span><span class="o">=</span><span class="k">${</span><span class="nv">TEMPLATE_UUID</span><span class="k">})</span>
 xe vm-param-set <span class="nv">uuid</span><span class="o">=</span><span class="nv">$VMUUID</span> other-config:install-repository<span class="o">=</span>http://mirror.centos.org/centos/7/os/x86_64
-xe vm-param-set <span class="nv">uuid</span><span class="o">=</span><span class="nv">$VMUUID</span> PV-args<span class="o">=</span><span class="s2">&quot;ks=https://gist.githubusercontent.com/bhnedo/4648499f5680207e86ec/raw/4239fd8d0e10f7f2759d600b28b52f1744d9b5ad/kickstart-centos-minimal.cfg ksdevice=eth0&quot;</span></code></pre></div>
+xe vm-param-set <span class="nv">uuid</span><span class="o">=</span><span class="nv">$VMUUID</span> PV-args<span class="o">=</span><span class="s2">"ks=https://gist.githubusercontent.com/bhnedo/4648499f5680207e86ec/raw/4239fd8d0e10f7f2759d600b28b52f1744d9b5ad/kickstart-centos-minimal.cfg ksdevice=eth0"</span></code></pre></figure>
 
 <p>Find out the network UUID for the bridge that has access to the Internet. Note that Xen bridge is created for every physical network adapter on your machine. Get a list of XenServer networks and store the UUID for the appropriate bridge (in most cases it will be <code>xenbr0</code>).</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">xe network-list
-<span class="nv">NETUUID</span><span class="o">=</span><span class="k">$(</span>xe network-list <span class="nv">bridge</span><span class="o">=</span>xenbr0 --minimal<span class="k">)</span></code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">xe network-list
+<span class="nv">NETUUID</span><span class="o">=</span><span class="k">$(</span>xe network-list <span class="nv">bridge</span><span class="o">=</span>xenbr0 <span class="nt">--minimal</span><span class="k">)</span></code></pre></figure>
 
 <p>Create a virtual network interface (VIF) and attach it to the virtual machine and network. Start the VM and watch the installation progress from XenCenter.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">xe vif-create vm-uuid<span class="o">=</span><span class="nv">$VMUUID</span> network-uuid<span class="o">=</span><span class="nv">$NETUUID</span> <span class="nv">mac</span><span class="o">=</span>random <span class="nv">device</span><span class="o">=</span>0
-xe vm-start <span class="nv">uuid</span><span class="o">=</span><span class="nv">$VMUUID</span></code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">xe vif-create vm-uuid<span class="o">=</span><span class="nv">$VMUUID</span> network-uuid<span class="o">=</span><span class="nv">$NETUUID</span> <span class="nv">mac</span><span class="o">=</span>random <span class="nv">device</span><span class="o">=</span>0
+xe vm-start <span class="nv">uuid</span><span class="o">=</span><span class="nv">$VMUUID</span></code></pre></figure>
 
 <p>When installation process is done export the VM so we have the base image to use for the storage node too.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">xe vm-export <span class="nv">uuid</span><span class="o">=</span><span class="nv">$VMUUID</span> <span class="nv">filename</span><span class="o">=</span>openstack-juno-centos7.xva</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">xe vm-export <span class="nv">uuid</span><span class="o">=</span><span class="nv">$VMUUID</span> <span class="nv">filename</span><span class="o">=</span>openstack-juno-centos7.xva</code></pre></figure>
 
 <p class="notice">
 <strong>Notice:</strong> <code>PyGrub</code> doesn't support <code>grub2</code> boot loader. You will need to apply the following <a href="https://github.com/xenserver/xen-4.3.pg/blob/bf5f09b1a8b5ad4086285ce926a2c2dae68771a1/pygrub-fix-for-rhel7.patch" target="_blank">patch</a> in order to boot the VM properly. This issue has been corrected in XenServer 6.5 release.
@@ -178,32 +172,32 @@ xe vm-start <span class="nv">uuid</span><span class="o">=</span><span class="nv"
 <p>
 Once you have a running PV guest the next step is to install OpenStack plugins for XenServer Dom0. These will let the compute node to communicate with Xen XAPI in order to provision virtual machines, set up networking, storage, etc. Download the latest Openstack Juno branch, unzip and copy the content of <code>plugins/xenserver/xenapi/etc/xapi.d/plugins</code> directory to<code>/etc/xapi.d/plugins</code>. Also ensure that added files are executable.
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">cd</span> /tmp
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">cd</span> /tmp
 wget https://github.com/openstack/nova/archive/master.zip
 unzip master.zip
-cp /tmp/nova-juno-stable/plugins/xenserver/xenapi/etc/xapi.d/plugins/* /etc/xapi.d/plugins
-chmod a+x /etc/xapi.d/plugins/*</code></pre></div>
+<span class="nb">cp</span> /tmp/nova-juno-stable/plugins/xenserver/xenapi/etc/xapi.d/plugins/<span class="k">*</span> /etc/xapi.d/plugins
+<span class="nb">chmod </span>a+x /etc/xapi.d/plugins/<span class="k">*</span></code></pre></figure>
 
 
 Log into your newly installed compute node (default password for the <strong>root</strong> user is <i>changeit</i>) and run these commands to enable OpenStack Juno repository and upgrade the packages on your host.
 </p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">yum install http://rdo.fedorapeople.org/openstack-juno/rdo-release-juno.rpm
-yum upgrade</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">yum <span class="nb">install </span>http://rdo.fedorapeople.org/openstack-juno/rdo-release-juno.rpm
+yum upgrade</code></pre></figure>
 
 <p>If your kernel is upgraded you will probably need to reboot the machine after upgrade process in order to activate the new kernel. Now install the required packages for the compute hypervisor components and <i>nova-network</i> legacy networking.
 </p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">yum install openstack-nova-compute sysfsutils
-yum install openstack-nova-network openstack-nova-api</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">yum <span class="nb">install </span>openstack-nova-compute sysfsutils
+yum <span class="nb">install </span>openstack-nova-network openstack-nova-api</code></pre></figure>
 
 <p> Xenapi python package is also required, so install it using <code>pip</code> package manager.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">easy_install pip
-pip install xenapi</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">easy_install pip
+pip <span class="nb">install </span>xenapi</code></pre></figure>
 
 <blockquote>
-I didn't wanted to setup another network node for <strong>Neutron</strong>, even legacy networking is deprecated in favor of after-mentioned component. If you need advanced features like VLANs, virtual routing, switching, tenant isolation and so on, follow these <a href="http://docs.openstack.org/juno/install-guide/install/yum/content/section_neutron-networking.html" target="_blank">docs</a> on how to add Neutron network.
+I didn't wanted to setup another network node for <strong>Neutron</strong>, even legacy networking is deprecated in favor of aforementioned component. If you need advanced features like VLANs, virtual routing, switching, tenant isolation and so on, follow these <a href="http://docs.openstack.org/juno/install-guide/install/yum/content/section_neutron-networking.html" target="_blank">docs</a> on how to add Neutron network.
 </blockquote>
 <p>
 Now we need to edit the <code>/etc/nova/nova.conf</code> configuration file.
@@ -329,70 +323,70 @@ Now we need to edit the <code>/etc/nova/nova.conf</code> configuration file.
 </ol>
 <p>Start the Compute and Network services and configure them to be automatically started at boot time.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">systemctl <span class="nb">enable </span>openstack-nova-compute.service openstack-nova-network.service openstack-nova-metadata-api.service
-systemctl start openstack-nova-compute.service openstack-nova-network.service openstack-nova-metadata-api.service</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">systemctl <span class="nb">enable </span>openstack-nova-compute.service openstack-nova-network.service openstack-nova-metadata-api.service
+systemctl start openstack-nova-compute.service openstack-nova-network.service openstack-nova-metadata-api.service</code></pre></figure>
 
 <p>Make sure the <code>nova-compute</code> and <code>nova-network</code> are up and running by executing this command on the controller node:</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">nova service-list
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"> nova service-list
 +----+------------------+---------+----------+---------+-------+----------------------------+
-<span class="p">|</span> Id <span class="p">|</span> Binary           <span class="p">|</span> Host    <span class="p">|</span> Zone     <span class="p">|</span> Status  <span class="p">|</span> State <span class="p">|</span> Updated_at                 <span class="p">|</span>
+| Id | Binary           | Host    | Zone     | Status  | State | Updated_at                 |
 +----+------------------+---------+----------+---------+-------+----------------------------+
-<span class="p">|</span> <span class="m">1</span>  <span class="p">|</span> nova-consoleauth <span class="p">|</span> hydra   <span class="p">|</span> internal <span class="p">|</span> enabled <span class="p">|</span> up    <span class="p">|</span> 2015-01-31T17:57:06.000000 <span class="p">|</span>
-<span class="p">|</span> <span class="m">2</span>  <span class="p">|</span> nova-cert        <span class="p">|</span> hydra   <span class="p">|</span> internal <span class="p">|</span> enabled <span class="p">|</span> up    <span class="p">|</span> 2015-01-31T17:57:06.000000 <span class="p">|</span>
-<span class="p">|</span> <span class="m">3</span>  <span class="p">|</span> nova-scheduler   <span class="p">|</span> hydra   <span class="p">|</span> internal <span class="p">|</span> enabled <span class="p">|</span> up    <span class="p">|</span> 2015-01-31T17:57:06.000000 <span class="p">|</span>
-<span class="p">|</span> <span class="m">4</span>  <span class="p">|</span> nova-conductor   <span class="p">|</span> hydra   <span class="p">|</span> internal <span class="p">|</span> enabled <span class="p">|</span> up    <span class="p">|</span> 2015-01-31T17:57:06.000000 <span class="p">|</span>
-<span class="p">|</span> <span class="m">5</span>  <span class="p">|</span> nova-compute     <span class="p">|</span> compute <span class="p">|</span> nova     <span class="p">|</span> enabled <span class="p">|</span> up    <span class="p">|</span> 2015-01-31T17:57:07.000000 <span class="p">|</span>
-<span class="p">|</span> <span class="m">6</span>  <span class="p">|</span> nova-network     <span class="p">|</span> compute <span class="p">|</span> internal <span class="p">|</span> enabled <span class="p">|</span> up    <span class="p">|</span> 2015-01-31T17:57:00.000000 <span class="p">|</span>
-+----+------------------+---------+----------+---------+-------+----------------------------+-</code></pre></div>
+| 1  | nova-consoleauth | hydra   | internal | enabled | up    | 2015-01-31T17:57:06.000000 |
+| 2  | nova-cert        | hydra   | internal | enabled | up    | 2015-01-31T17:57:06.000000 |
+| 3  | nova-scheduler   | hydra   | internal | enabled | up    | 2015-01-31T17:57:06.000000 |
+| 4  | nova-conductor   | hydra   | internal | enabled | up    | 2015-01-31T17:57:06.000000 |
+| 5  | nova-compute     | compute | nova     | enabled | up    | 2015-01-31T17:57:07.000000 |
+| 6  | nova-network     | compute | internal | enabled | up    | 2015-01-31T17:57:00.000000 |
++----+------------------+---------+----------+---------+-------+----------------------------+-</code></pre></figure>
 
 <h3>Installing and configuring storage node</h3>
 
 <p>We can start by creating the storage node VM from the base template image we had exported. Run these commands in the XenServer console:
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">SRUUID</span> <span class="o">=</span> <span class="k">$(</span>xe sr-list name-label<span class="o">=</span><span class="s2">&quot;Local storage&quot;</span> --minimal<span class="k">)</span>
-xe vm-import <span class="nv">filename</span><span class="o">=</span>openstack-juno-centos7.xva <span class="nv">force</span><span class="o">=</span><span class="nb">true </span>sr-uuid<span class="o">=</span><span class="nv">$SRUUID</span> <span class="nv">preserve</span><span class="o">=</span><span class="nb">true</span></code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">SRUUID <span class="o">=</span> <span class="k">$(</span>xe sr-list name-label<span class="o">=</span><span class="s2">"Local storage"</span> <span class="nt">--minimal</span><span class="k">)</span>
+xe vm-import <span class="nv">filename</span><span class="o">=</span>openstack-juno-centos7.xva <span class="nv">force</span><span class="o">=</span><span class="nb">true </span>sr-uuid<span class="o">=</span><span class="nv">$SRUUID</span> <span class="nv">preserve</span><span class="o">=</span><span class="nb">true</span></code></pre></figure>
 
 
 You will need to create and attach the VDI where <i>cinder</i> volumes will be stored. Get the UUID of your newly imported VM, and then run
 these commands.
 </p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">VDIUUID</span> <span class="o">=</span> <span class="k">$(</span>xe vdi-create sr-uuid<span class="o">=</span><span class="nv">$SRUUID</span> name-label<span class="o">=</span><span class="s2">&quot;cinder&quot;</span> <span class="nb">type</span><span class="o">=</span>user virtual-size<span class="o">=</span>250GiB<span class="k">)</span>
-<span class="nv">VBDUUID</span> <span class="o">=</span> <span class="k">$(</span>xe vbd-create vm-uuid<span class="o">=</span><span class="nv">$VMUUID</span> vdi-uuid<span class="o">=</span><span class="nv">$VDIUUID</span> <span class="nv">device</span><span class="o">=</span>1<span class="k">)</span>
-xe vbd-plug <span class="nv">uuid</span><span class="o">=</span><span class="nv">$VBDUUID</span></code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">VDIUUID <span class="o">=</span> <span class="k">$(</span>xe vdi-create sr-uuid<span class="o">=</span><span class="nv">$SRUUID</span> name-label<span class="o">=</span><span class="s2">"cinder"</span> <span class="nb">type</span><span class="o">=</span>user virtual-size<span class="o">=</span>250GiB<span class="k">)</span>
+VBDUUID <span class="o">=</span> <span class="k">$(</span>xe vbd-create vm-uuid<span class="o">=</span><span class="nv">$VMUUID</span> vdi-uuid<span class="o">=</span><span class="nv">$VDIUUID</span> <span class="nv">device</span><span class="o">=</span>1<span class="k">)</span>
+xe vbd-plug <span class="nv">uuid</span><span class="o">=</span><span class="nv">$VBDUUID</span></code></pre></figure>
 
 <p>
 Install the required dependencies and start the LVM metadata service.
 </p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">yum install lvm2
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">yum <span class="nb">install </span>lvm2
 systemctl <span class="nb">enable </span>lvm2-lvmetad.service
-systemctl start lvm2-lvmetad.service</code></pre></div>
+systemctl start lvm2-lvmetad.service</code></pre></figure>
 
 <p>
 Partition the disk in order to create the LVM physical volume and the volume group labeled as <code> cinder-volumes </code>. Change <code>/dev/xvdb1</code> with your partition.
 </p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">pvcreate /dev/xvdb1
-vgcreate cinder-volumes /dev/xvdb1</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">pvcreate /dev/xvdb1
+vgcreate cinder-volumes /dev/xvdb1</code></pre></figure>
 
 <p>
 It is also necessary to instruct the LVM which block storage devices should be scanned. Edit the <code>/etc/lvm/lvm.conf</code> file and modify the <code>filter</code> section to include the created volume group.
 </p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">devices <span class="o">{</span>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">devices <span class="o">{</span>
   ...
-  <span class="nv">filter</span> <span class="o">=</span> <span class="o">[</span> <span class="s2">&quot;a/xvda/&quot;</span>, <span class="s2">&quot;a/xvdb/&quot;</span>, <span class="s2">&quot;r/.*/&quot;</span><span class="o">]</span>
+  filter <span class="o">=</span> <span class="o">[</span> <span class="s2">"a/xvda/"</span>, <span class="s2">"a/xvdb/"</span>, <span class="s2">"r/.*/"</span><span class="o">]</span>
   ...
-<span class="o">}</span></code></pre></div>
+<span class="o">}</span></code></pre></figure>
 
 <p>
 We are now ready to install and configure Block Storage components and dependencies. I wasn't able to get iSCSI LUNs to work using <code>targetcli</code>, probably because XenServer relies on SCSI initiator utilities. The solution was to use <code>scsi-target-utils</code> instead.
 </p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">yum install scsi-target-utils
-yum install openstack-cinder python-oslo-db MySQL-python</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">yum <span class="nb">install </span>scsi-target-utils
+yum <span class="nb">install </span>openstack-cinder python-oslo-db MySQL-python</code></pre></figure>
 
 <p>
 Edit the <code>/etc/cinder/cinder.conf</code> configuration file.
@@ -443,7 +437,6 @@ Edit the <code>/etc/cinder/cinder.conf</code> configuration file.
 
  verbose = true
  		</pre>
-	
 	<li>
 		<strong>Target administration service</strong>
 		<p>In the <code>[DEFAULT]</code> configure Cinder to use <code>tgtadm</code> service for iSCSI storage management:</p>
@@ -460,19 +453,19 @@ Edit the <code>/etc/cinder/cinder.conf</code> configuration file.
 
 <p>Start the Block Storage and target service and configure them to be automatically started at boot time.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">systemctl <span class="nb">enable </span>openstack-cinder-volume.service tgtd.service
-systemctl start openstack-cinder-volume.service tgtd.service</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">systemctl <span class="nb">enable </span>openstack-cinder-volume.service tgtd.service
+systemctl start openstack-cinder-volume.service tgtd.service</code></pre></figure>
 
 
 <p> Run this command on the controller node to ensure the Storage service is up and running. </p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">cinder service-list
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">cinder service-list
 +------------------+--------+------+---------+-------+----------------------------+
-<span class="p">|</span>      Binary      <span class="p">|</span>  Host  <span class="p">|</span> Zone <span class="p">|</span>  Status <span class="p">|</span> State <span class="p">|</span>         Updated_at         <span class="p">|</span>
+|      Binary      |  Host  | Zone |  Status | State |         Updated_at         |
 +------------------+--------+------+---------+-------+----------------------------+
-<span class="p">|</span> cinder-scheduler <span class="p">|</span> hydra  <span class="p">|</span> nova <span class="p">|</span> enabled <span class="p">|</span>   up  <span class="p">|</span> 2015-01-31T17:57:44.000000 <span class="p">|</span>
-<span class="p">|</span>  cinder-volume   <span class="p">|</span> cinder <span class="p">|</span> nova <span class="p">|</span> enabled <span class="p">|</span>   up  <span class="p">|</span> 2015-01-31T17:57:55.000000 <span class="p">|</span>
-+------------------+--------+------+---------+-------+----------------------------+</code></pre></div>
+| cinder-scheduler | hydra  | nova | enabled |   up  | 2015-01-31T17:57:44.000000 |
+|  cinder-volume   | cinder | nova | enabled |   up  | 2015-01-31T17:57:55.000000 |
++------------------+--------+------+---------+-------+----------------------------+</code></pre></figure>
 
 
 <p class="notice">
@@ -539,7 +532,7 @@ systemctl start openstack-cinder-volume.service tgtd.service</code></pre></div>
   <h4>You might also enjoy <small class="pull-right">(<a href="http://rabbitstack.github.io/posts/">View all posts</a>)</small></h4>
     <ul>
     
-      <li><a href="http://rabbitstack.github.io/operating%20systems/linux-containers-internals-part-i/" title="Linux Containers Internals (Part I)">Linux Containers Internals (Part I)</a></li>
+      <li><a href="http://rabbitstack.github.io/operating%20systems/containers/linux-containers-internals-part-i/" title="Linux Container Internals (Part I)">Linux Container Internals (Part I)</a></li>
     
       <li><a href="http://rabbitstack.github.io/operating%20systems/fibratus-0-7-0/" title="Fibratus 0.7.0">Fibratus 0.7.0</a></li>
     
@@ -552,7 +545,7 @@ systemctl start openstack-cinder-volume.service tgtd.service</code></pre></div>
   <footer>
     
 
-<span>&copy; 2017 Nedim Šabić. Rabbit Stack blog is powered by Jekyll. Bunny icon is courtesy of <a href="http://www.freepik.com" title="Freepik">Freepik.</a>
+<span>&copy; 2018 Nedim Šabić. Rabbit Stack blog is powered by Jekyll. Bunny icon is courtesy of <a href="http://www.freepik.com" title="Freepik">Freepik.</a>
 
   </footer>
 </div><!-- /.footer-wrap -->

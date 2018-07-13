@@ -10,7 +10,6 @@
 <meta name="keywords" content="operating systems, windows, kernel, system calls, exploration, python, cython, tracing, portable executable, yara, pattern matching, malware, classification">
 
 
-
 <!-- Twitter Cards -->
 <meta name="twitter:title" content="Fibratus 0.7.0">
 <meta name="twitter:description" content="I'm thrilled to announce the release of Fibratus 0.7.0. Let's see what's new in this version.">
@@ -55,9 +54,10 @@
 <script src="http://rabbitstack.github.io/assets/js/vendor/modernizr-2.7.1.custom.min.js"></script>
 
 <link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'>
-
+<link href='https://fonts.googleapis.com/css?family=Rajdhani:400,600,700' rel='stylesheet' type='text/css'>
+<link href="https://fonts.googleapis.com/css?family=Exo+2" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
 <!-- Icons -->
 <!-- 16x16 -->
 <link rel="shortcut icon" href="http://rabbitstack.github.io/favicon.ico">
@@ -93,17 +93,11 @@
 		    <ul>
 		        
 				    
-				        
-				    
 				    <li><a href="http://rabbitstack.github.io#" >Home</a></li>
 				
 				    
-				        
-				    
 				    <li><a href="http://rabbitstack.github.io/posts/" >Archive</a></li>
 				
-				    
-				        
 				    
 				    <li><a href="http://rabbitstack.github.io/about/" >About</a></li>
 				
@@ -121,7 +115,7 @@
   alt="Fibratus 0.7.0 feature image">
   
        <div class="headline-wrap">
-          <img src="http://rabbitstack.github.io/images/rabbitstack.png" />
+          <img class="bunny" src="http://rabbitstack.github.io/images/rabbitstack.png" />
           <h1> The place where bunnies dwell </h1>
           <h2> And bits become colossal </h2>
       </div>
@@ -140,54 +134,54 @@
 
 <h4 id="yara-integration">YARA integration</h4>
 
-<p>This release stems a new set of features I’ve decided to call <strong>bindings</strong>. They represent join-points between fibratus and other tools that can add additional insights to the data captured from kernel. The first of them is the integration with the <a href="https://virustoal.github.io/yara/">Yara</a> tool. The rule matching phase is triggered when process creation kernel event is detected. The image path of the created process is evaluated against the available rule set. If a match occurs, the <code>CreateProcess</code> event is enriched with rule context information (the matching rule, rule meta information, data strings etc). Here is the example of the produced JSON payload:</p>
+<p>This release stems a new set of features I’ve decided to call <strong>bindings</strong>. They represent join-points between fibratus and other tools that can add additional insights to the data captured from kernel. The first of them is the integration with the <a href="https://virustoal.github.io/yara/">Yara</a> tool. The rule matching phase is triggered when process creation kernel event is detected. The image path of the created process is evaluated against the available rule set. If a match occurs, the <code class="highlighter-rouge">CreateProcess</code> event is enriched with rule context information (the matching rule, rule meta information, data strings etc). Here is the example of the produced JSON payload:</p>
 
-<div class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span>
-   <span class="nt">&quot;pid&quot;</span><span class="p">:</span><span class="mi">8100</span><span class="p">,</span>
-   <span class="nt">&quot;params&quot;</span><span class="p">:{</span>
-      <span class="nt">&quot;pid&quot;</span><span class="p">:</span><span class="mi">2628</span><span class="p">,</span>
-      <span class="nt">&quot;exe&quot;</span><span class="p">:</span><span class="s2">&quot;C:\\WINDOWS\\system32\\notepad.exe&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;notepad.exe&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;comm&quot;</span><span class="p">:</span><span class="s2">&quot;\&quot;C:\\WINDOWS\\system32\\notepad.exe\&quot; &quot;</span><span class="p">,</span>
-      <span class="nt">&quot;ppid&quot;</span><span class="p">:</span><span class="mi">8100</span><span class="p">,</span>
-      <span class="nt">&quot;rule_info&quot;</span><span class="p">:{</span>
-         <span class="nt">&quot;rule&quot;</span><span class="p">:</span><span class="s2">&quot;test&quot;</span><span class="p">,</span>
-         <span class="nt">&quot;meta&quot;</span><span class="p">:{</span>
-            <span class="nt">&quot;weight&quot;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span>
-            <span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="s2">&quot;0.1&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;author&quot;</span><span class="p">:</span><span class="s2">&quot;rabbitstack&quot;</span>
-         <span class="p">},</span>
-         <span class="nt">&quot;namespace&quot;</span><span class="p">:</span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
-         <span class="nt">&quot;strings&quot;</span><span class="p">:[</span>
-            <span class="p">{</span>
-               <span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="s2">&quot;notepad&quot;</span><span class="p">,</span>
-               <span class="nt">&quot;identifier&quot;</span><span class="p">:</span><span class="s2">&quot;$magic&quot;</span><span class="p">,</span>
-               <span class="nt">&quot;offset&quot;</span><span class="p">:</span><span class="mi">118820</span>
-            <span class="p">},</span>
-            <span class="p">{</span>
-               <span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="s2">&quot;notepad&quot;</span><span class="p">,</span>
-               <span class="nt">&quot;identifier&quot;</span><span class="p">:</span><span class="s2">&quot;$magic&quot;</span><span class="p">,</span>
-               <span class="nt">&quot;offset&quot;</span><span class="p">:</span><span class="mi">137751</span>
-            <span class="p">}</span>
-         <span class="p">],</span>
-         <span class="nt">&quot;tags&quot;</span><span class="p">:[</span>
-            <span class="s2">&quot;Notepad&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;raw&quot;</span>
-         <span class="p">]</span>
-      <span class="p">}</span>
-   <span class="p">},</span>
-   <span class="nt">&quot;cpuid&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span>
-   <span class="nt">&quot;proc&quot;</span><span class="p">:</span><span class="s2">&quot;explorer.exe&quot;</span><span class="p">,</span>
-   <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;CreateProcess&quot;</span><span class="p">,</span>
-   <span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="s2">&quot;2017-03-22 20:09:31.513000&quot;</span><span class="p">,</span>
-   <span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="mi">4</span>
-<span class="p">}</span></code></pre></div>
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
+   </span><span class="s2">"pid"</span><span class="p">:</span><span class="mi">8100</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"params"</span><span class="p">:{</span><span class="w">
+      </span><span class="s2">"pid"</span><span class="p">:</span><span class="mi">2628</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"exe"</span><span class="p">:</span><span class="s2">"C:</span><span class="se">\\</span><span class="s2">WINDOWS</span><span class="se">\\</span><span class="s2">system32</span><span class="se">\\</span><span class="s2">notepad.exe"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"name"</span><span class="p">:</span><span class="s2">"notepad.exe"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"comm"</span><span class="p">:</span><span class="s2">"</span><span class="se">\"</span><span class="s2">C:</span><span class="se">\\</span><span class="s2">WINDOWS</span><span class="se">\\</span><span class="s2">system32</span><span class="se">\\</span><span class="s2">notepad.exe</span><span class="se">\"</span><span class="s2"> "</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"ppid"</span><span class="p">:</span><span class="mi">8100</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"rule_info"</span><span class="p">:{</span><span class="w">
+         </span><span class="s2">"rule"</span><span class="p">:</span><span class="s2">"test"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"meta"</span><span class="p">:{</span><span class="w">
+            </span><span class="s2">"weight"</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"version"</span><span class="p">:</span><span class="s2">"0.1"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"author"</span><span class="p">:</span><span class="s2">"rabbitstack"</span><span class="w">
+         </span><span class="p">},</span><span class="w">
+         </span><span class="s2">"namespace"</span><span class="p">:</span><span class="s2">"default"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"strings"</span><span class="p">:[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+               </span><span class="s2">"data"</span><span class="p">:</span><span class="s2">"notepad"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"identifier"</span><span class="p">:</span><span class="s2">"$magic"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"offset"</span><span class="p">:</span><span class="mi">118820</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+               </span><span class="s2">"data"</span><span class="p">:</span><span class="s2">"notepad"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"identifier"</span><span class="p">:</span><span class="s2">"$magic"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"offset"</span><span class="p">:</span><span class="mi">137751</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+         </span><span class="p">],</span><span class="w">
+         </span><span class="s2">"tags"</span><span class="p">:[</span><span class="w">
+            </span><span class="s2">"Notepad"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"raw"</span><span class="w">
+         </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+   </span><span class="p">},</span><span class="w">
+   </span><span class="s2">"cpuid"</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"proc"</span><span class="p">:</span><span class="s2">"explorer.exe"</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"name"</span><span class="p">:</span><span class="s2">"CreateProcess"</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"timestamp"</span><span class="p">:</span><span class="s2">"2017-03-22 20:09:31.513000"</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"id"</span><span class="p">:</span><span class="mi">4</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
 
-<p>To enable the YARA binding , you need to edit <code>fibratus.yml</code> configuration descriptor. Under the <code>yara</code> binding section, the <code>path</code> key has to point to a valid path with a directory containing rule definitions. I’m not sure if this is a bug or limitation of the yara cython extension, but if the root directory is traversed recursively with multiple directories containing the <code>yar</code> files, the matching might not work as expected.</p>
+<p>To enable the YARA binding , you need to edit <code class="highlighter-rouge">fibratus.yml</code> configuration descriptor. Under the <code class="highlighter-rouge">yara</code> binding section, the <code class="highlighter-rouge">path</code> key has to point to a valid path with a directory containing rule definitions. I’m not sure if this is a bug or limitation of the yara cython extension, but if the root directory is traversed recursively with multiple directories containing the <code class="highlighter-rouge">yar</code> files, the matching might not work as expected.</p>
 
 <h4 id="standalone-installer">Standalone installer</h4>
 
-<p>I have to be honest about the drawbacks of installing fibratus from <strong>PyPI</strong>. The kernel stream collector needs to be compiled and in order to do it the C compiler has to be present on the local machine. Obviously, the python interpreter and the <code>cython</code> package are also the required dependencies to install fibratus successfully. Over and above that, the installation of <code>yara-python</code> package doesn’t go smoothly on Windows, so I ended up compiling <code>libyara</code> from sources which produces the statically linked library required by <code>yara-python</code>.
+<p>I have to be honest about the drawbacks of installing fibratus from <strong>PyPI</strong>. The kernel stream collector needs to be compiled and in order to do it the C compiler has to be present on the local machine. Obviously, the python interpreter and the <code class="highlighter-rouge">cython</code> package are also the required dependencies to install fibratus successfully. Over and above that, the installation of <code class="highlighter-rouge">yara-python</code> package doesn’t go smoothly on Windows, so I ended up compiling <code class="highlighter-rouge">libyara</code> from sources which produces the statically linked library required by <code class="highlighter-rouge">yara-python</code>.
 To overcome all those after-mentioned tedious tasks, from this release on, I’ll be shipping the windows installer which embeds python interpreter, cython extensions and any extra dependency in a single binary, so installing fibratus becomes a matter of few clicks. Feel free to download the latest version <a href="https://github.com/rabbitstack/fibratus/releases/download/v0.7.0/fibratus-0.7.0.exe">here</a>.</p>
 
 <p>If you have any feedback or would like to contribute you can reach out via <a href="https://github.com/rabbitstack/fibratus/issues">Github</a> or drop me an email.</p>
@@ -247,7 +241,7 @@ To overcome all those after-mentioned tedious tasks, from this release on, I’l
   <h4>You might also enjoy <small class="pull-right">(<a href="http://rabbitstack.github.io/posts/">View all posts</a>)</small></h4>
     <ul>
     
-      <li><a href="http://rabbitstack.github.io/operating%20systems/linux-containers-internals-part-i/" title="Linux Containers Internals (Part I)">Linux Containers Internals (Part I)</a></li>
+      <li><a href="http://rabbitstack.github.io/operating%20systems/containers/linux-containers-internals-part-i/" title="Linux Container Internals (Part I)">Linux Container Internals (Part I)</a></li>
     
       <li><a href="http://rabbitstack.github.io/operating%20systems/fibratus-0-6-0/" title="Fibratus 0.6.0">Fibratus 0.6.0</a></li>
     
@@ -260,7 +254,7 @@ To overcome all those after-mentioned tedious tasks, from this release on, I’l
   <footer>
     
 
-<span>&copy; 2017 Nedim Šabić. Rabbit Stack blog is powered by Jekyll. Bunny icon is courtesy of <a href="http://www.freepik.com" title="Freepik">Freepik.</a>
+<span>&copy; 2018 Nedim Šabić. Rabbit Stack blog is powered by Jekyll. Bunny icon is courtesy of <a href="http://www.freepik.com" title="Freepik">Freepik.</a>
 
   </footer>
 </div><!-- /.footer-wrap -->

@@ -10,7 +10,6 @@
 <meta name="keywords" content="virtulization, containers, docker, unikernels, osv, runtime.js, docker, library os, mirageos">
 
 
-
 <!-- Twitter Cards -->
 <meta name="twitter:title" content="Of Unikernels and Containers">
 <meta name="twitter:description" content="Containers have revolutionized the way we package and deliver software. Instead of distributing large VM images, the application is assembled in a lightweight and portable container which has its own isolated runtime environment.">
@@ -55,9 +54,10 @@
 <script src="http://rabbitstack.github.io/assets/js/vendor/modernizr-2.7.1.custom.min.js"></script>
 
 <link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'>
-
+<link href='https://fonts.googleapis.com/css?family=Rajdhani:400,600,700' rel='stylesheet' type='text/css'>
+<link href="https://fonts.googleapis.com/css?family=Exo+2" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
 <!-- Icons -->
 <!-- 16x16 -->
 <link rel="shortcut icon" href="http://rabbitstack.github.io/favicon.ico">
@@ -93,17 +93,11 @@
 		    <ul>
 		        
 				    
-				        
-				    
 				    <li><a href="http://rabbitstack.github.io#" >Home</a></li>
 				
 				    
-				        
-				    
 				    <li><a href="http://rabbitstack.github.io/posts/" >Archive</a></li>
 				
-				    
-				        
 				    
 				    <li><a href="http://rabbitstack.github.io/about/" >About</a></li>
 				
@@ -121,7 +115,7 @@
   alt="Of Unikernels and Containers feature image">
   
        <div class="headline-wrap">
-          <img src="http://rabbitstack.github.io/images/rabbitstack.png" />
+          <img class="bunny" src="http://rabbitstack.github.io/images/rabbitstack.png" />
           <h1> The place where bunnies dwell </h1>
           <h2> And bits become colossal </h2>
       </div>
@@ -154,24 +148,24 @@ language oriented unikernel projects. There are also used to be called as <stron
 <p>But, what lies behind the motivation for unikernels?
 They claim to notably reduce the attack vector. As the majority of the OS services are pulled out from the kernel (no compiler tools, no shells, only essential drivers are kept, etc.), the zero day exploits or intrusions are less likely to compromise the system itself. The entire application process is operating in the privileged CPU mode, which means no I/O waits, no competing for resources and no context switches at all! Unikernels are made for <strong>immutability</strong>. Rather then patching the existing unikernel when a security issue is detected, the application sources are recompiled to a new unikernel and the old one is disposed.</p>
 
-<p>I found <a href="http://osv.io"><strong>OSv</strong></a> the perfect fit to illustrate how to package any C, Node.js or Java application into unikernel. It provides the <code>capstan</code> CLI tool to pull, build and run unikernel images. Issue the following commands to get the binary.</p>
+<p>I found <a href="http://osv.io"><strong>OSv</strong></a> the perfect fit to illustrate how to package any C, Node.js or Java application into unikernel. It provides the <code class="highlighter-rouge">capstan</code> CLI tool to pull, build and run unikernel images. Issue the following commands to get the binary.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ CAPSTAN_URL</span><span class="o">=</span>https://raw.githubusercontent.com/cloudius-systems/capstan/master/scripts/download
-<span class="nv">$ </span>curl <span class="nv">$CAPSTAN_URL</span> <span class="p">|</span> bash
-<span class="nv">$ $HOME</span>/bin/capstan</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ CAPSTAN_URL</span><span class="o">=</span>https://raw.githubusercontent.com/cloudius-systems/capstan/master/scripts/download
+<span class="nv">$ </span>curl <span class="nv">$CAPSTAN_URL</span> | bash
+<span class="nv">$ $HOME</span>/bin/capstan</code></pre></figure>
 
-<p>We are going to build the Spring Boot microservice unikernel. Clone the github repository which contains <code>Capstanfile</code> configuration to build the jar artifact and assemble it into unikernel image.</p>
+<p>We are going to build the Spring Boot microservice unikernel. Clone the github repository which contains <code class="highlighter-rouge">Capstanfile</code> configuration to build the jar artifact and assemble it into unikernel image.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>git clone https://github.com/bhnedo/cloud-rabbit-todo/tree/master/todo-microservice.git
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>git clone https://github.com/bhnedo/cloud-rabbit-todo/tree/master/todo-microservice.git
 <span class="nv">$ </span><span class="nb">cd </span>todo-microservice
-<span class="nv">$ $HOME</span>/bin/capstan build</code></pre></div>
+<span class="nv">$ $HOME</span>/bin/capstan build</code></pre></figure>
 
-<p>You can test the unikernel locally by running <code>capstan run</code> or use the generated <strong>QEMU</strong> image to boot it straight under KVM hypervisor.</p>
+<p>You can test the unikernel locally by running <code class="highlighter-rouge">capstan run</code> or use the generated <strong>QEMU</strong> image to boot it straight under KVM hypervisor.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>virt-install -f <span class="nv">$HOME</span>/.capstan/repository/todo-microservice/todo-microservice.qemu <span class="se">\</span>
--n spring-boot-unikernel --boot hd -r 1024</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>virt-install <span class="nt">-f</span> <span class="nv">$HOME</span>/.capstan/repository/todo-microservice/todo-microservice.qemu <span class="se">\</span>
+<span class="nt">-n</span> spring-boot-unikernel <span class="nt">--boot</span> hd <span class="nt">-r</span> 1024</code></pre></figure>
 
-<p>Voila! The Spring Boot microservice is running happily as KVM guest. The image is about 114M (mainly because of <code>openjdk</code> runtime and Spring Boot dependencies), and less than 80M in size when compressed!</p>
+<p>Voila! The Spring Boot microservice is running happily as KVM guest. The image is about 114M (mainly because of <code class="highlighter-rouge">openjdk</code> runtime and Spring Boot dependencies), and less than 80M in size when compressed!</p>
 
 <h3 id="are-unikernels-production-ready">Are unikernels production ready?</h3>
 
@@ -235,7 +229,7 @@ They claim to notably reduce the attack vector. As the majority of the OS servic
   <h4>You might also enjoy <small class="pull-right">(<a href="http://rabbitstack.github.io/posts/">View all posts</a>)</small></h4>
     <ul>
     
-      <li><a href="http://rabbitstack.github.io/operating%20systems/linux-containers-internals-part-i/" title="Linux Containers Internals (Part I)">Linux Containers Internals (Part I)</a></li>
+      <li><a href="http://rabbitstack.github.io/operating%20systems/containers/linux-containers-internals-part-i/" title="Linux Container Internals (Part I)">Linux Container Internals (Part I)</a></li>
     
       <li><a href="http://rabbitstack.github.io/operating%20systems/fibratus-0-7-0/" title="Fibratus 0.7.0">Fibratus 0.7.0</a></li>
     
@@ -248,7 +242,7 @@ They claim to notably reduce the attack vector. As the majority of the OS servic
   <footer>
     
 
-<span>&copy; 2017 Nedim Šabić. Rabbit Stack blog is powered by Jekyll. Bunny icon is courtesy of <a href="http://www.freepik.com" title="Freepik">Freepik.</a>
+<span>&copy; 2018 Nedim Šabić. Rabbit Stack blog is powered by Jekyll. Bunny icon is courtesy of <a href="http://www.freepik.com" title="Freepik">Freepik.</a>
 
   </footer>
 </div><!-- /.footer-wrap -->

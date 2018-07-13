@@ -10,7 +10,6 @@
 <meta name="keywords" content="spring mvc, angular, websockets, spring, single page application, Spring Data, Mongodb, SockJS, SaSS, Bourbon, Neat, Refills">
 
 
-
 <!-- Twitter Cards -->
 <meta name="twitter:title" content="Spring MVC + Angular = Hasta la vista JSP!">
 <meta name="twitter:description" content="In a sea of client side MVC web frameworks, Angular seems to be the most prominent one due to its increasing popularity. Unlike other MVC frameworks (Backbone, Ember), Angular uses HTML as the templating language and also allow us to build our own HTML directives that can be interpreted by the browser.">
@@ -55,9 +54,10 @@
 <script src="http://rabbitstack.github.io/assets/js/vendor/modernizr-2.7.1.custom.min.js"></script>
 
 <link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'>
-
+<link href='https://fonts.googleapis.com/css?family=Rajdhani:400,600,700' rel='stylesheet' type='text/css'>
+<link href="https://fonts.googleapis.com/css?family=Exo+2" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
 <!-- Icons -->
 <!-- 16x16 -->
 <link rel="shortcut icon" href="http://rabbitstack.github.io/favicon.ico">
@@ -93,17 +93,11 @@
 		    <ul>
 		        
 				    
-				        
-				    
 				    <li><a href="http://rabbitstack.github.io#" >Home</a></li>
 				
 				    
-				        
-				    
 				    <li><a href="http://rabbitstack.github.io/posts/" >Archive</a></li>
 				
-				    
-				        
 				    
 				    <li><a href="http://rabbitstack.github.io/about/" >About</a></li>
 				
@@ -121,7 +115,7 @@
   alt="Spring MVC + Angular = Hasta la vista JSP! feature image">
   
        <div class="headline-wrap">
-          <img src="http://rabbitstack.github.io/images/rabbitstack.png" />
+          <img class="bunny" src="http://rabbitstack.github.io/images/rabbitstack.png" />
           <h1> The place where bunnies dwell </h1>
           <h2> And bits become colossal </h2>
       </div>
@@ -177,7 +171,7 @@ In this post we will focus on how to build a simple web application to highlight
 
 <p><b>Spring Data</b> makes it extremely easy to access and manipulate the new generation data access technologies as well as relational databases, providing the well known Spring programming model such as POJOs, templates, etc. For instance, our <code>Todo</code> entity could be modeled as follows. </p>
 
-<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Document</span>
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Document</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">Todo</span> <span class="o">{</span>
 
     <span class="nd">@Id</span>
@@ -189,38 +183,38 @@ In this post we will focus on how to build a simple web application to highlight
     <span class="kd">private</span> <span class="n">Date</span> <span class="n">creationDate</span><span class="o">;</span>
     <span class="kd">private</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Task</span><span class="o">&gt;</span> <span class="n">tasks</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Task</span><span class="o">&gt;();</span>
 
-<span class="o">}</span></code></pre></div>
+<span class="o">}</span></code></pre></figure>
 
 <p>The <code>@Document</code> annotation identifies the domain object to be saved in Mongo. Spring Data provides the <code>MongoTemplate</code> abstraction we could use to query and manipulate the data store. However, a more consistent and idiomatic approach can be achieved with the data repositories.</p>
 
-<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">TodoRepository</span> <span class="kd">extends</span> <span class="n">MongoRepository</span><span class="o">&lt;</span><span class="n">Todo</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="o">{</span>
-<span class="o">}</span></code></pre></div>
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">TodoRepository</span> <span class="kd">extends</span> <span class="n">MongoRepository</span><span class="o">&lt;</span><span class="n">Todo</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="o">{</span>
+<span class="o">}</span></code></pre></figure>
 
 <p>That's the whole code needed to enable the basic CRUD operations on <i>Todo</i> documents. Magic! Isn't it? It is also necessary to activate the repository scanning in the Spring XML configuration file.</p>
 
-<div class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="nt">&lt;mongo:repositories</span> <span class="na">base-package=</span><span class="s">&quot;org.rabbitstack.rabbit.todo.data.repository&quot;</span> <span class="nt">/&gt;</span></code></pre></div>
+<figure class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="nt">&lt;mongo:repositories</span> <span class="na">base-package=</span><span class="s">"org.rabbitstack.rabbit.todo.data.repository"</span> <span class="nt">/&gt;</span></code></pre></figure>
 
 <h4>Serving up the data via REST</h4>
 
 <p>The next step is to expose the HTTP endpoints the will be called from Angular to get <i>todo</i> lists, create new ones, change tasks priority or mark them as done. That won't be a big deal. Spring MVC <b>controllers</b> allow us the create lightweight REST services and map the methods with requests using the <code>@RequestMapping</code> annotation. Let's see some code. </p>
 
-<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Controller</span>
-<span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">&quot;api/v1&quot;</span><span class="o">)</span>
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Controller</span>
+<span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"api/v1"</span><span class="o">)</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">TodoController</span> <span class="o">{</span>
 
     <span class="nd">@Autowired</span>
     <span class="kd">private</span> <span class="n">TodoRepository</span> <span class="n">todoRepository</span><span class="o">;</span>
 
-    <span class="cm">/**</span>
-<span class="cm">     * Gets all todo lists.</span>
-<span class="cm">     * @return a JSON array of todo lists</span>
-<span class="cm">     */</span>
-    <span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">&quot;/todos&quot;</span><span class="o">,</span> <span class="n">method</span> <span class="o">=</span> <span class="n">RequestMethod</span><span class="o">.</span><span class="na">GET</span><span class="o">)</span>
+    <span class="cm">/**
+     * Gets all todo lists.
+     * @return a JSON array of todo lists
+     */</span>
+    <span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">"/todos"</span><span class="o">,</span> <span class="n">method</span> <span class="o">=</span> <span class="n">RequestMethod</span><span class="o">.</span><span class="na">GET</span><span class="o">)</span>
     <span class="kd">public</span> <span class="nd">@ResponseBody</span>
     <span class="n">List</span><span class="o">&lt;</span><span class="n">Todo</span><span class="o">&gt;</span> <span class="nf">todos</span><span class="o">()</span> <span class="o">{</span>
         <span class="k">return</span> <span class="n">todoRepository</span><span class="o">.</span><span class="na">findAll</span><span class="o">();</span>
     <span class="o">}</span>
-<span class="o">}</span></code></pre></div>
+<span class="o">}</span></code></pre></figure>
 
 <p>That's pretty straightforward. We have annotated the <code>TodoController</code> class with <code>@Controller</code> and <code>@RequestMapping</code> annotations, so the Spring knows this class will act as the controller. Note how the controller receives the reference of the repository and how the <code>findAll</code> method is called to get all created todos in Mongo. When the client (browser) requests the <code>api/v1/todos</code> endpoint the <code>todos</code> method will be triggered to respond with the JSON array of todo lists in the response body.</p>
 
@@ -229,22 +223,22 @@ In this post we will focus on how to build a simple web application to highlight
 <p>Every time a user adds a new todo list, delete the task or performs any other action, we want that changes to propagate to the rest of the users. Instead of pulling for the changes using the traditional XHR calls, the websockets open a bidirectional full duplex channel with the server. Once the connection had been established they can interchange data in real time.</p>
 <p><b>Spring Websocket</b> provides a SockJS endpoint which can be enabled with the following XML configuration.</p>
 
-<div class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="nt">&lt;websocket:message-broker</span> <span class="na">application-destination-prefix=</span><span class="s">&quot;/todo&quot;</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;websocket:stomp-endpoint</span> <span class="na">path=</span><span class="s">&quot;/io&quot;</span><span class="nt">&gt;</span>
+<figure class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="nt">&lt;websocket:message-broker</span> <span class="na">application-destination-prefix=</span><span class="s">"/todo"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;websocket:stomp-endpoint</span> <span class="na">path=</span><span class="s">"/io"</span><span class="nt">&gt;</span>
         <span class="nt">&lt;websocket:sockjs</span> <span class="nt">/&gt;</span>
     <span class="nt">&lt;/websocket:stomp-endpoint&gt;</span>
-    <span class="nt">&lt;websocket:simple-broker</span> <span class="na">prefix=</span><span class="s">&quot;/topic&quot;</span> <span class="nt">/&gt;</span>
-<span class="nt">&lt;/websocket:message-broker&gt;</span></code></pre></div>
+    <span class="nt">&lt;websocket:simple-broker</span> <span class="na">prefix=</span><span class="s">"/topic"</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/websocket:message-broker&gt;</span></code></pre></figure>
 
 <p>This will boot up a broker on <code>/io</code> endpoint so the clients can connect over the Stomp protocol. Here we also tell the Spring to use <b>SockJS</b> websocket emulation. If web browser doesn't support web sockets, SockJS will choose another transport.</p>
 
 <p>On the client side, the Angular service is responsible for establishing the connection with websocket server upon application bootstrap.</p>
 
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">todoApi</span> <span class="o">=</span> <span class="p">{</span>
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">todoApi</span> <span class="o">=</span> <span class="p">{</span>
 
-    <span class="nx">stomp</span> <span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="na">stomp</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
 
-    <span class="nx">connect</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">endpoint</span><span class="p">)</span> <span class="p">{</span>
+    <span class="na">connect</span> <span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">endpoint</span><span class="p">)</span> <span class="p">{</span>
         <span class="kd">var</span> <span class="nx">socket</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SockJS</span><span class="p">(</span><span class="nx">endpoint</span><span class="p">);</span>
         <span class="kd">var</span> <span class="nx">defer</span> <span class="o">=</span> <span class="nx">$q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
         <span class="nx">todoApi</span><span class="p">.</span><span class="nx">stomp</span>  <span class="o">=</span> <span class="nx">Stomp</span><span class="p">.</span><span class="nx">over</span><span class="p">(</span><span class="nx">socket</span><span class="p">);</span>
@@ -254,22 +248,22 @@ In this post we will focus on how to build a simple web application to highlight
         <span class="k">return</span> <span class="nx">defer</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
     <span class="p">},</span>
 
-    <span class="nx">subscribe</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">topic</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+    <span class="na">subscribe</span> <span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">topic</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
         <span class="nx">todoApi</span><span class="p">.</span><span class="nx">stomp</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="nx">topic</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
             <span class="nx">$rootScope</span><span class="p">.</span><span class="nx">$apply</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
                 <span class="nx">callback</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">body</span><span class="p">);</span>
             <span class="p">});</span>
         <span class="p">});</span>
-    <span class="p">}</span></code></pre></div>
+    <span class="p">}</span></code></pre></figure>
 
 <p>The <code>subscribe</code> function registers a callback that is called every time the content is being pushed from the server. For sending the messages to a subscribed topic, Spring provides the <code>SimpMessagingTemplate</code> template. See the code below. Upon the creation of a <i>todo</i> list <code>convertAndSend</code> will serialize a <code>Todo</code> object to JSON and send it to the browser.
 
 
-<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="cm">/**</span>
-<span class="cm"> * Creates a new todo list.</span>
-<span class="cm"> * @param todo list to be created</span>
-<span class="cm"> */</span>
-<span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">&quot;/todos&quot;</span><span class="o">,</span> <span class="n">method</span> <span class="o">=</span> <span class="n">RequestMethod</span><span class="o">.</span><span class="na">POST</span><span class="o">)</span>
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="cm">/**
+ * Creates a new todo list.
+ * @param todo list to be created
+ */</span>
+<span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">"/todos"</span><span class="o">,</span> <span class="n">method</span> <span class="o">=</span> <span class="n">RequestMethod</span><span class="o">.</span><span class="na">POST</span><span class="o">)</span>
 <span class="nd">@ResponseStatus</span><span class="o">(</span><span class="n">HttpStatus</span><span class="o">.</span><span class="na">NO_CONTENT</span><span class="o">)</span>
 <span class="kd">public</span> <span class="kt">void</span> <span class="nf">createTodo</span><span class="o">(</span><span class="nd">@Valid</span> <span class="nd">@RequestBody</span> <span class="n">Todo</span> <span class="n">todo</span><span class="o">)</span> <span class="o">{</span>
     <span class="n">todo</span><span class="o">.</span><span class="na">setCreationDate</span><span class="o">(</span><span class="n">Date</span><span class="o">.</span><span class="na">from</span><span class="o">(</span><span class="n">LocalDateTime</span><span class="o">.</span><span class="na">now</span><span class="o">().</span><span class="na">atZone</span><span class="o">(</span><span class="n">ZoneId</span><span class="o">.</span><span class="na">systemDefault</span><span class="o">()).</span><span class="na">toInstant</span><span class="o">()));</span>
@@ -277,20 +271,20 @@ In this post we will focus on how to build a simple web application to highlight
                         <span class="n">task</span> <span class="o">-&gt;</span> <span class="n">task</span><span class="o">.</span><span class="na">setId</span><span class="o">(</span><span class="n">UUID</span><span class="o">.</span><span class="na">randomUUID</span><span class="o">().</span><span class="na">toString</span><span class="o">())</span>
                     <span class="o">);</span>
     <span class="n">Todo</span> <span class="n">t</span> <span class="o">=</span> <span class="n">todoRepository</span><span class="o">.</span><span class="na">insert</span><span class="o">(</span><span class="n">todo</span><span class="o">);</span>
-    <span class="n">messagingTemplate</span><span class="o">.</span><span class="na">convertAndSend</span><span class="o">(</span><span class="s">&quot;/topic/todos/created&quot;</span><span class="o">,</span> <span class="n">t</span><span class="o">);</span>
+    <span class="n">messagingTemplate</span><span class="o">.</span><span class="na">convertAndSend</span><span class="o">(</span><span class="s">"/topic/todos/created"</span><span class="o">,</span> <span class="n">t</span><span class="o">);</span>
 
-<span class="o">}</span></code></pre></div>
+<span class="o">}</span></code></pre></figure>
 
 
 <p>On the Angular side, we inject the <code>TodoService</code> into the controller, and then call the <code>connect</code> method to initiate the connection and register the callbacks that are triggered when message is received from the server.</p>
 
 
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">todoService</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="s1">&#39;/io&#39;</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">todoService</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="s1">'/io'</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
 
-    <span class="nx">todoService</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="s1">&#39;/topic/todos/created&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">todo</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">todoService</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="s1">'/topic/todos/created'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">todo</span><span class="p">)</span> <span class="p">{</span>
 	<span class="nx">$scope</span><span class="p">.</span><span class="nx">todos</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">angular</span><span class="p">.</span><span class="nx">fromJson</span><span class="p">(</span><span class="nx">todo</span><span class="p">));</span>
 
-<span class="p">});</span></code></pre></div>
+<span class="p">});</span></code></pre></figure>
 
 
 <h4>Consuming the REST API</h4>
@@ -298,49 +292,49 @@ In this post we will focus on how to build a simple web application to highlight
 <p>Angular ships with the built in <code>$http</code> service that can be used to perform requests. For example to create a new <i>todo</i> list, we can call the <code>post</code> method.</p>
 
 
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">create</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">description</span><span class="p">,</span> <span class="nx">tasks</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">$http</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="nx">API_ENDPOINT</span><span class="p">,</span> <span class="p">{</span> <span class="nx">name</span> <span class="o">:</span> <span class="nx">name</span><span class="p">,</span>
-                              <span class="nx">description</span> <span class="o">:</span> <span class="nx">description</span><span class="p">,</span>
-                              <span class="nx">tasks</span><span class="o">:</span> <span class="nx">tasks</span><span class="p">});</span>
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">create</span> <span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">description</span><span class="p">,</span> <span class="nx">tasks</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">$http</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="nx">API_ENDPOINT</span><span class="p">,</span> <span class="p">{</span> <span class="na">name</span> <span class="p">:</span> <span class="nx">name</span><span class="p">,</span>
+                              <span class="na">description</span> <span class="p">:</span> <span class="nx">description</span><span class="p">,</span>
+                              <span class="na">tasks</span><span class="p">:</span> <span class="nx">tasks</span><span class="p">});</span>
 
-<span class="p">}</span></code></pre></div>
+<span class="p">}</span></code></pre></figure>
 
 
 <p>Similarly, we can send a GET request like this.</p>
 
 
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">list</span> <span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-   <span class="kd">var</span> <span class="nx">promise</span> <span class="o">=</span> <span class="nx">$http</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">API_ENDPOINT</span><span class="p">)</span>
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">list</span> <span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+   <span class="kd">var</span> <span class="nx">promise</span> <span class="o">=</span> <span class="nx">$http</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="nx">API_ENDPOINT</span><span class="p">)</span>
         <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
 
             <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
 
         <span class="p">});</span>
    <span class="k">return</span> <span class="nx">promise</span><span class="p">;</span>
-<span class="p">}</span></code></pre></div>
+<span class="p">}</span></code></pre></figure>
 
 
 <p>This function returns a special promise object which encapsulates the asynchronous action. In the controller we wait for the operation to complete, and then we provide the scope with the result.</p>
 
 
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">todoService</span><span class="p">.</span><span class="nx">list</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">todos</span><span class="p">)</span> <span class="p">{</span>
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">todoService</span><span class="p">.</span><span class="nx">list</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">todos</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">$scope</span><span class="p">.</span><span class="nx">todos</span> <span class="o">=</span> <span class="nx">todos</span><span class="p">;</span>
 
-<span class="p">});</span></code></pre></div>
+<span class="p">});</span></code></pre></figure>
 
 
 <h4>Rendering the views</h4>
 
 <p>As we already stated, Angular uses the HTML templates to build up the views with the set of well known directives. They provide bidirectional data binding, iterations, conditional rendering, event handlers, etc. Here is a part of the view which renders <i>todo</i> lists.</p>  
 
-<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;flex-boxes&quot;</span><span class="nt">&gt;</span>
-	<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;flex-box&quot;</span> <span class="na">ng-repeat=</span><span class="s">&quot;todo in todos&quot;</span><span class="nt">&gt;</span>
-		 <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;delete&quot;</span><span class="nt">&gt;&lt;i</span> <span class="na">ng-click=</span><span class="s">&quot;deleteTodo(todo.id)&quot;</span> <span class="na">class=</span><span class="s">&quot;icon ion-close-circled&quot;</span><span class="nt">&gt;&lt;/i&gt;&lt;/div&gt;</span>
-                <span class="nt">&lt;h1</span> <span class="na">class=</span><span class="s">&quot;flex-title uppercase&quot;</span><span class="nt">&gt;&lt;/h1&gt;</span>
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"flex-boxes"</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"flex-box"</span> <span class="na">ng-repeat=</span><span class="s">"todo in todos"</span><span class="nt">&gt;</span>
+		 <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"delete"</span><span class="nt">&gt;&lt;i</span> <span class="na">ng-click=</span><span class="s">"deleteTodo(todo.id)"</span> <span class="na">class=</span><span class="s">"icon ion-close-circled"</span><span class="nt">&gt;&lt;/i&gt;&lt;/div&gt;</span>
+                <span class="nt">&lt;h1</span> <span class="na">class=</span><span class="s">"flex-title uppercase"</span><span class="nt">&gt;&lt;/h1&gt;</span>
 
-                <span class="nt">&lt;p</span> <span class="na">class=</span><span class="s">&quot;todo-description&quot;</span><span class="nt">&gt;&lt;/p&gt;</span>
+                <span class="nt">&lt;p</span> <span class="na">class=</span><span class="s">"todo-description"</span><span class="nt">&gt;&lt;/p&gt;</span>
     <span class="nt">&lt;/div&gt;</span>
-<span class="nt">&lt;/div&gt;</span></code></pre></div>
+<span class="nt">&lt;/div&gt;</span></code></pre></figure>
 
 </p>
 
@@ -397,7 +391,7 @@ In this post we will focus on how to build a simple web application to highlight
   <h4>You might also enjoy <small class="pull-right">(<a href="http://rabbitstack.github.io/posts/">View all posts</a>)</small></h4>
     <ul>
     
-      <li><a href="http://rabbitstack.github.io/operating%20systems/linux-containers-internals-part-i/" title="Linux Containers Internals (Part I)">Linux Containers Internals (Part I)</a></li>
+      <li><a href="http://rabbitstack.github.io/operating%20systems/containers/linux-containers-internals-part-i/" title="Linux Container Internals (Part I)">Linux Container Internals (Part I)</a></li>
     
       <li><a href="http://rabbitstack.github.io/operating%20systems/fibratus-0-7-0/" title="Fibratus 0.7.0">Fibratus 0.7.0</a></li>
     
@@ -410,7 +404,7 @@ In this post we will focus on how to build a simple web application to highlight
   <footer>
     
 
-<span>&copy; 2017 Nedim Šabić. Rabbit Stack blog is powered by Jekyll. Bunny icon is courtesy of <a href="http://www.freepik.com" title="Freepik">Freepik.</a>
+<span>&copy; 2018 Nedim Šabić. Rabbit Stack blog is powered by Jekyll. Bunny icon is courtesy of <a href="http://www.freepik.com" title="Freepik">Freepik.</a>
 
   </footer>
 </div><!-- /.footer-wrap -->

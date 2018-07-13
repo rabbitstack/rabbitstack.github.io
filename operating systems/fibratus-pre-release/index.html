@@ -10,7 +10,6 @@
 <meta name="keywords" content="operating systems, windows, kernel, system calls, exploration, python, cython, tracing">
 
 
-
 <!-- Twitter Cards -->
 <meta name="twitter:title" content="Fibratus Pre-Release">
 <meta name="twitter:description" content="Pardon me for not announcing the pre-release availability of Fibratus here on the blog. It was a pretty busy month for me. Anyway, I feel very excited about Fibratus. At the moment of writing, it has **205** stars and **23** forks on Github. I didn't expect much acceptance during these 3 weeks since I had pushed the code to the repository!">
@@ -55,9 +54,10 @@
 <script src="http://rabbitstack.github.io/assets/js/vendor/modernizr-2.7.1.custom.min.js"></script>
 
 <link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'>
-
+<link href='https://fonts.googleapis.com/css?family=Rajdhani:400,600,700' rel='stylesheet' type='text/css'>
+<link href="https://fonts.googleapis.com/css?family=Exo+2" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
 <!-- Icons -->
 <!-- 16x16 -->
 <link rel="shortcut icon" href="http://rabbitstack.github.io/favicon.ico">
@@ -93,17 +93,11 @@
 		    <ul>
 		        
 				    
-				        
-				    
 				    <li><a href="http://rabbitstack.github.io#" >Home</a></li>
 				
 				    
-				        
-				    
 				    <li><a href="http://rabbitstack.github.io/posts/" >Archive</a></li>
 				
-				    
-				        
 				    
 				    <li><a href="http://rabbitstack.github.io/about/" >About</a></li>
 				
@@ -121,7 +115,7 @@
   alt="Fibratus Pre-Release feature image">
   
        <div class="headline-wrap">
-          <img src="http://rabbitstack.github.io/images/rabbitstack.png" />
+          <img class="bunny" src="http://rabbitstack.github.io/images/rabbitstack.png" />
           <h1> The place where bunnies dwell </h1>
           <h2> And bits become colossal </h2>
       </div>
@@ -144,7 +138,7 @@
 
 <p>Anyway, I feel very excited about Fibratus. At the moment of writing, it has <strong>205</strong> stars and <strong>23</strong> forks on Github. I didn’t expect much acceptance during these <strong>3</strong> weeks since I pushed the code to the repository! The production ready release should be out shortly. There are some minor issues to fix.</p>
 
-<p>I’m figuring out on how to avoid blocking the main thread when calling the <code>NtQueryObject</code> function on a synchronous kernel object. Since Windows doesn’t provide any facility to get the I/O status of an object opened for synchronous access, the famous work-around consists on calling the <code>NtQueryObject</code> in a new thread and terminating it if the timeout is reached. The support for <strong>Windows 10</strong> and a whole new set of filaments is also on the roadmap.</p>
+<p>I’m figuring out on how to avoid blocking the main thread when calling the <code class="highlighter-rouge">NtQueryObject</code> function on a synchronous kernel object. Since Windows doesn’t provide any facility to get the I/O status of an object opened for synchronous access, the famous work-around consists on calling the <code class="highlighter-rouge">NtQueryObject</code> in a new thread and terminating it if the timeout is reached. The support for <strong>Windows 10</strong> and a whole new set of filaments is also on the roadmap.</p>
 
 <p>I would like to thank my mate <a href="http://www.ildesign.es/">Ilde</a> (check out his portfolio) for an awesome Fibratus logo, the contributions, pull requests and encouragements from the community.</p>
 
@@ -201,7 +195,7 @@
   <h4>You might also enjoy <small class="pull-right">(<a href="http://rabbitstack.github.io/posts/">View all posts</a>)</small></h4>
     <ul>
     
-      <li><a href="http://rabbitstack.github.io/operating%20systems/linux-containers-internals-part-i/" title="Linux Containers Internals (Part I)">Linux Containers Internals (Part I)</a></li>
+      <li><a href="http://rabbitstack.github.io/operating%20systems/containers/linux-containers-internals-part-i/" title="Linux Container Internals (Part I)">Linux Container Internals (Part I)</a></li>
     
       <li><a href="http://rabbitstack.github.io/operating%20systems/fibratus-0-7-0/" title="Fibratus 0.7.0">Fibratus 0.7.0</a></li>
     
@@ -214,7 +208,7 @@
   <footer>
     
 
-<span>&copy; 2017 Nedim Šabić. Rabbit Stack blog is powered by Jekyll. Bunny icon is courtesy of <a href="http://www.freepik.com" title="Freepik">Freepik.</a>
+<span>&copy; 2018 Nedim Šabić. Rabbit Stack blog is powered by Jekyll. Bunny icon is courtesy of <a href="http://www.freepik.com" title="Freepik">Freepik.</a>
 
   </footer>
 </div><!-- /.footer-wrap -->

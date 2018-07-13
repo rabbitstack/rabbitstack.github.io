@@ -10,7 +10,6 @@
 <meta name="keywords" content="operating systems, windows, kernel, system calls, exploration, python, cython, tracing">
 
 
-
 <!-- Twitter Cards -->
 <meta name="twitter:title" content="Fibratus 0.4.0">
 <meta name="twitter:description" content="I'm pleased to announce the release of Fibratus 0.4.0. The remarkable features of this release include per-pid process spying, Elasticsearch output adapter and the configuration based process exclusions.">
@@ -55,9 +54,10 @@
 <script src="http://rabbitstack.github.io/assets/js/vendor/modernizr-2.7.1.custom.min.js"></script>
 
 <link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'>
-
+<link href='https://fonts.googleapis.com/css?family=Rajdhani:400,600,700' rel='stylesheet' type='text/css'>
+<link href="https://fonts.googleapis.com/css?family=Exo+2" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
 <!-- Icons -->
 <!-- 16x16 -->
 <link rel="shortcut icon" href="http://rabbitstack.github.io/favicon.ico">
@@ -93,17 +93,11 @@
 		    <ul>
 		        
 				    
-				        
-				    
 				    <li><a href="http://rabbitstack.github.io#" >Home</a></li>
 				
 				    
-				        
-				    
 				    <li><a href="http://rabbitstack.github.io/posts/" >Archive</a></li>
 				
-				    
-				        
 				    
 				    <li><a href="http://rabbitstack.github.io/about/" >About</a></li>
 				
@@ -121,7 +115,7 @@
   alt="Fibratus 0.4.0 feature image">
   
        <div class="headline-wrap">
-          <img src="http://rabbitstack.github.io/images/rabbitstack.png" />
+          <img class="bunny" src="http://rabbitstack.github.io/images/rabbitstack.png" />
           <h1> The place where bunnies dwell </h1>
           <h2> And bits become colossal </h2>
       </div>
@@ -142,42 +136,42 @@
 
 <h4 id="per-pid-process-spying">Per-pid process spying</h4>
 
-<p>Let me introduce the <code>--pid</code> command line option which enables to attach and spy on the activity of the given process. For example, here is the output when attached to the <strong>Chrome</strong> process:</p>
+<p>Let me introduce the <code class="highlighter-rouge">--pid</code> command line option which enables to attach and spy on the activity of the given process. For example, here is the output when attached to the <strong>Chrome</strong> process:</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>fibratus run --pid 6040
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>fibratus run <span class="nt">--pid</span> 6040
 
 ...
-<span class="m">1141</span> 11:51:43.751000 <span class="m">2</span> chrome.exe <span class="o">(</span>6040<span class="o">)</span> - RegQueryKey <span class="o">(</span><span class="nv">hive</span><span class="o">=</span>REGISTRY_MACHINE_SYSTEM, <span class="nv">key</span><span class="o">=</span>SYSTEM<span class="se">\C</span>ontrolSet001<span class="se">\C</span>ontrol<span class="se">\S</span>ession Manager<span class="se">\,</span> <span class="nv">pid</span><span class="o">=</span>6040, <span class="nv">status</span><span class="o">=</span>0, <span class="nv">tid</span><span class="o">=</span>1624<span class="o">)</span>
-<span class="m">1142</span> 11:51:43.751000 <span class="m">2</span> chrome.exe <span class="o">(</span>6040<span class="o">)</span> - RegQueryKey <span class="o">(</span><span class="nv">hive</span><span class="o">=</span>REGISTRY_MACHINE_SYSTEM, <span class="nv">key</span><span class="o">=</span>SYSTEM<span class="se">\C</span>ontrolSet001<span class="se">\C</span>ontrol<span class="se">\S</span>ession Manager<span class="se">\,</span> <span class="nv">pid</span><span class="o">=</span>6040, <span class="nv">status</span><span class="o">=</span>0, <span class="nv">tid</span><span class="o">=</span>1624<span class="o">)</span>
-<span class="m">1143</span> 11:51:43.751000 <span class="m">2</span> chrome.exe <span class="o">(</span>6040<span class="o">)</span> - RegOpenKey <span class="o">(</span><span class="nv">hive</span><span class="o">=</span>REGISTRY_MACHINE_SOFTWARE, <span class="nv">key</span><span class="o">=</span>SOFTWARE<span class="se">\W</span>OW6432Node<span class="se">\G</span>oogle<span class="se">\U</span>pdate<span class="se">\C</span>lientState<span class="se">\{</span>8A69D345-D564-463c-AFF1-A69D9E530F96<span class="o">}</span>, <span class="nv">pid</span><span class="o">=</span>6040, <span class="nv">status</span><span class="o">=</span>0, <span class="nv">tid</span><span class="o">=</span>1624<span class="o">)</span>
+1141 11:51:43.751000 2 chrome.exe <span class="o">(</span>6040<span class="o">)</span> - RegQueryKey <span class="o">(</span><span class="nv">hive</span><span class="o">=</span>REGISTRY_MACHINE_SYSTEM, <span class="nv">key</span><span class="o">=</span>SYSTEM<span class="se">\C</span>ontrolSet001<span class="se">\C</span>ontrol<span class="se">\S</span>ession Manager<span class="se">\,</span> <span class="nv">pid</span><span class="o">=</span>6040, <span class="nv">status</span><span class="o">=</span>0, <span class="nv">tid</span><span class="o">=</span>1624<span class="o">)</span>
+1142 11:51:43.751000 2 chrome.exe <span class="o">(</span>6040<span class="o">)</span> - RegQueryKey <span class="o">(</span><span class="nv">hive</span><span class="o">=</span>REGISTRY_MACHINE_SYSTEM, <span class="nv">key</span><span class="o">=</span>SYSTEM<span class="se">\C</span>ontrolSet001<span class="se">\C</span>ontrol<span class="se">\S</span>ession Manager<span class="se">\,</span> <span class="nv">pid</span><span class="o">=</span>6040, <span class="nv">status</span><span class="o">=</span>0, <span class="nv">tid</span><span class="o">=</span>1624<span class="o">)</span>
+1143 11:51:43.751000 2 chrome.exe <span class="o">(</span>6040<span class="o">)</span> - RegOpenKey <span class="o">(</span><span class="nv">hive</span><span class="o">=</span>REGISTRY_MACHINE_SOFTWARE, <span class="nv">key</span><span class="o">=</span>SOFTWARE<span class="se">\W</span>OW6432Node<span class="se">\G</span>oogle<span class="se">\U</span>pdate<span class="se">\C</span>lientState<span class="se">\{</span>8A69D345-D564-463c-AFF1-A69D9E530F96<span class="o">}</span>, <span class="nv">pid</span><span class="o">=</span>6040, <span class="nv">status</span><span class="o">=</span>0, <span class="nv">tid</span><span class="o">=</span>1624<span class="o">)</span>
 ...
-<span class="m">1541</span> 11:51:52.833000 <span class="m">3</span> chrome.exe <span class="o">(</span>6040<span class="o">)</span> - CloseFile <span class="o">(</span><span class="nv">file</span><span class="o">=</span><span class="se">\D</span>evice<span class="se">\H</span>arddiskVolume2<span class="se">\U</span>sers<span class="se">\N</span>edo<span class="se">\A</span>ppData<span class="se">\L</span>ocal<span class="se">\G</span>oogle<span class="se">\C</span>hrome<span class="se">\U</span>ser Data<span class="se">\D</span>efault<span class="se">\T</span>ransportSecurity~RFe927c36.TMP, <span class="nv">tid</span><span class="o">=</span>8984<span class="o">)</span>
-<span class="m">1542</span> 11:51:52.833000 <span class="m">3</span> chrome.exe <span class="o">(</span>6040<span class="o">)</span> - CreateFile <span class="o">(</span><span class="nv">file</span><span class="o">=</span><span class="se">\D</span>evice<span class="se">\H</span>arddiskVolume2<span class="se">\U</span>sers<span class="se">\N</span>edo<span class="se">\A</span>ppData<span class="se">\L</span>ocal<span class="se">\G</span>oogle<span class="se">\C</span>hrome<span class="se">\U</span>ser Data<span class="se">\D</span>efault<span class="se">\,</span> <span class="nv">file_type</span><span class="o">=</span>FILE, <span class="nv">operation</span><span class="o">=</span>OPEN, <span class="nv">share_mask</span><span class="o">=</span>rw-, <span class="nv">tid</span><span class="o">=</span>8984<span class="o">)</span>
-<span class="m">1543</span> 11:51:52.835000 <span class="m">2</span> chrome.exe <span class="o">(</span>6040<span class="o">)</span> - CloseFile <span class="o">(</span><span class="nv">file</span><span class="o">=</span><span class="se">\D</span>evice<span class="se">\H</span>arddiskVolume2<span class="se">\U</span>sers<span class="se">\N</span>edo<span class="se">\A</span>ppData<span class="se">\L</span>ocal<span class="se">\G</span>oogle<span class="se">\C</span>hrome<span class="se">\U</span>ser Data<span class="se">\D</span>efault<span class="se">\,</span> <span class="nv">tid</span><span class="o">=</span>8984<span class="o">)</span>
-<span class="m">1544</span> 11:51:52.835000 <span class="m">2</span> chrome.exe <span class="o">(</span>6040<span class="o">)</span> - CreateFile <span class="o">(</span><span class="nv">file</span><span class="o">=</span><span class="se">\D</span>evice<span class="se">\H</span>arddiskVolume2<span class="se">\U</span>sers<span class="se">\N</span>edo<span class="se">\A</span>ppData<span class="se">\L</span>ocal<span class="se">\G</span>oogle<span class="se">\C</span>hrome<span class="se">\U</span>ser Data<span class="se">\D</span>efault<span class="se">\,</span> <span class="nv">file_type</span><span class="o">=</span>FILE, <span class="nv">operation</span><span class="o">=</span>OPEN, <span class="nv">share_mask</span><span class="o">=</span>rw-, <span class="nv">tid</span><span class="o">=</span>8984<span class="o">)</span>
-<span class="m">1545</span> 11:51:52.836000 <span class="m">2</span> chrome.exe <span class="o">(</span>6040<span class="o">)</span> - CloseFile <span class="o">(</span><span class="nv">file</span><span class="o">=</span><span class="se">\D</span>evice<span class="se">\H</span>arddiskVolume2<span class="se">\U</span>sers<span class="se">\N</span>edo<span class="se">\A</span>ppData<span class="se">\L</span>ocal<span class="se">\G</span>oogle<span class="se">\C</span>hrome<span class="se">\U</span>ser Data<span class="se">\D</span>efault<span class="se">\,</span> <span class="nv">tid</span><span class="o">=</span>8984<span class="o">)</span>
-<span class="m">1546</span> 11:51:52.836000 <span class="m">2</span> chrome.exe <span class="o">(</span>6040<span class="o">)</span> - CloseFile <span class="o">(</span><span class="nv">file</span><span class="o">=</span><span class="se">\D</span>evice<span class="se">\H</span>arddiskVolume2<span class="se">\U</span>sers<span class="se">\N</span>edo<span class="se">\A</span>ppData<span class="se">\L</span>ocal<span class="se">\G</span>oogle<span class="se">\C</span>hrome<span class="se">\U</span>ser Data<span class="se">\D</span>efault<span class="se">\T</span>ransportSecurity, <span class="nv">tid</span><span class="o">=</span>8984<span class="o">)</span>
-<span class="m">1547</span> 11:51:52.836000 <span class="m">2</span> chrome.exe <span class="o">(</span>6040<span class="o">)</span> - CloseFile <span class="o">(</span><span class="nv">file</span><span class="o">=</span><span class="se">\D</span>evice<span class="se">\H</span>arddiskVolume2<span class="se">\U</span>sers<span class="se">\N</span>edo<span class="se">\A</span>ppData<span class="se">\L</span>ocal<span class="se">\G</span>oogle<span class="se">\C</span>hrome<span class="se">\U</span>ser Data<span class="se">\D</span>efault<span class="se">\7</span>CFE.tmp, <span class="nv">tid</span><span class="o">=</span>8984<span class="o">)</span>
-<span class="m">1548</span> 11:51:52.836000 <span class="m">2</span> chrome.exe <span class="o">(</span>6040<span class="o">)</span> - CreateFile <span class="o">(</span><span class="nv">file</span><span class="o">=</span><span class="se">\D</span>evice<span class="se">\H</span>arddiskVolume2<span class="se">\U</span>sers<span class="se">\N</span>edo<span class="se">\A</span>ppData<span class="se">\L</span>ocal<span class="se">\G</span>oogle<span class="se">\C</span>hrome<span class="se">\U</span>ser Data<span class="se">\D</span>efault<span class="se">\T</span>ransportSecurity~RFe927c36.TMP, <span class="nv">file_type</span><span class="o">=</span>REPARSE_POINT, <span class="nv">operation</span><span class="o">=</span>OPEN, <span class="nv">share_mask</span><span class="o">=</span>rwd, <span class="nv">tid</span><span class="o">=</span>8984<span class="o">)</span>
-<span class="m">1549</span> 11:51:52.836000 <span class="m">2</span> chrome.exe <span class="o">(</span>6040<span class="o">)</span> - DeleteFile <span class="o">(</span><span class="nv">file</span><span class="o">=</span><span class="se">\D</span>evice<span class="se">\H</span>arddiskVolume2<span class="se">\U</span>sers<span class="se">\N</span>edo<span class="se">\A</span>ppData<span class="se">\L</span>ocal<span class="se">\G</span>oogle<span class="se">\C</span>hrome<span class="se">\U</span>ser Data<span class="se">\D</span>efault<span class="se">\T</span>ransportSecurity~RFe927c36.TMP, <span class="nv">tid</span><span class="o">=</span>8984<span class="o">)</span>
-<span class="m">1551</span> 11:51:53.311000 <span class="m">0</span> chrome.exe <span class="o">(</span>6040<span class="o">)</span> - Recv <span class="o">(</span><span class="nv">application</span><span class="o">=</span>https, <span class="nv">dport</span><span class="o">=</span>443, <span class="nv">ip_dst</span><span class="o">=</span>192.30.253.112, <span class="nv">ip_src</span><span class="o">=</span>192.168.1.105, <span class="nv">l4_proto</span><span class="o">=</span>TCP, <span class="nv">packet_size</span><span class="o">=</span>31, <span class="nv">pid</span><span class="o">=</span>6040, <span class="nv">sport</span><span class="o">=</span>55896<span class="o">)</span>
-<span class="m">1552</span> 11:51:53.322000 <span class="m">0</span> chrome.exe <span class="o">(</span>6040<span class="o">)</span> - Recv <span class="o">(</span><span class="nv">application</span><span class="o">=</span>https, <span class="nv">dport</span><span class="o">=</span>443, <span class="nv">ip_dst</span><span class="o">=</span>192.30.253.112, <span class="nv">ip_src</span><span class="o">=</span>192.168.1.105, <span class="nv">l4_proto</span><span class="o">=</span>TCP, <span class="nv">packet_size</span><span class="o">=</span>31, <span class="nv">pid</span><span class="o">=</span>6040, <span class="nv">sport</span><span class="o">=</span>55897<span class="o">)</span>
-<span class="m">1553</span> 11:51:53.648000 <span class="m">0</span> chrome.exe <span class="o">(</span>6040<span class="o">)</span> - Recv <span class="o">(</span><span class="nv">application</span><span class="o">=</span>https, <span class="nv">dport</span><span class="o">=</span>443, <span class="nv">ip_dst</span><span class="o">=</span>192.30.253.112, <span class="nv">ip_src</span><span class="o">=</span>192.168.1.105, <span class="nv">l4_proto</span><span class="o">=</span>TCP, <span class="nv">packet_size</span><span class="o">=</span>31, <span class="nv">pid</span><span class="o">=</span>6040, <span class="nv">sport</span><span class="o">=</span>55898<span class="o">)</span>
-...</code></pre></div>
+1541 11:51:52.833000 3 chrome.exe <span class="o">(</span>6040<span class="o">)</span> - CloseFile <span class="o">(</span><span class="nv">file</span><span class="o">=</span><span class="se">\D</span>evice<span class="se">\H</span>arddiskVolume2<span class="se">\U</span>sers<span class="se">\N</span>edo<span class="se">\A</span>ppData<span class="se">\L</span>ocal<span class="se">\G</span>oogle<span class="se">\C</span>hrome<span class="se">\U</span>ser Data<span class="se">\D</span>efault<span class="se">\T</span>ransportSecurity~RFe927c36.TMP, <span class="nv">tid</span><span class="o">=</span>8984<span class="o">)</span>
+1542 11:51:52.833000 3 chrome.exe <span class="o">(</span>6040<span class="o">)</span> - CreateFile <span class="o">(</span><span class="nv">file</span><span class="o">=</span><span class="se">\D</span>evice<span class="se">\H</span>arddiskVolume2<span class="se">\U</span>sers<span class="se">\N</span>edo<span class="se">\A</span>ppData<span class="se">\L</span>ocal<span class="se">\G</span>oogle<span class="se">\C</span>hrome<span class="se">\U</span>ser Data<span class="se">\D</span>efault<span class="se">\,</span> <span class="nv">file_type</span><span class="o">=</span>FILE, <span class="nv">operation</span><span class="o">=</span>OPEN, <span class="nv">share_mask</span><span class="o">=</span>rw-, <span class="nv">tid</span><span class="o">=</span>8984<span class="o">)</span>
+1543 11:51:52.835000 2 chrome.exe <span class="o">(</span>6040<span class="o">)</span> - CloseFile <span class="o">(</span><span class="nv">file</span><span class="o">=</span><span class="se">\D</span>evice<span class="se">\H</span>arddiskVolume2<span class="se">\U</span>sers<span class="se">\N</span>edo<span class="se">\A</span>ppData<span class="se">\L</span>ocal<span class="se">\G</span>oogle<span class="se">\C</span>hrome<span class="se">\U</span>ser Data<span class="se">\D</span>efault<span class="se">\,</span> <span class="nv">tid</span><span class="o">=</span>8984<span class="o">)</span>
+1544 11:51:52.835000 2 chrome.exe <span class="o">(</span>6040<span class="o">)</span> - CreateFile <span class="o">(</span><span class="nv">file</span><span class="o">=</span><span class="se">\D</span>evice<span class="se">\H</span>arddiskVolume2<span class="se">\U</span>sers<span class="se">\N</span>edo<span class="se">\A</span>ppData<span class="se">\L</span>ocal<span class="se">\G</span>oogle<span class="se">\C</span>hrome<span class="se">\U</span>ser Data<span class="se">\D</span>efault<span class="se">\,</span> <span class="nv">file_type</span><span class="o">=</span>FILE, <span class="nv">operation</span><span class="o">=</span>OPEN, <span class="nv">share_mask</span><span class="o">=</span>rw-, <span class="nv">tid</span><span class="o">=</span>8984<span class="o">)</span>
+1545 11:51:52.836000 2 chrome.exe <span class="o">(</span>6040<span class="o">)</span> - CloseFile <span class="o">(</span><span class="nv">file</span><span class="o">=</span><span class="se">\D</span>evice<span class="se">\H</span>arddiskVolume2<span class="se">\U</span>sers<span class="se">\N</span>edo<span class="se">\A</span>ppData<span class="se">\L</span>ocal<span class="se">\G</span>oogle<span class="se">\C</span>hrome<span class="se">\U</span>ser Data<span class="se">\D</span>efault<span class="se">\,</span> <span class="nv">tid</span><span class="o">=</span>8984<span class="o">)</span>
+1546 11:51:52.836000 2 chrome.exe <span class="o">(</span>6040<span class="o">)</span> - CloseFile <span class="o">(</span><span class="nv">file</span><span class="o">=</span><span class="se">\D</span>evice<span class="se">\H</span>arddiskVolume2<span class="se">\U</span>sers<span class="se">\N</span>edo<span class="se">\A</span>ppData<span class="se">\L</span>ocal<span class="se">\G</span>oogle<span class="se">\C</span>hrome<span class="se">\U</span>ser Data<span class="se">\D</span>efault<span class="se">\T</span>ransportSecurity, <span class="nv">tid</span><span class="o">=</span>8984<span class="o">)</span>
+1547 11:51:52.836000 2 chrome.exe <span class="o">(</span>6040<span class="o">)</span> - CloseFile <span class="o">(</span><span class="nv">file</span><span class="o">=</span><span class="se">\D</span>evice<span class="se">\H</span>arddiskVolume2<span class="se">\U</span>sers<span class="se">\N</span>edo<span class="se">\A</span>ppData<span class="se">\L</span>ocal<span class="se">\G</span>oogle<span class="se">\C</span>hrome<span class="se">\U</span>ser Data<span class="se">\D</span>efault<span class="se">\7</span>CFE.tmp, <span class="nv">tid</span><span class="o">=</span>8984<span class="o">)</span>
+1548 11:51:52.836000 2 chrome.exe <span class="o">(</span>6040<span class="o">)</span> - CreateFile <span class="o">(</span><span class="nv">file</span><span class="o">=</span><span class="se">\D</span>evice<span class="se">\H</span>arddiskVolume2<span class="se">\U</span>sers<span class="se">\N</span>edo<span class="se">\A</span>ppData<span class="se">\L</span>ocal<span class="se">\G</span>oogle<span class="se">\C</span>hrome<span class="se">\U</span>ser Data<span class="se">\D</span>efault<span class="se">\T</span>ransportSecurity~RFe927c36.TMP, <span class="nv">file_type</span><span class="o">=</span>REPARSE_POINT, <span class="nv">operation</span><span class="o">=</span>OPEN, <span class="nv">share_mask</span><span class="o">=</span>rwd, <span class="nv">tid</span><span class="o">=</span>8984<span class="o">)</span>
+1549 11:51:52.836000 2 chrome.exe <span class="o">(</span>6040<span class="o">)</span> - DeleteFile <span class="o">(</span><span class="nv">file</span><span class="o">=</span><span class="se">\D</span>evice<span class="se">\H</span>arddiskVolume2<span class="se">\U</span>sers<span class="se">\N</span>edo<span class="se">\A</span>ppData<span class="se">\L</span>ocal<span class="se">\G</span>oogle<span class="se">\C</span>hrome<span class="se">\U</span>ser Data<span class="se">\D</span>efault<span class="se">\T</span>ransportSecurity~RFe927c36.TMP, <span class="nv">tid</span><span class="o">=</span>8984<span class="o">)</span>
+1551 11:51:53.311000 0 chrome.exe <span class="o">(</span>6040<span class="o">)</span> - Recv <span class="o">(</span><span class="nv">application</span><span class="o">=</span>https, <span class="nv">dport</span><span class="o">=</span>443, <span class="nv">ip_dst</span><span class="o">=</span>192.30.253.112, <span class="nv">ip_src</span><span class="o">=</span>192.168.1.105, <span class="nv">l4_proto</span><span class="o">=</span>TCP, <span class="nv">packet_size</span><span class="o">=</span>31, <span class="nv">pid</span><span class="o">=</span>6040, <span class="nv">sport</span><span class="o">=</span>55896<span class="o">)</span>
+1552 11:51:53.322000 0 chrome.exe <span class="o">(</span>6040<span class="o">)</span> - Recv <span class="o">(</span><span class="nv">application</span><span class="o">=</span>https, <span class="nv">dport</span><span class="o">=</span>443, <span class="nv">ip_dst</span><span class="o">=</span>192.30.253.112, <span class="nv">ip_src</span><span class="o">=</span>192.168.1.105, <span class="nv">l4_proto</span><span class="o">=</span>TCP, <span class="nv">packet_size</span><span class="o">=</span>31, <span class="nv">pid</span><span class="o">=</span>6040, <span class="nv">sport</span><span class="o">=</span>55897<span class="o">)</span>
+1553 11:51:53.648000 0 chrome.exe <span class="o">(</span>6040<span class="o">)</span> - Recv <span class="o">(</span><span class="nv">application</span><span class="o">=</span>https, <span class="nv">dport</span><span class="o">=</span>443, <span class="nv">ip_dst</span><span class="o">=</span>192.30.253.112, <span class="nv">ip_src</span><span class="o">=</span>192.168.1.105, <span class="nv">l4_proto</span><span class="o">=</span>TCP, <span class="nv">packet_size</span><span class="o">=</span>31, <span class="nv">pid</span><span class="o">=</span>6040, <span class="nv">sport</span><span class="o">=</span>55898<span class="o">)</span>
+...</code></pre></figure>
 
-<p>Here we can observe the file system operations, the registry activity and the network requests performed by the Chrome process. If you want to narrow the scope of a trace to a specific kernel events, use process spying in combination with the <code>--filters</code> flag.</p>
+<p>Here we can observe the file system operations, the registry activity and the network requests performed by the Chrome process. If you want to narrow the scope of a trace to a specific kernel events, use process spying in combination with the <code class="highlighter-rouge">--filters</code> flag.</p>
 
 <h4 id="streaming-kernel-events-to-elasticsearch">Streaming kernel events to Elasticsearch</h4>
 
 <p>The kernel event stream can now be emitted to <strong>Elasticsearch</strong> via the output adapter.
-It can perform per-document indexing as well as bulk indexing. The <code>elasticsearch</code> accessor is injected into filament at runtime. For more information see <code>fibratus.yml</code> configuration descriptor.</p>
+It can perform per-document indexing as well as bulk indexing. The <code class="highlighter-rouge">elasticsearch</code> accessor is injected into filament at runtime. For more information see <code class="highlighter-rouge">fibratus.yml</code> configuration descriptor.</p>
 
 <h4 id="process-exclusions">Process exclusions</h4>
 
 <p>To avoid the overhead of the unecessary kernel events you can exclude them from the trace.
-Just add the process name (including the extension) to the <code>fibratus.yml</code> configuration file.</p>
+Just add the process name (including the extension) to the <code class="highlighter-rouge">fibratus.yml</code> configuration file.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">excluded_procs:
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">excluded_procs:
   - svchost.exe
   - smss.exe
   - services.exe
@@ -186,7 +180,7 @@ Just add the process name (including the extension) to the <code>fibratus.yml</c
   - vprot.exe
   - lsass.exe
   - sihost.exe
-  - system</code></pre></div>
+  - system</code></pre></figure>
 
 <p>If you have any feedback or want to contribute you can reach out via <a href="https://github.com/rabbitstack/fibratus/issues">Github</a> or drop me an email.</p>
 
@@ -243,7 +237,7 @@ Just add the process name (including the extension) to the <code>fibratus.yml</c
   <h4>You might also enjoy <small class="pull-right">(<a href="http://rabbitstack.github.io/posts/">View all posts</a>)</small></h4>
     <ul>
     
-      <li><a href="http://rabbitstack.github.io/operating%20systems/linux-containers-internals-part-i/" title="Linux Containers Internals (Part I)">Linux Containers Internals (Part I)</a></li>
+      <li><a href="http://rabbitstack.github.io/operating%20systems/containers/linux-containers-internals-part-i/" title="Linux Container Internals (Part I)">Linux Container Internals (Part I)</a></li>
     
       <li><a href="http://rabbitstack.github.io/operating%20systems/fibratus-0-7-0/" title="Fibratus 0.7.0">Fibratus 0.7.0</a></li>
     
@@ -256,7 +250,7 @@ Just add the process name (including the extension) to the <code>fibratus.yml</c
   <footer>
     
 
-<span>&copy; 2017 Nedim Šabić. Rabbit Stack blog is powered by Jekyll. Bunny icon is courtesy of <a href="http://www.freepik.com" title="Freepik">Freepik.</a>
+<span>&copy; 2018 Nedim Šabić. Rabbit Stack blog is powered by Jekyll. Bunny icon is courtesy of <a href="http://www.freepik.com" title="Freepik">Freepik.</a>
 
   </footer>
 </div><!-- /.footer-wrap -->
