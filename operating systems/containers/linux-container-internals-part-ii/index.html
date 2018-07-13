@@ -1,0 +1,317 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<title>Linux Container Internals (Part II) &#8211; Rabbit Stack</title>
+<meta name="description" content="Containers are moving the world. Each passing day more and more organizations are embracing containers as first-class citizens for distribution and deployment of software components. Containers represent the core of the cloud native paradigm.">
+<meta name="keywords" content="docker, namespaces, runc, cgroups, linux, containers, rust, syscall, libc, nix, rabbitc">
+
+
+<!-- Twitter Cards -->
+<meta name="twitter:title" content="Linux Container Internals (Part II)">
+<meta name="twitter:description" content="Containers are moving the world. Each passing day more and more organizations are embracing containers as first-class citizens for distribution and deployment of software components. Containers represent the core of the cloud native paradigm.">
+<meta name="twitter:site" content="@rabbitstack">
+<meta name="twitter:creator" content="@rabbitstack">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://localhost:4000/images/rabbit-bkgd.jpg">
+
+<!-- Open Graph -->
+<meta property="og:locale" content="en_US">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux Container Internals (Part II)">
+<meta property="og:description" content="Containers are moving the world. Each passing day more and more organizations are embracing containers as first-class citizens for distribution and deployment of software components. Containers represent the core of the cloud native paradigm.">
+<meta property="og:url" content="http://localhost:4000/operating%20systems/containers/linux-container-internals-part-ii/">
+<meta property="og:site_name" content="Rabbit Stack">
+
+
+
+
+
+<link rel="canonical" href="http://localhost:4000/operating%20systems/containers/linux-container-internals-part-ii/">
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="Rabbit Stack Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<meta http-equiv="cleartype" content="on">
+
+<!-- HTML5 Shiv and Media Query Support -->
+<!--[if lt IE 9]>
+	<script src="http://localhost:4000/assets/js/vendor/html5shiv.min.js"></script>
+	<script src="http://localhost:4000/assets/js/vendor/respond.min.js"></script>
+<![endif]-->
+
+<!-- Modernizr -->
+<script src="http://localhost:4000/assets/js/vendor/modernizr-2.7.1.custom.min.js"></script>
+
+<link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Rajdhani:400,600,700' rel='stylesheet' type='text/css'>
+<link href="https://fonts.googleapis.com/css?family=Exo+2" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
+<!-- Icons -->
+<!-- 16x16 -->
+<link rel="shortcut icon" href="http://localhost:4000/favicon.ico">
+<!-- 32x32 -->
+<link rel="shortcut icon" href="http://localhost:4000/favicon.png">
+<!-- 57x57 (precomposed) for iPhone 3GS, pre-2011 iPod Touch and older Android devices -->
+<link rel="apple-touch-icon-precomposed" href="http://localhost:4000/images/apple-touch-icon-precomposed.png">
+<!-- 72x72 (precomposed) for 1st generation iPad, iPad 2 and iPad mini -->
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="http://localhost:4000/images/apple-touch-icon-72x72-precomposed.png">
+<!-- 114x114 (precomposed) for iPhone 4, 4S, 5 and post-2011 iPod Touch -->
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="http://localhost:4000/images/apple-touch-icon-114x114-precomposed.png">
+<!-- 144x144 (precomposed) for iPad 3rd and 4th generation -->
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://localhost:4000/images/apple-touch-icon-144x144-precomposed.png">
+
+</head>
+
+<body class="post">
+
+<!--[if lt IE 9]><div class="browser-upgrade alert alert-info">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div><![endif]-->
+
+<div class="navigation-wrapper">
+		<div class="site-name">
+			<!-- <img src="/images/rabbit-small.jpg" alt="Rabbit Stack logo" class="logo" /> -->
+			<!-- <a href="http://localhost:4000/">Rabbit Stack</a> -->
+			<a href="http://localhost:4000/"><span class="site-name-segment">Rabbit</span> <span class="big-font">Stack</span></a>
+
+		</div><!-- /.site-name -->
+
+	
+	
+	<div class="top-navigation">
+		<nav role="navigation" id="site-nav" class="nav">
+		    <ul>
+		        
+				    
+				    <li><a href="http://localhost:4000#" >Home</a></li>
+				
+				    
+				    <li><a href="http://localhost:4000/posts/" >Archive</a></li>
+				
+				    
+				    <li><a href="http://localhost:4000/about/" >About</a></li>
+				
+		    </ul>
+		</nav>
+	</div><!-- /.top-navigation -->
+</div><!-- /.navigation-wrapper -->
+
+
+  <div class="image-wrap">
+  <img class="bkg" src=
+    
+      "http://localhost:4000/images/rabbit-bkgd.jpg"
+    
+  alt="Linux Container Internals (Part II) feature image">
+  
+       <div class="headline-wrap">
+          <img class="bunny" src="http://localhost:4000/images/rabbitstack.png" />
+          <h1> The place where bunnies dwell </h1>
+          <h2> And bits become colossal </h2>
+      </div>
+  </div><!-- /.image-wrap -->
+
+
+<div id="main" role="main">
+  <article class="post">
+    <div class="headline-wrap">
+      
+        <h1><a href="http://localhost:4000/operating%20systems/containers/linux-container-internals-part-ii/" rel="bookmark" title="Linux Container Internals (Part II)">Linux Container Internals (Part II)</a></h1>
+      
+    </div><!--/ .headline-wrap -->
+    <div class="article-wrap">
+      <p><strong>Containers</strong> are moving the world. Each passing day more and more organizations are embracing containers as first-class citizens for distribution and deployment of software components. Containers represent the core of the <strong>cloud native</strong> paradigm. We are witnessing the birth of new container runtimes such as <a href="http://cri-o.io/">CRI-O</a> - a lightweight alternative to Docker that allows spinning up containers on top of <strong>Kubernetes</strong>. A while back, I <a href="/operating%20systems/containers/linux-containers-internals-part-i/">blogged</a> about container internals and the Linux pillars that power some of the leading container engines. I have to admit the code snippets were rather unfunctional and ugly. Interfacing with the underlying Linux subsystem through <code class="highlighter-rouge">libc</code> crate with <code class="highlighter-rouge">unsafe</code> scattered throughout the code looked terrifying. That’s why I decided to wrap up a small project called <a href="https://github.com/rabbitstack/rabbitc">rabbitc</a> - a minimal container runtime meant for learning purposes (keep in mind that my knowledge on Rust is modest and I’m still in process of educating myself). Rust toolchain is required to build it. Once you have the binary, grab a minimal rootfs (such as <a href="http://dl-cdn.alpinelinux.org/alpine/v3.8/releases/x86_64/alpine-minirootfs-3.8.0-x86_64.tar.gz">Alpine’s</a> rootfs) and spawn a new containerized process.</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span><span class="nb">sudo </span>rabbitc <span class="nt">--rootfs</span><span class="o">=</span>&lt;rootfs&gt;
+/# ps
+PID   USER     TIME   COMMAND
+1     root     0:00   sh
+5     root     0:00   ps</code></pre></figure>
+
+<p>By default, you’ll be presented with a shell process, but you can run a different process with <code class="highlighter-rouge">--cmd</code> option. For example, let’s build a Go-based HTTP server and run it inside container. Save the following code snippet to <code class="highlighter-rouge">main.go</code>.</p>
+
+<figure class="highlight"><pre><code class="language-go" data-lang="go"><span class="k">package</span><span class="x"> </span><span class="n">main</span><span class="x">
+
+</span><span class="k">import</span><span class="x"> </span><span class="p">(</span><span class="x">
+    </span><span class="s">"net/http"</span><span class="x">
+    </span><span class="s">"fmt"</span><span class="x">
+    </span><span class="s">"net"</span><span class="x">
+</span><span class="p">)</span><span class="x">
+
+</span><span class="k">func</span><span class="x"> </span><span class="n">main</span><span class="p">()</span><span class="x"> </span><span class="p">{</span><span class="x">
+   </span><span class="n">http</span><span class="o">.</span><span class="n">HandleFunc</span><span class="p">(</span><span class="s">"/"</span><span class="p">,</span><span class="x"> </span><span class="k">func</span><span class="p">(</span><span class="n">w</span><span class="x"> </span><span class="n">http</span><span class="o">.</span><span class="n">ResponseWriter</span><span class="p">,</span><span class="x"> </span><span class="n">r</span><span class="x"> </span><span class="o">*</span><span class="n">http</span><span class="o">.</span><span class="n">Request</span><span class="p">)</span><span class="x"> </span><span class="p">{</span><span class="x">
+      </span><span class="n">fmt</span><span class="o">.</span><span class="n">Fprintf</span><span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="x"> </span><span class="s">"Hello from rabbitc container"</span><span class="p">)</span><span class="x">
+   </span><span class="p">})</span><span class="x">
+   </span><span class="k">var</span><span class="x"> </span><span class="n">addr</span><span class="x"> </span><span class="kt">string</span><span class="x">
+   </span><span class="n">addrs</span><span class="p">,</span><span class="x"> </span><span class="n">err</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">net</span><span class="o">.</span><span class="n">InterfaceAddrs</span><span class="p">()</span><span class="x">
+   </span><span class="k">if</span><span class="x"> </span><span class="n">err</span><span class="x"> </span><span class="o">!=</span><span class="x"> </span><span class="no">nil</span><span class="x"> </span><span class="p">{</span><span class="x">
+       </span><span class="n">addr</span><span class="x"> </span><span class="o">=</span><span class="x"> </span><span class="s">"127.0.0.1"</span><span class="x">
+   </span><span class="p">}</span><span class="x">
+
+   </span><span class="k">for</span><span class="x"> </span><span class="n">_</span><span class="p">,</span><span class="x"> </span><span class="n">address</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="k">range</span><span class="x"> </span><span class="n">addrs</span><span class="x"> </span><span class="p">{</span><span class="x">
+      </span><span class="k">if</span><span class="x"> </span><span class="n">ipnet</span><span class="p">,</span><span class="x"> </span><span class="n">ok</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">address</span><span class="o">.</span><span class="p">(</span><span class="o">*</span><span class="n">net</span><span class="o">.</span><span class="n">IPNet</span><span class="p">);</span><span class="x"> </span><span class="n">ok</span><span class="x"> </span><span class="o">&amp;&amp;</span><span class="x"> </span><span class="o">!</span><span class="n">ipnet</span><span class="o">.</span><span class="n">IP</span><span class="o">.</span><span class="n">IsLoopback</span><span class="p">()</span><span class="x"> </span><span class="p">{</span><span class="x">
+            </span><span class="k">if</span><span class="x"> </span><span class="n">ipnet</span><span class="o">.</span><span class="n">IP</span><span class="o">.</span><span class="n">To4</span><span class="p">()</span><span class="x"> </span><span class="o">!=</span><span class="x"> </span><span class="no">nil</span><span class="x"> </span><span class="p">{</span><span class="x">
+                </span><span class="n">addr</span><span class="x"> </span><span class="o">=</span><span class="x"> </span><span class="n">ipnet</span><span class="o">.</span><span class="n">IP</span><span class="o">.</span><span class="n">String</span><span class="p">()</span><span class="x">
+            </span><span class="p">}</span><span class="x">
+      </span><span class="p">}</span><span class="x">
+   </span><span class="p">}</span><span class="x">
+   </span><span class="n">endpoint</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">fmt</span><span class="o">.</span><span class="n">Sprintf</span><span class="p">(</span><span class="s">"%s:80"</span><span class="p">,</span><span class="x"> </span><span class="n">addr</span><span class="p">)</span><span class="x">
+   </span><span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"running HTTP server on"</span><span class="p">,</span><span class="x"> </span><span class="n">endpoint</span><span class="p">)</span><span class="x">
+   </span><span class="n">err</span><span class="x"> </span><span class="o">=</span><span class="x"> </span><span class="n">http</span><span class="o">.</span><span class="n">ListenAndServe</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span><span class="x"> </span><span class="no">nil</span><span class="p">)</span><span class="x">
+   </span><span class="k">if</span><span class="x"> </span><span class="n">err</span><span class="x"> </span><span class="o">!=</span><span class="x"> </span><span class="no">nil</span><span class="x"> </span><span class="p">{</span><span class="x">
+      </span><span class="nb">panic</span><span class="p">(</span><span class="n">err</span><span class="p">)</span><span class="x">
+   </span><span class="p">}</span><span class="x">
+</span><span class="p">}</span></code></pre></figure>
+
+<p>Instruct the Go compiler to produce statically linked binary by disabling <code class="highlighter-rouge">CGO</code>. We also copy the resulting binary to our rootfs path.</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ CGO_ENABLED</span><span class="o">=</span>0 go build <span class="nt">-o</span> server main.go
+<span class="nv">$ </span><span class="nb">cp </span>server /&lt;rootfs&gt;/bin</code></pre></figure>
+
+<p>Since <code class="highlighter-rouge">rabbitc</code> doesn’t support port forwarding (but it’s easily doable with some <code class="highlighter-rouge">iptables</code> magic), we have to provide container IP address to send the request to HTTP server.</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span><span class="nb">sudo </span>rabbitc <span class="nt">--rootfs</span><span class="o">=</span>&lt;rootfs&gt; <span class="nt">--cmd</span><span class="o">=</span>/bin/server
+Running HTTP server on 172.19.0.2:80
+<span class="nv">$ </span>curl 172.19.0.2:80
+Hello from rabbitc container</code></pre></figure>
+
+<p>We’re running a full isolated process with its own network stack, file system and process tree in 400~ lines of Rust code. That’s awesome!
+In the next blog post I’ll focus on explaining the remaining kernel namespaces, how resources are controlled by <code class="highlighter-rouge">cgroup</code> subsystem and other container-specific nuances. Stay tuned.</p>
+
+
+      <hr />
+      <footer role="contentinfo">
+        <div class="social-share">
+  <h4>Share on</h4>
+  <ul>
+    <li>
+      <a href="https://twitter.com/intent/tweet?text=http://localhost:4000/operating%20systems/containers/linux-container-internals-part-ii/" class="twitter" title="Share on Twitter"><i class="fa fa-twitter"></i><span> Twitter</span></a>
+    </li>
+    <li>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:4000/operating%20systems/containers/linux-container-internals-part-ii/" class="facebook" title="Share on Facebook"><i class="fa fa-facebook"></i><span> Facebook</span></a>
+    </li>
+    <li>
+      <a href="https://plus.google.com/share?url=http://localhost:4000/operating%20systems/containers/linux-container-internals-part-ii/" class="google-plus" title="Share on Google Plus"><i class="fa fa-google-plus"></i><span> Google+</span></a>
+    </li>
+  </ul>
+</div><!-- /.social-share -->
+        <p class="byline"><strong>Linux Container Internals (Part II)</strong> was published on <time datetime="2018-07-13T18:10:04+02:00">July 13, 2018</time>.</p>
+      </footer>
+    </div><!-- /.article-wrap -->
+  
+    <section id="disqus_thread">
+        
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'rabbitstack'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+    </section><!-- /#disqus_thread -->
+  
+  </article>
+</div><!-- /#main -->
+
+<div class="footer-wrap">
+  <div class="related-articles">
+  <h4>You might also enjoy <small class="pull-right">(<a href="http://localhost:4000/posts/">View all posts</a>)</small></h4>
+    <ul>
+    
+      <li><a href="http://localhost:4000/operating%20systems/containers/linux-containers-internals-part-i/" title="Linux Container Internals (Part I)">Linux Container Internals (Part I)</a></li>
+    
+      <li><a href="http://localhost:4000/operating%20systems/fibratus-0-7-0/" title="Fibratus 0.7.0">Fibratus 0.7.0</a></li>
+    
+      <li><a href="http://localhost:4000/operating%20systems/fibratus-0-6-0/" title="Fibratus 0.6.0">Fibratus 0.6.0</a></li>
+    
+    </ul>
+    <hr />
+  </div><!-- /.related-articles -->
+
+  <footer>
+    
+
+<span>&copy; 2018 Nedim Šabić. Rabbit Stack blog is powered by Jekyll. Bunny icon is courtesy of <a href="http://www.freepik.com" title="Freepik">Freepik.</a>
+
+  </footer>
+</div><!-- /.footer-wrap -->
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="http://localhost:4000/assets/js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+<script src="http://localhost:4000/assets/js/plugins/jquery.magnific-popup.js"></script>
+<script src="http://localhost:4000/assets/js/scripts.min.js"></script>
+
+<!-- Asynchronous Google Analytics snippet -->
+<script>
+  var _gaq = _gaq || [];
+  var pluginUrl =
+ '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'rabbitstack']);
+  _gaq.push(['_trackPageview']);
+
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-61212549-1', 'auto');
+  ga('send', 'pageview');
+
+  $(document).ready(function() {
+     $('.image-popup').magnificPopup({type:'image'});
+  });
+</script>
+
+
+  
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'rabbitstack'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+
+</body>
+</html>
