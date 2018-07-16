@@ -2,26 +2,26 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
 <title type="text">Rabbit Stack</title>
 <generator uri="https://github.com/jekyll/jekyll">Jekyll</generator>
-<link rel="self" type="application/atom+xml" href="http://rabbitstack.github.io/feed.xml" />
-<link rel="alternate" type="text/html" href="http://rabbitstack.github.io" />
-<updated>2018-07-16T18:01:05+02:00</updated>
-<id>http://rabbitstack.github.io/</id>
+<link rel="self" type="application/atom+xml" href="https://rabbitstack.github.io/feed.xml" />
+<link rel="alternate" type="text/html" href="https://rabbitstack.github.io" />
+<updated>2018-07-16T18:33:37+02:00</updated>
+<id>https://rabbitstack.github.io/</id>
 <author>
   <name>Nedim Šabić</name>
-  <uri>http://rabbitstack.github.io/</uri>
+  <uri>https://rabbitstack.github.io/</uri>
   <email>bhnedo@hotmail.com</email>
 </author>
 
 
 <entry>
   <title type="html"><![CDATA[Linux Container Internals (Part II)]]></title>
-  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/operating%20systems/containers/linux-container-internals-part-ii/" />
-  <id>http://rabbitstack.github.io/operating%20systems/containers/linux-container-internals-part-ii</id>
+  <link rel="alternate" type="text/html" href="https://rabbitstack.github.io/operating%20systems/containers/linux-container-internals-part-ii/" />
+  <id>https://rabbitstack.github.io/operating%20systems/containers/linux-container-internals-part-ii</id>
   <published>2018-07-13T18:10:04+02:00</published>
   <updated>2018-07-13T18:10:04+02:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://rabbitstack.github.io</uri>
+    <uri>https://rabbitstack.github.io</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;&lt;strong&gt;Containers&lt;/strong&gt; are moving the world. Each passing day more and more organizations are embracing containers as first-class citizens for distribution and deployment of software components. Containers represent the core of the &lt;strong&gt;cloud native&lt;/strong&gt; paradigm. We are witnessing the birth of new container runtimes such as &lt;a href=&quot;http://cri-o.io/&quot;&gt;CRI-O&lt;/a&gt; - a lightweight alternative to Docker that allows spinning up containers on top of &lt;strong&gt;Kubernetes&lt;/strong&gt;. A while back, I &lt;a href=&quot;/operating%20systems/containers/linux-containers-internals-part-i/&quot;&gt;blogged&lt;/a&gt; about container internals and the Linux pillars that power some of the leading container engines. I have to admit the code snippets were rather unfunctional and ugly. Interfacing with the underlying Linux subsystem through &lt;code class=&quot;highlighter-rouge&quot;&gt;libc&lt;/code&gt; crate with &lt;code class=&quot;highlighter-rouge&quot;&gt;unsafe&lt;/code&gt; scattered throughout the code looked terrifying. That’s why I decided to wrap up a small project called &lt;a href=&quot;https://github.com/rabbitstack/rabbitc&quot;&gt;rabbitc&lt;/a&gt; - a minimal container runtime meant for learning purposes (keep in mind that my knowledge on Rust is modest and I’m still in process of educating myself). Rust toolchain is required to build it. Once you have the binary, grab a minimal rootfs (such as &lt;a href=&quot;http://dl-cdn.alpinelinux.org/alpine/v3.8/releases/x86_64/alpine-minirootfs-3.8.0-x86_64.tar.gz&quot;&gt;Alpine’s&lt;/a&gt; rootfs) and spawn a new containerized process.&lt;/p&gt;
@@ -83,19 +83,19 @@ Hello from rabbitc container&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 In the next blog post I’ll focus on explaining the remaining kernel namespaces, how resources are controlled by &lt;code class=&quot;highlighter-rouge&quot;&gt;cgroup&lt;/code&gt; subsystem and other container-specific nuances. Stay tuned.&lt;/p&gt;
 
 
-  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/operating%20systems/containers/linux-container-internals-part-ii/&quot;&gt;Linux Container Internals (Part II)&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on July 13, 2018.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;https://rabbitstack.github.io/operating%20systems/containers/linux-container-internals-part-ii/&quot;&gt;Linux Container Internals (Part II)&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;https://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on July 13, 2018.&lt;/p&gt;</content>
 </entry>
 
 
 <entry>
   <title type="html"><![CDATA[Linux Container Internals (Part I)]]></title>
-  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/operating%20systems/containers/linux-containers-internals-part-i/" />
-  <id>http://rabbitstack.github.io/operating%20systems/containers/linux-containers-internals-part-i</id>
+  <link rel="alternate" type="text/html" href="https://rabbitstack.github.io/operating%20systems/containers/linux-containers-internals-part-i/" />
+  <id>https://rabbitstack.github.io/operating%20systems/containers/linux-containers-internals-part-i</id>
   <published>2017-05-29T20:12:55+02:00</published>
   <updated>2017-05-29T20:12:55+02:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://rabbitstack.github.io</uri>
+    <uri>https://rabbitstack.github.io</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;&lt;strong&gt;Namespaces&lt;/strong&gt; and &lt;strong&gt;control groups&lt;/strong&gt; (cgroups) are responsible for the magic behind Linux containers. The support for namespaces initially appeared in &lt;strong&gt;2.4.19&lt;/strong&gt; kernels (mount point/file system isolation), but there are now six different types of namespace abstractions in the mainline of the contemporary kernels. From the kernel’s perspective, a container is just another process with its own set of resources - file descriptors, process address space and processor’s state. For instance, a containerized &lt;strong&gt;nginx&lt;/strong&gt; web server exposes &lt;strong&gt;external PIDs&lt;/strong&gt; for its master and worker processes:&lt;/p&gt;
@@ -263,19 +263,19 @@ d&lt;/p&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 
-  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/operating%20systems/containers/linux-containers-internals-part-i/&quot;&gt;Linux Container Internals (Part I)&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on May 29, 2017.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;https://rabbitstack.github.io/operating%20systems/containers/linux-containers-internals-part-i/&quot;&gt;Linux Container Internals (Part I)&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;https://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on May 29, 2017.&lt;/p&gt;</content>
 </entry>
 
 
 <entry>
   <title type="html"><![CDATA[Fibratus 0.7.0]]></title>
-  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/operating%20systems/fibratus-0-7-0/" />
-  <id>http://rabbitstack.github.io/operating%20systems/fibratus-0-7-0</id>
+  <link rel="alternate" type="text/html" href="https://rabbitstack.github.io/operating%20systems/fibratus-0-7-0/" />
+  <id>https://rabbitstack.github.io/operating%20systems/fibratus-0-7-0</id>
   <published>2017-03-25T08:56:28+01:00</published>
   <updated>2017-03-25T08:56:28+01:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://rabbitstack.github.io</uri>
+    <uri>https://rabbitstack.github.io</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;I’m thrilled to announce the release of Fibratus 0.7.0. Let’s see what’s new in this version.&lt;/p&gt;
@@ -336,19 +336,19 @@ To overcome all those after-mentioned tedious tasks, from this release on, I’l
 
 &lt;p&gt;Enjoy this new release!&lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/operating%20systems/fibratus-0-7-0/&quot;&gt;Fibratus 0.7.0&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on March 25, 2017.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;https://rabbitstack.github.io/operating%20systems/fibratus-0-7-0/&quot;&gt;Fibratus 0.7.0&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;https://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on March 25, 2017.&lt;/p&gt;</content>
 </entry>
 
 
 <entry>
   <title type="html"><![CDATA[Fibratus 0.6.0]]></title>
-  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/operating%20systems/fibratus-0-6-0/" />
-  <id>http://rabbitstack.github.io/operating%20systems/fibratus-0-6-0</id>
+  <link rel="alternate" type="text/html" href="https://rabbitstack.github.io/operating%20systems/fibratus-0-6-0/" />
+  <id>https://rabbitstack.github.io/operating%20systems/fibratus-0-6-0</id>
   <published>2017-01-23T15:31:35+01:00</published>
   <updated>2017-01-23T15:31:35+01:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://rabbitstack.github.io</uri>
+    <uri>https://rabbitstack.github.io</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;I’m happy to announce the release of &lt;strong&gt;Fibratus 0.6.0&lt;/strong&gt;. Let’s see what’s new in this version.&lt;/p&gt;
@@ -421,19 +421,19 @@ If you look at the source tree, you should notice the &lt;strong&gt;kstream&lt;/
 
 &lt;p&gt;If you have any feedback or would like to contribute you can reach out via &lt;a href=&quot;https://github.com/rabbitstack/fibratus/issues&quot;&gt;Github&lt;/a&gt; or drop me an email.&lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/operating%20systems/fibratus-0-6-0/&quot;&gt;Fibratus 0.6.0&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on January 23, 2017.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;https://rabbitstack.github.io/operating%20systems/fibratus-0-6-0/&quot;&gt;Fibratus 0.6.0&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;https://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on January 23, 2017.&lt;/p&gt;</content>
 </entry>
 
 
 <entry>
   <title type="html"><![CDATA[Fibratus 0.4.0]]></title>
-  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/operating%20systems/fibratus-0-4-0/" />
-  <id>http://rabbitstack.github.io/operating%20systems/fibratus-0-4-0</id>
+  <link rel="alternate" type="text/html" href="https://rabbitstack.github.io/operating%20systems/fibratus-0-4-0/" />
+  <id>https://rabbitstack.github.io/operating%20systems/fibratus-0-4-0</id>
   <published>2016-11-01T15:31:35+01:00</published>
   <updated>2016-11-01T15:31:35+01:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://rabbitstack.github.io</uri>
+    <uri>https://rabbitstack.github.io</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;I’m pleased to announce the release of &lt;strong&gt;Fibratus 0.4.0&lt;/strong&gt;. The remarkable features of this release include per-pid process spying, &lt;strong&gt;Elasticsearch&lt;/strong&gt; output adapter and the configuration based process exclusions.&lt;/p&gt;
@@ -490,19 +490,19 @@ Just add the process name (including the extension) to the &lt;code class=&quot;
 
 &lt;p&gt;If you have any feedback or want to contribute you can reach out via &lt;a href=&quot;https://github.com/rabbitstack/fibratus/issues&quot;&gt;Github&lt;/a&gt; or drop me an email.&lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/operating%20systems/fibratus-0-4-0/&quot;&gt;Fibratus 0.4.0&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on November 01, 2016.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;https://rabbitstack.github.io/operating%20systems/fibratus-0-4-0/&quot;&gt;Fibratus 0.4.0&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;https://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on November 01, 2016.&lt;/p&gt;</content>
 </entry>
 
 
 <entry>
   <title type="html"><![CDATA[Fibratus 0.3.0]]></title>
-  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/operating%20systems/fibratus-0-3-0/" />
-  <id>http://rabbitstack.github.io/operating%20systems/fibratus-0-3-0</id>
+  <link rel="alternate" type="text/html" href="https://rabbitstack.github.io/operating%20systems/fibratus-0-3-0/" />
+  <id>https://rabbitstack.github.io/operating%20systems/fibratus-0-3-0</id>
   <published>2016-10-03T13:48:25+02:00</published>
   <updated>2016-10-03T13:48:25+02:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://rabbitstack.github.io</uri>
+    <uri>https://rabbitstack.github.io</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;I’m pleased to announce the release of &lt;strong&gt;Fibratus 0.3.0&lt;/strong&gt;. This version ships with support for context switch instrumentation through the &lt;strong&gt;ContextSwitch&lt;/strong&gt; kernel event type.&lt;/p&gt;
@@ -539,19 +539,19 @@ Just add the process name (including the extension) to the &lt;code class=&quot;
 
 &lt;p&gt;If you have any feedback or want to contribute you can reach out via &lt;a href=&quot;https://github.com/rabbitstack/fibratus/issues&quot;&gt;Github&lt;/a&gt; or drop me an email.&lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/operating%20systems/fibratus-0-3-0/&quot;&gt;Fibratus 0.3.0&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on October 03, 2016.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;https://rabbitstack.github.io/operating%20systems/fibratus-0-3-0/&quot;&gt;Fibratus 0.3.0&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;https://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on October 03, 2016.&lt;/p&gt;</content>
 </entry>
 
 
 <entry>
   <title type="html"><![CDATA[Fibratus 0.2.3]]></title>
-  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/operating%20systems/fibratus-0-2-3/" />
-  <id>http://rabbitstack.github.io/operating%20systems/fibratus-0-2-3</id>
+  <link rel="alternate" type="text/html" href="https://rabbitstack.github.io/operating%20systems/fibratus-0-2-3/" />
+  <id>https://rabbitstack.github.io/operating%20systems/fibratus-0-2-3</id>
   <published>2016-08-21T13:48:25+02:00</published>
   <updated>2016-08-21T13:48:25+02:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://rabbitstack.github.io</uri>
+    <uri>https://rabbitstack.github.io</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;I’m pleased to announce the first production-ready release of Fibratus. The tool is now available via the &lt;strong&gt;pip&lt;/strong&gt; package manager by typing &lt;code class=&quot;highlighter-rouge&quot;&gt;pip install fibratus&lt;/code&gt; (the C compiler is required to build the kernel stream collector). The &lt;strong&gt;multiprocessing&lt;/strong&gt; and Python serialization don’t play well together when compiled with &lt;strong&gt;nuitka&lt;/strong&gt;. Until I figure out how to make it work I’ll not ship the compiled versions of Fibratus.&lt;/p&gt;
@@ -582,19 +582,19 @@ Just add the process name (including the extension) to the &lt;code class=&quot;
 
 &lt;p&gt;If you have any feedback, you can reach out via &lt;a href=&quot;https://github.com/rabbitstack/fibratus/issues&quot;&gt;Github&lt;/a&gt; or drop me an email.&lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/operating%20systems/fibratus-0-2-3/&quot;&gt;Fibratus 0.2.3&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on August 21, 2016.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;https://rabbitstack.github.io/operating%20systems/fibratus-0-2-3/&quot;&gt;Fibratus 0.2.3&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;https://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on August 21, 2016.&lt;/p&gt;</content>
 </entry>
 
 
 <entry>
   <title type="html"><![CDATA[Fibratus Pre-Release]]></title>
-  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/operating%20systems/fibratus-pre-release/" />
-  <id>http://rabbitstack.github.io/operating%20systems/fibratus-pre-release</id>
+  <link rel="alternate" type="text/html" href="https://rabbitstack.github.io/operating%20systems/fibratus-pre-release/" />
+  <id>https://rabbitstack.github.io/operating%20systems/fibratus-pre-release</id>
   <published>2016-06-12T17:44:25+02:00</published>
   <updated>2016-06-12T17:44:25+02:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://rabbitstack.github.io</uri>
+    <uri>https://rabbitstack.github.io</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;Pardon me for not announcing the pre-release availability of &lt;a href=&quot;https://github.com/rabbitstack/fibratus&quot;&gt;&lt;strong&gt;Fibratus&lt;/strong&gt;&lt;/a&gt; here on the blog. It was a pretty busy month for me.&lt;/p&gt;
@@ -609,19 +609,19 @@ Just add the process name (including the extension) to the &lt;code class=&quot;
 
 &lt;p&gt;I would like to thank my mate &lt;a href=&quot;http://www.ildesign.es/&quot;&gt;Ilde&lt;/a&gt; (check out his portfolio) for an awesome Fibratus logo, the contributions, pull requests and encouragements from the community.&lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/operating%20systems/fibratus-pre-release/&quot;&gt;Fibratus Pre-Release&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on June 12, 2016.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;https://rabbitstack.github.io/operating%20systems/fibratus-pre-release/&quot;&gt;Fibratus Pre-Release&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;https://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on June 12, 2016.&lt;/p&gt;</content>
 </entry>
 
 
 <entry>
   <title type="html"><![CDATA[Impressions on installation of CoreOS on a bare metal server]]></title>
-  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/operating%20systems/impressions-on-installation-of-coreos-on-a-bare-metal-server/" />
-  <id>http://rabbitstack.github.io/operating%20systems/impressions-on-installation-of-coreos-on-a-bare-metal-server</id>
+  <link rel="alternate" type="text/html" href="https://rabbitstack.github.io/operating%20systems/impressions-on-installation-of-coreos-on-a-bare-metal-server/" />
+  <id>https://rabbitstack.github.io/operating%20systems/impressions-on-installation-of-coreos-on-a-bare-metal-server</id>
   <published>2016-05-08T13:28:05+02:00</published>
   <updated>2016-05-08T13:28:05+02:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://rabbitstack.github.io</uri>
+    <uri>https://rabbitstack.github.io</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;Yesterday I threw away the &lt;strong&gt;SmartOS&lt;/strong&gt; hypervisor from my home lab server. SmartOS is an excellent operating system (based on the &lt;strong&gt;Illumos&lt;/strong&gt;, an open source fork of Solaris) made for running very demanding cloud infrastructures. &lt;strong&gt;Zones&lt;/strong&gt;, &lt;strong&gt;ZFS&lt;/strong&gt;, &lt;strong&gt;DTrace&lt;/strong&gt;, the &lt;strong&gt;KVM&lt;/strong&gt; port are some of the kicking ass features built-in into SmartOS.&lt;/p&gt;
@@ -695,19 +695,19 @@ Learning about &lt;strong&gt;etcd&lt;/strong&gt;, &lt;strong&gt;fleet&lt;/strong
   &lt;figcaption&gt;CoreOS is ready to boot&lt;/figcaption&gt;
 &lt;/figure&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/operating%20systems/impressions-on-installation-of-coreos-on-a-bare-metal-server/&quot;&gt;Impressions on installation of CoreOS on a bare metal server&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on May 08, 2016.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;https://rabbitstack.github.io/operating%20systems/impressions-on-installation-of-coreos-on-a-bare-metal-server/&quot;&gt;Impressions on installation of CoreOS on a bare metal server&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;https://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on May 08, 2016.&lt;/p&gt;</content>
 </entry>
 
 
 <entry>
   <title type="html"><![CDATA[Fibratus Video Teaser]]></title>
-  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/operating%20systems/fibratus-video-teaser/" />
-  <id>http://rabbitstack.github.io/operating%20systems/fibratus-video-teaser</id>
+  <link rel="alternate" type="text/html" href="https://rabbitstack.github.io/operating%20systems/fibratus-video-teaser/" />
+  <id>https://rabbitstack.github.io/operating%20systems/fibratus-video-teaser</id>
   <published>2016-03-21T17:24:44+01:00</published>
   <updated>2016-03-21T17:24:44+01:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://rabbitstack.github.io</uri>
+    <uri>https://rabbitstack.github.io</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;Over these past months I’ve been working on &lt;strong&gt;Fibratus&lt;/strong&gt; - a tool for exploration and tracing of the Windows kernel. It’s about 90% completed, and the alpha release could be out the next month.&lt;/p&gt;
@@ -723,19 +723,19 @@ Fibratus has a very simple CLI which encapsulates the machinery to start the ker
 kernel event stream. Do you need to emit the kernel event payloads to a &lt;strong&gt;RabbitMQ&lt;/strong&gt; queue and perform aggregations, filtering, groupings or maybe you already have a remote HTTP endpoint to send the Fibratus capture? Use your favourite clients like &lt;strong&gt;pika&lt;/strong&gt; or &lt;strong&gt;requests&lt;/strong&gt;. Filaments open up the whole Python ecosystem for you. This is the perfect and non-invasive way to extend Fibratus and complement it with an already existing arsenal of security tools, penetration testing and performance monitoring tools.
 Without further ado, watch the &lt;a href=&quot;https://www.youtube.com/watch?v=7Isrn-eb8Ws&quot;&gt;video teaser&lt;/a&gt; and stay tuned for the upcoming Fibratus release.&lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/operating%20systems/fibratus-video-teaser/&quot;&gt;Fibratus Video Teaser&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on March 21, 2016.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;https://rabbitstack.github.io/operating%20systems/fibratus-video-teaser/&quot;&gt;Fibratus Video Teaser&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;https://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on March 21, 2016.&lt;/p&gt;</content>
 </entry>
 
 
 <entry>
   <title type="html"><![CDATA[Of Unikernels and Containers]]></title>
-  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/virtualization/of-unikernels-and-containers/" />
-  <id>http://rabbitstack.github.io/virtualization/of-unikernels-and-containers</id>
+  <link rel="alternate" type="text/html" href="https://rabbitstack.github.io/virtualization/of-unikernels-and-containers/" />
+  <id>https://rabbitstack.github.io/virtualization/of-unikernels-and-containers</id>
   <published>2016-02-14T17:55:48+01:00</published>
   <updated>2016-02-14T17:55:48+01:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://rabbitstack.github.io</uri>
+    <uri>https://rabbitstack.github.io</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;Containers have revolutionized the way we package and deliver software. Instead of distributing large VM images, the application is assembled in a lightweight and portable container which has its own isolated runtime environment. This is possible thanks to some Linux kernel capabilities like &lt;strong&gt;cgroups&lt;/strong&gt; (system resource accounting and limiting) and &lt;strong&gt;namespaces&lt;/strong&gt; (file system, network, process, and hostname segregation), without incurring the virtualization overhead. &lt;strong&gt;Docker&lt;/strong&gt;, &lt;strong&gt;Rkt&lt;/strong&gt;, or &lt;strong&gt;LXC/LXD&lt;/strong&gt; are some of the most popular container platforms, althought the first of them has the market dominance. In fact, FreeBSD Jails and Solaris Zones have never had the adoption
@@ -784,19 +784,19 @@ They claim to notably reduce the attack vector. As the majority of the OS servic
 &lt;p&gt;The next few years are going to be crucial for unikernels existence. I am eager to see the outcome.&lt;/p&gt;
 
 
-  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/virtualization/of-unikernels-and-containers/&quot;&gt;Of Unikernels and Containers&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on February 14, 2016.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;https://rabbitstack.github.io/virtualization/of-unikernels-and-containers/&quot;&gt;Of Unikernels and Containers&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;https://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on February 14, 2016.&lt;/p&gt;</content>
 </entry>
 
 
 <entry>
   <title type="html"><![CDATA[A pragmatic approach to migration from monolithic to microservices]]></title>
-  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/cloud/microservices/spring/a-pragmatic-approach-to-migration-from-monolithic-to-microservices/" />
-  <id>http://rabbitstack.github.io/cloud/microservices/spring/a-pragmatic-approach-to-migration-from-monolithic-to-microservices</id>
+  <link rel="alternate" type="text/html" href="https://rabbitstack.github.io/cloud/microservices/spring/a-pragmatic-approach-to-migration-from-monolithic-to-microservices/" />
+  <id>https://rabbitstack.github.io/cloud/microservices/spring/a-pragmatic-approach-to-migration-from-monolithic-to-microservices</id>
   <published>2015-12-20T21:41:42+01:00</published>
   <updated>2015-12-20T21:41:42+01:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://rabbitstack.github.io</uri>
+    <uri>https://rabbitstack.github.io</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;If you recall from &lt;a href=&quot;http://rabbitstack.github.io/cloud/microservices/from-monolithic-to-cloud-native-architectures&quot;&gt;this&lt;/a&gt; post, I wrote about cloud native manifesto and tradeoffs that arise when migrating the monolithic based applications to the cloud. I have to admit it was pretty abstract and theoretical approach, but the fun starts now! We’ll see how to decompose a simple monolithic application (an already implemented &lt;em&gt;todo&lt;/em&gt; list management web application) into independent services to deliver the microservice oriented architecture.&lt;/p&gt;
@@ -1046,19 +1046,19 @@ if there are 20 failures in the timespan of 5 seconds. If you want to see it in 
 
 &lt;p&gt;Unlike microservices, SOA services are not aware of the single responsibility principle. The size and scope of the latter is measured in &lt;strong&gt;LOC&lt;/strong&gt; (Lines of Code), not the functionalities they try to accomplish. Another subtle difference between microservices and SOA are their operational requirements. In a microservice world the &lt;strong&gt;PaaS&lt;/strong&gt; solution and the &lt;strong&gt;DevOps&lt;/strong&gt; culture are a must. The services have to be replicated over multiple nodes and they have to be able to scale in question of seconds. Another common practise is the packaging of microservices inside isolated execution environments known as containers (here is where Docker excels as the most popular implementation in the container ecosystem). From the point of view of &lt;strong&gt;technical&lt;/strong&gt; changes, the operational requirements may be the most challenging factor for organizations when it comes to migrating from monolithic to microservice architectures.&lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/cloud/microservices/spring/a-pragmatic-approach-to-migration-from-monolithic-to-microservices/&quot;&gt;A pragmatic approach to migration from monolithic to microservices&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on December 20, 2015.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;https://rabbitstack.github.io/cloud/microservices/spring/a-pragmatic-approach-to-migration-from-monolithic-to-microservices/&quot;&gt;A pragmatic approach to migration from monolithic to microservices&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;https://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on December 20, 2015.&lt;/p&gt;</content>
 </entry>
 
 
 <entry>
   <title type="html"><![CDATA[Spring MVC + Angular = Hasta la vista JSP!]]></title>
-  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/angularjs/spring/mongodb/spring-mvc-angular-hasta-la-vista-jsp/" />
-  <id>http://rabbitstack.github.io/angularjs/spring/mongodb/spring-mvc-angular-hasta-la-vista-jsp</id>
+  <link rel="alternate" type="text/html" href="https://rabbitstack.github.io/angularjs/spring/mongodb/spring-mvc-angular-hasta-la-vista-jsp/" />
+  <id>https://rabbitstack.github.io/angularjs/spring/mongodb/spring-mvc-angular-hasta-la-vista-jsp</id>
   <published>2015-06-28T21:38:45+02:00</published>
   <updated>2015-06-28T21:38:45+02:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://rabbitstack.github.io</uri>
+    <uri>https://rabbitstack.github.io</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;
@@ -1269,19 +1269,19 @@ In this post we will focus on how to build a simple web application to highlight
 
 &lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/angularjs/spring/mongodb/spring-mvc-angular-hasta-la-vista-jsp/&quot;&gt;Spring MVC + Angular = Hasta la vista JSP!&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on June 28, 2015.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;https://rabbitstack.github.io/angularjs/spring/mongodb/spring-mvc-angular-hasta-la-vista-jsp/&quot;&gt;Spring MVC + Angular = Hasta la vista JSP!&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;https://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on June 28, 2015.&lt;/p&gt;</content>
 </entry>
 
 
 <entry>
   <title type="html"><![CDATA[Spring Boot or Not to Spring Boot?]]></title>
-  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/spring/spring-boot-or-not-to-spring-boot/" />
-  <id>http://rabbitstack.github.io/spring/spring-boot-or-not-to-spring-boot</id>
+  <link rel="alternate" type="text/html" href="https://rabbitstack.github.io/spring/spring-boot-or-not-to-spring-boot/" />
+  <id>https://rabbitstack.github.io/spring/spring-boot-or-not-to-spring-boot</id>
   <published>2015-05-16T21:48:42+02:00</published>
   <updated>2015-05-16T21:48:42+02:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://rabbitstack.github.io</uri>
+    <uri>https://rabbitstack.github.io</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;
@@ -1326,19 +1326,19 @@ Spring Boot provides an abstraction layer on top of Spring core and the rest of 
 
 &lt;p&gt;Seven years ago, Spring framework had changed my perception on software development. Nowdays, it’s being the essential part of my day to day programmer’s life. I still feel very comfortable with XML based configuration, or the hybrid combination of JavaConfig and XML. That doesn’t mean things won’t change, and make the tip to scales in favor of Spring Boot.&lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/spring/spring-boot-or-not-to-spring-boot/&quot;&gt;Spring Boot or Not to Spring Boot?&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on May 16, 2015.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;https://rabbitstack.github.io/spring/spring-boot-or-not-to-spring-boot/&quot;&gt;Spring Boot or Not to Spring Boot?&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;https://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on May 16, 2015.&lt;/p&gt;</content>
 </entry>
 
 
 <entry>
   <title type="html"><![CDATA[From monolithic to cloud-native architectures]]></title>
-  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/cloud/microservices/from-monolithic-to-cloud-native-architectures/" />
-  <id>http://rabbitstack.github.io/cloud/microservices/from-monolithic-to-cloud-native-architectures</id>
+  <link rel="alternate" type="text/html" href="https://rabbitstack.github.io/cloud/microservices/from-monolithic-to-cloud-native-architectures/" />
+  <id>https://rabbitstack.github.io/cloud/microservices/from-monolithic-to-cloud-native-architectures</id>
   <published>2015-05-11T22:29:25+02:00</published>
   <updated>2015-05-11T22:29:25+02:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://rabbitstack.github.io</uri>
+    <uri>https://rabbitstack.github.io</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;The software industry is moving fast - that fact should be crystal clear. What now is considered as the state of the art model for software development and deployment, in a few years it usually becomes business agility barrier for the most organizations. The lack of agility limits the innovation factor and response time needed for the organizations to react, correct or deliver the business values before their competitors. The era of cloud computing has brought a myriad of new choices for software delivery. Computing resources, storage and networks can be provisioned elastically and on demand. Application can be scaled in question of seconds and the most of the &lt;strong&gt;PaaS&lt;/strong&gt; solutions also provide proactive application monitoring, recovery, load balancing and centralized log aggregation.&lt;/p&gt;
@@ -1402,19 +1402,19 @@ To establish an analogy, think about the following quote I have borrowed from &l
 &lt;p&gt;In a cloud-native architectures it is essential to guarantee the fault tolerance and prevent cascading failures when one of the microservices comes out of control. As we already mentioned, packaging and partitioning the microservices into Linux containers will prevent a nasty microservice to consume an entire machine's resources or affect another container. That is a wise doze of defense at infrastructure level. But what's about the application level protection? The circuit breaker pattern is based on the premise that unhealthy microservices wouldn't have to cause the interruption of other services. Every RPC call that is being routed to an unhealthy microservice shouldn't continuously punch the service making it impossible to recover. The circuit breaker behavior can be compared to our home circuit breaker that prevents the current from damaging devices when it exceeds the certain threshold.&lt;/p&gt;
 &lt;p&gt;Similarly, the circuit breaker pattern counts the number of failed calls, and when the number is above the specified threshold, it transitions into the open state and make the call to fail immediately. Once the service has recovered, the circuit breaker is closed and the calls can be executed successfully.&lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/cloud/microservices/from-monolithic-to-cloud-native-architectures/&quot;&gt;From monolithic to cloud-native architectures&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on May 11, 2015.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;https://rabbitstack.github.io/cloud/microservices/from-monolithic-to-cloud-native-architectures/&quot;&gt;From monolithic to cloud-native architectures&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;https://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on May 11, 2015.&lt;/p&gt;</content>
 </entry>
 
 
 <entry>
   <title type="html"><![CDATA[Lua Rocks!]]></title>
-  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/lua/lua-rocks/" />
-  <id>http://rabbitstack.github.io/lua/lua-rocks</id>
+  <link rel="alternate" type="text/html" href="https://rabbitstack.github.io/lua/lua-rocks/" />
+  <id>https://rabbitstack.github.io/lua/lua-rocks</id>
   <published>2015-04-08T00:21:29+02:00</published>
   <updated>2015-04-08T00:21:29+02:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://rabbitstack.github.io</uri>
+    <uri>https://rabbitstack.github.io</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;For the ones used to read my large posts, I am sorry to disappoint you. This time it will be a very short post about a thing that recently called my attention and I want to share it with you. After I discovered &lt;a href=&quot;http://luajit.org/luajit.html&quot; target=&quot;_blank&quot;&gt;LuaJIT&lt;/a&gt;, I am thinking seriously about embracing the Lua language and incorporating it into my arsenal of programming languages. LuaJIT is a high performance &lt;i&gt;Just-In-Time&lt;/i&gt; compiler for the Lua programming language which is compatible with all major desktop and mobile operating systems, processor's architectures, gaming consoles, and more. It makes it a perfect fit for the IoT. As far as the interpreter is written in &lt;strong&gt;assembly&lt;/strong&gt; language, it beats other dynamic languages in most benchmarks. As a language itself, Lua is very flexible and lightweight, and syntactically it reminds me of Ruby (at least the control flow structures). One of the things I missed at first was the absence of classes, as long as Lua is not really an object-oriented programming language, but it is quite easily to build your own abstraction using tables and metatables.
@@ -1429,19 +1429,19 @@ I have started using Lua for the operating system statistics aggregation and cen
 Lua also has it's own package manager, &lt;a href=&quot;https://rocks.moonscript.org/&quot; target=&quot;_blank&quot;&gt;luarocks&lt;/a&gt;.
 &lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/lua/lua-rocks/&quot;&gt;Lua Rocks!&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on April 08, 2015.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;https://rabbitstack.github.io/lua/lua-rocks/&quot;&gt;Lua Rocks!&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;https://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on April 08, 2015.&lt;/p&gt;</content>
 </entry>
 
 
 <entry>
   <title type="html"><![CDATA[Running a Storm cluster on SmartOS]]></title>
-  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/storm/virtualization/running-a-storm-cluster-on-smartos/" />
-  <id>http://rabbitstack.github.io/storm/virtualization/running-a-storm-cluster-on-smartos</id>
+  <link rel="alternate" type="text/html" href="https://rabbitstack.github.io/storm/virtualization/running-a-storm-cluster-on-smartos/" />
+  <id>https://rabbitstack.github.io/storm/virtualization/running-a-storm-cluster-on-smartos</id>
   <published>2015-03-21T21:35:37+01:00</published>
   <updated>2015-03-21T21:35:37+01:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://rabbitstack.github.io</uri>
+    <uri>https://rabbitstack.github.io</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;In a time when Storm was still developed and maintained by Twitter, I was working on small experiments in local cluster mode by processing social data from Facebook. It rained a lot since then, and Storm is now an active project under Apache umbrella. The curiosity of mine was eager to see how would the Storm operate in multi node deployment, so I decided to build a cluster on SmartOS hypervisor. I really adore SmartOS. It is so lightweight and it loads from the USB media. While the other hypervisors I've tried (XenServer, ESX) reserved the &quot;huge&quot; amount of RAM (on my 24 GB server XenServer was taking almost 4GB for the Dom0), SmartOS needs 200-300 MB of RAM. The provisioning of new virtual machines is really fast. You can run an OS level virtualization units called zones, or the KVM based virtual machines to run almost any modern operating system (Linux, Windows, FreeBSD). You can learn more about SmartOS &lt;a href=&quot;https://wiki.smartos.org/display/DOC/Home&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;. &lt;/p&gt;
@@ -1863,19 +1863,19 @@ File &lt;span class=&quot;s1&quot;&gt;'storm-starter-0.10.0-SNAPSHOT.jar'&lt;/sp
 &lt;/figure&gt;
 &lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/storm/virtualization/running-a-storm-cluster-on-smartos/&quot;&gt;Running a Storm cluster on SmartOS&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on March 21, 2015.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;https://rabbitstack.github.io/storm/virtualization/running-a-storm-cluster-on-smartos/&quot;&gt;Running a Storm cluster on SmartOS&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;https://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on March 21, 2015.&lt;/p&gt;</content>
 </entry>
 
 
 <entry>
   <title type="html"><![CDATA[Introduction to CQRS]]></title>
-  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/cqrs/introduction-to-cqrs/" />
-  <id>http://rabbitstack.github.io/cqrs/introduction-to-cqrs</id>
+  <link rel="alternate" type="text/html" href="https://rabbitstack.github.io/cqrs/introduction-to-cqrs/" />
+  <id>https://rabbitstack.github.io/cqrs/introduction-to-cqrs</id>
   <published>2015-02-21T19:11:46+01:00</published>
   <updated>2015-02-21T19:11:46+01:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://rabbitstack.github.io</uri>
+    <uri>https://rabbitstack.github.io</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;
@@ -1960,19 +1960,19 @@ It is where &lt;strong&gt;CQRS&lt;/strong&gt; comes to the rescue. CQRS stands f
 &lt;h3&gt;Conclusion&lt;/h3&gt;
 &lt;p&gt;Perhaps the time has come to change the traditional approach to software development? At the end, it is up to you. The benefits of CQRS are tremendous. It keeps the software maintainable, easily extensible and ready to face new challenges that the future holds. If your next project’s requirements are going to be complex, or you just need high availability and scalability at the application level and you want to grow without losing the agility, don’t hesitate, use CQRS.&lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/cqrs/introduction-to-cqrs/&quot;&gt;Introduction to CQRS&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on February 21, 2015.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;https://rabbitstack.github.io/cqrs/introduction-to-cqrs/&quot;&gt;Introduction to CQRS&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;https://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on February 21, 2015.&lt;/p&gt;</content>
 </entry>
 
 
 <entry>
   <title type="html"><![CDATA[Deploying Cloud Foundry on OpenStack Juno and XenServer (Part II)]]></title>
-  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/openstack/cloud%20foundry/devops/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-ii/" />
-  <id>http://rabbitstack.github.io/openstack/cloud%20foundry/devops/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-ii</id>
+  <link rel="alternate" type="text/html" href="https://rabbitstack.github.io/openstack/cloud%20foundry/devops/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-ii/" />
+  <id>https://rabbitstack.github.io/openstack/cloud%20foundry/devops/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-ii</id>
   <published>2015-02-14T11:48:52+01:00</published>
   <updated>2015-02-14T11:48:52+01:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://rabbitstack.github.io</uri>
+    <uri>https://rabbitstack.github.io</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;Let's move on. We should have our OpenStack instance prepared for Cloud Foundry. The most usual way of deploying Cloud Foundry is through &lt;strong&gt;BOSH&lt;/strong&gt;. For the who still didn't hear about it, &lt;a href=&quot;http://bosh.io/docs&quot; target=&quot;_blank&quot;&gt;BOSH&lt;/a&gt; is the platform for automation and lifecycle management of software and distributed services. It is also capable of monitoring and failure recovery of processes and virtual machines. There are already a few IT automation platforms in the market like &lt;a href=&quot;https://www.chef.io/&quot; target=&quot;_blank&quot;&gt;Chef&lt;/a&gt; or &lt;a href=&quot;http://puppetlabs.com/&quot; target=&quot;_blank&quot;&gt;Puppet&lt;/a&gt;, so, why to learn / use BOSH then?
@@ -2788,19 +2788,19 @@ Make sure you can access the API endpoint of the Cloud Foundry instance. If so, 
 &lt;p&gt;&lt;br /&gt;
 Congratulations! You now have a fully functional private Cloud Foundry.&lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/openstack/cloud%20foundry/devops/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-ii/&quot;&gt;Deploying Cloud Foundry on OpenStack Juno and XenServer (Part II)&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on February 14, 2015.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;https://rabbitstack.github.io/openstack/cloud%20foundry/devops/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-ii/&quot;&gt;Deploying Cloud Foundry on OpenStack Juno and XenServer (Part II)&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;https://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on February 14, 2015.&lt;/p&gt;</content>
 </entry>
 
 
 <entry>
   <title type="html"><![CDATA[Deploying Cloud Foundry on OpenStack Juno and XenServer (Part I)]]></title>
-  <link rel="alternate" type="text/html" href="http://rabbitstack.github.io/openstack/virtualization/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i/" />
-  <id>http://rabbitstack.github.io/openstack/virtualization/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i</id>
+  <link rel="alternate" type="text/html" href="https://rabbitstack.github.io/openstack/virtualization/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i/" />
+  <id>https://rabbitstack.github.io/openstack/virtualization/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i</id>
   <published>2015-01-30T17:03:28+01:00</published>
   <updated>2015-01-30T17:03:28+01:00</updated>
   <author>
     <name>Nedim Šabić</name>
-    <uri>http://rabbitstack.github.io</uri>
+    <uri>https://rabbitstack.github.io</uri>
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;
@@ -3151,7 +3151,7 @@ systemctl start openstack-cinder-volume.service tgtd.service&lt;/code&gt;&lt;/pr
 &lt;p&gt; You should go through &lt;a href=&quot;http://docs.cloudfoundry.org/deploying/openstack/validate_openstack.html&quot; target=&quot;_blank&quot;&gt;this&lt;/a&gt; steps to validate your OpenStack environment. In the second part we will see how to deploy Cloud Foundry using &lt;strong&gt;BOSH&lt;/strong&gt; and push our first application.
 &lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/openstack/virtualization/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i/&quot;&gt;Deploying Cloud Foundry on OpenStack Juno and XenServer (Part I)&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on January 30, 2015.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;https://rabbitstack.github.io/openstack/virtualization/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i/&quot;&gt;Deploying Cloud Foundry on OpenStack Juno and XenServer (Part I)&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;https://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on January 30, 2015.&lt;/p&gt;</content>
 </entry>
 
 </feed>
