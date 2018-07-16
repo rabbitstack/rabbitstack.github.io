@@ -4,7 +4,7 @@
 <generator uri="https://github.com/jekyll/jekyll">Jekyll</generator>
 <link rel="self" type="application/atom+xml" href="http://rabbitstack.github.io/feed.xml" />
 <link rel="alternate" type="text/html" href="http://rabbitstack.github.io" />
-<updated>2018-07-15T16:19:59+02:00</updated>
+<updated>2018-07-16T18:01:05+02:00</updated>
 <id>http://rabbitstack.github.io/</id>
 <author>
   <name>Nedim Šabić</name>
@@ -2804,7 +2804,7 @@ Congratulations! You now have a fully functional private Cloud Foundry.&lt;/p&gt
     <email>bhnedo@hotmail.com</email>
   </author>
   <content type="html">&lt;p&gt;
-&lt;a href=&quot;http://www.cloudfoundry.org/index.html&quot; target=&quot;_blank&quot;&gt;Cloud Foundry&lt;/a&gt; ecosystem had been blowing my mind for a long time, and I think it really has made an IT disruption letting us focus on applications as the essential unit of business process. There is no need for us to worry about all those painful stuffs like scalability, multi tenancy and application health. Cloud Foundry will do that nasty job for us, and much more. It could be considered as an operating system for the cloud.
+&lt;a href=&quot;http://www.cloudfoundry.org/index.html&quot; target=&quot;_blank&quot;&gt;Cloud Foundry&lt;/a&gt; ecosystem has been blowing my mind for a long time, and I think it really has made an IT disruption letting us focus on applications as the essential unit of business process. There is no need to worry about all those painful stuffs like scalability, multi tenancy and application health. Cloud Foundry will do that nasty job for us, and much more. It could be considered as an operating system for the cloud.
 &lt;/p&gt;
 
 &lt;p&gt;
@@ -2870,7 +2870,7 @@ yum &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;openstack-nova-network
 pip &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;xenapi&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;blockquote&gt;
-I didn't wanted to setup another network node for &lt;strong&gt;Neutron&lt;/strong&gt;, even legacy networking is deprecated in favor of aforementioned component. If you need advanced features like VLANs, virtual routing, switching, tenant isolation and so on, follow these &lt;a href=&quot;http://docs.openstack.org/juno/install-guide/install/yum/content/section_neutron-networking.html&quot; target=&quot;_blank&quot;&gt;docs&lt;/a&gt; on how to add Neutron network.
+I preferred not to setup another network node for &lt;strong&gt;Neutron&lt;/strong&gt;, even legacy networking is deprecated in favor of aforementioned component. If you need advanced features like VLANs, virtual routing, switching, tenant isolation and so on, follow these &lt;a href=&quot;http://docs.openstack.org/juno/install-guide/install/yum/content/section_neutron-networking.html&quot; target=&quot;_blank&quot;&gt;docs&lt;/a&gt; on how to add Neutron network.
 &lt;/blockquote&gt;
 &lt;p&gt;
 Now we need to edit the &lt;code&gt;/etc/nova/nova.conf&lt;/code&gt; configuration file.
@@ -2914,7 +2914,7 @@ Now we need to edit the &lt;code&gt;/etc/nova/nova.conf&lt;/code&gt; configurati
 		&lt;/p&gt;
 		&lt;pre&gt;
  $ ifconfig
- eth0: flags=4163&amp;lt;UP,BROADCAST,RUNNING,MULTICAST&amp;gt;  mtu 1500
+ eth0: flags=4163&amp;lt;UP,BROADCAST,RUNNING,MULTICAST&amp;gt; mtu 1500
         inet 192.168.1.106  netmask 255.255.255.0  broadcast 192.168.1.255
         inet6 fe80::90b3:8fff:fe2c:1d09  prefixlen 64  scopeid 0x20&lt;link /&gt;
         ether 92:b3:8f:2c:1d:09  txqueuelen 1000  (Ethernet)
@@ -2923,7 +2923,7 @@ Now we need to edit the &lt;code&gt;/etc/nova/nova.conf&lt;/code&gt; configurati
         TX packets 2812  bytes 636656 (621.7 KiB)
         TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
 
- eth1: flags=4163&amp;lt;UP,BROADCAST,RUNNING,MULTICAST&amp;gt;  mtu 1500
+ eth1: flags=4163&amp;lt;UP,BROADCAST,RUNNING,MULTICAST&amp;gt; mtu 1500
         inet6 fe80::44ab:daff:fe21:46d4  prefixlen 64  scopeid 0x20&lt;link /&gt;
         ether 46:ab:da:21:46:d4  txqueuelen 1000  (Ethernet)
         RX packets 611  bytes 111213 (108.6 KiB)
@@ -2931,7 +2931,7 @@ Now we need to edit the &lt;code&gt;/etc/nova/nova.conf&lt;/code&gt; configurati
         TX packets 38  bytes 4943 (4.8 KiB)
         TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
 
- xenbr0: flags=4163&amp;lt;UP,BROADCAST,RUNNING,MULTICAST&amp;gt;  mtu 1500
+ xenbr0: flags=4163&amp;lt;UP,BROADCAST,RUNNING,MULTICAST&amp;gt; mtu 1500
         inet 192.168.1.50  netmask 255.255.255.0  broadcast 192.168.1.255
         inet6 fe80::4034:39ff:fecd:b9b3  prefixlen 64  scopeid 0x20&lt;link /&gt;
         ether 46:ab:da:21:46:d4  txqueuelen 0  (Ethernet)
@@ -2994,6 +2994,7 @@ Now we need to edit the &lt;code&gt;/etc/nova/nova.conf&lt;/code&gt; configurati
  		&lt;/pre&gt;
 	&lt;/li&gt;
 &lt;/ol&gt;
+
 &lt;p&gt;Start the Compute and Network services and configure them to be automatically started at boot time.&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;systemctl &lt;span class=&quot;nb&quot;&gt;enable &lt;/span&gt;openstack-nova-compute.service openstack-nova-network.service openstack-nova-metadata-api.service
@@ -3064,6 +3065,7 @@ yum &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;openstack-cinder pytho
 &lt;p&gt;
 Edit the &lt;code&gt;/etc/cinder/cinder.conf&lt;/code&gt; configuration file.
 &lt;/p&gt;
+
 &lt;ol&gt;
 	&lt;li&gt;
 		&lt;strong&gt;Message broker settings&lt;/strong&gt;
@@ -3102,7 +3104,7 @@ Edit the &lt;code&gt;/etc/cinder/cinder.conf&lt;/code&gt; configuration file.
 	&lt;/li&gt;
 	&lt;li&gt;
 		&lt;strong&gt;Image service and management IP address&lt;/strong&gt;
-		&lt;p&gt;In the &lt;code&gt;[DEFAULT]&lt;/code&gt; section configure the location of the Image Service. Modify management interface address to match your storage node IP. Enable verbose logging.
+		&lt;p&gt;In the &lt;code&gt;[DEFAULT]&lt;/code&gt; section configure the location of the Image Service. Modify management interface address to match your storage node IP. Enable verbose logging.&lt;/p&gt;
 				&lt;pre&gt;
  [DEFAULT]
  host = controller
@@ -3110,6 +3112,7 @@ Edit the &lt;code&gt;/etc/cinder/cinder.conf&lt;/code&gt; configuration file.
 
  verbose = true
  		&lt;/pre&gt;
+    &lt;/li&gt;
 	&lt;li&gt;
 		&lt;strong&gt;Target administration service&lt;/strong&gt;
 		&lt;p&gt;In the &lt;code&gt;[DEFAULT]&lt;/code&gt; configure Cinder to use &lt;code&gt;tgtadm&lt;/code&gt; service for iSCSI storage management:&lt;/p&gt;
@@ -3122,13 +3125,12 @@ Edit the &lt;code&gt;/etc/cinder/cinder.conf&lt;/code&gt; configuration file.
  include /etc/cinder/volumes/*
 		&lt;/pre&gt;
 	&lt;/li&gt;
-
+&lt;/ol&gt;
 
 &lt;p&gt;Start the Block Storage and target service and configure them to be automatically started at boot time.&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;systemctl &lt;span class=&quot;nb&quot;&gt;enable &lt;/span&gt;openstack-cinder-volume.service tgtd.service
 systemctl start openstack-cinder-volume.service tgtd.service&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
 
 &lt;p&gt; Run this command on the controller node to ensure the Storage service is up and running. &lt;/p&gt;
 
@@ -3140,7 +3142,6 @@ systemctl start openstack-cinder-volume.service tgtd.service&lt;/code&gt;&lt;/pr
 |  cinder-volume   | cinder | nova | enabled |   up  | 2015-01-31T17:57:55.000000 |
 +------------------+--------+------+---------+-------+----------------------------+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-
 &lt;p class=&quot;notice&quot;&gt;
 &lt;strong&gt;Tip:&lt;/strong&gt; If you are able to attach cinder volumes from OpenStack, but the file system creation is taking too long or got stuck, try to disable the checksumming of your storage node VIF. Use &lt;code&gt; ethtool -K vifz.0 tx off &lt;/code&gt; where &lt;code&gt;z&lt;/code&gt; is the domain identifier of the storage VM.
 &lt;/p&gt;
@@ -3149,8 +3150,6 @@ systemctl start openstack-cinder-volume.service tgtd.service&lt;/code&gt;&lt;/pr
 
 &lt;p&gt; You should go through &lt;a href=&quot;http://docs.cloudfoundry.org/deploying/openstack/validate_openstack.html&quot; target=&quot;_blank&quot;&gt;this&lt;/a&gt; steps to validate your OpenStack environment. In the second part we will see how to deploy Cloud Foundry using &lt;strong&gt;BOSH&lt;/strong&gt; and push our first application.
 &lt;/p&gt;
-&lt;br /&gt;
-&lt;/p&gt;&lt;/li&gt;&lt;/ol&gt;
 
   &lt;p&gt;&lt;a href=&quot;http://rabbitstack.github.io/openstack/virtualization/deploying-cloud-foundry-on-openstack-juno-and-xenserver-part-i/&quot;&gt;Deploying Cloud Foundry on OpenStack Juno and XenServer (Part I)&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;http://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on January 30, 2015.&lt;/p&gt;</content>
 </entry>

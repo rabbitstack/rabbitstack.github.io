@@ -131,7 +131,7 @@
     </div><!--/ .headline-wrap -->
     <div class="article-wrap">
       <p>
-<a href="http://www.cloudfoundry.org/index.html" target="_blank">Cloud Foundry</a> ecosystem had been blowing my mind for a long time, and I think it really has made an IT disruption letting us focus on applications as the essential unit of business process. There is no need for us to worry about all those painful stuffs like scalability, multi tenancy and application health. Cloud Foundry will do that nasty job for us, and much more. It could be considered as an operating system for the cloud.
+<a href="http://www.cloudfoundry.org/index.html" target="_blank">Cloud Foundry</a> ecosystem has been blowing my mind for a long time, and I think it really has made an IT disruption letting us focus on applications as the essential unit of business process. There is no need to worry about all those painful stuffs like scalability, multi tenancy and application health. Cloud Foundry will do that nasty job for us, and much more. It could be considered as an operating system for the cloud.
 </p>
 
 <p>
@@ -197,7 +197,7 @@ yum <span class="nb">install </span>openstack-nova-network openstack-nova-api</c
 pip <span class="nb">install </span>xenapi</code></pre></figure>
 
 <blockquote>
-I didn't wanted to setup another network node for <strong>Neutron</strong>, even legacy networking is deprecated in favor of aforementioned component. If you need advanced features like VLANs, virtual routing, switching, tenant isolation and so on, follow these <a href="http://docs.openstack.org/juno/install-guide/install/yum/content/section_neutron-networking.html" target="_blank">docs</a> on how to add Neutron network.
+I preferred not to setup another network node for <strong>Neutron</strong>, even legacy networking is deprecated in favor of aforementioned component. If you need advanced features like VLANs, virtual routing, switching, tenant isolation and so on, follow these <a href="http://docs.openstack.org/juno/install-guide/install/yum/content/section_neutron-networking.html" target="_blank">docs</a> on how to add Neutron network.
 </blockquote>
 <p>
 Now we need to edit the <code>/etc/nova/nova.conf</code> configuration file.
@@ -241,7 +241,7 @@ Now we need to edit the <code>/etc/nova/nova.conf</code> configuration file.
 		</p>
 		<pre>
  $ ifconfig
- eth0: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500
+ eth0: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt; mtu 1500
         inet 192.168.1.106  netmask 255.255.255.0  broadcast 192.168.1.255
         inet6 fe80::90b3:8fff:fe2c:1d09  prefixlen 64  scopeid 0x20<link />
         ether 92:b3:8f:2c:1d:09  txqueuelen 1000  (Ethernet)
@@ -250,7 +250,7 @@ Now we need to edit the <code>/etc/nova/nova.conf</code> configuration file.
         TX packets 2812  bytes 636656 (621.7 KiB)
         TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
 
- eth1: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500
+ eth1: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt; mtu 1500
         inet6 fe80::44ab:daff:fe21:46d4  prefixlen 64  scopeid 0x20<link />
         ether 46:ab:da:21:46:d4  txqueuelen 1000  (Ethernet)
         RX packets 611  bytes 111213 (108.6 KiB)
@@ -258,7 +258,7 @@ Now we need to edit the <code>/etc/nova/nova.conf</code> configuration file.
         TX packets 38  bytes 4943 (4.8 KiB)
         TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
 
- xenbr0: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500
+ xenbr0: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt; mtu 1500
         inet 192.168.1.50  netmask 255.255.255.0  broadcast 192.168.1.255
         inet6 fe80::4034:39ff:fecd:b9b3  prefixlen 64  scopeid 0x20<link />
         ether 46:ab:da:21:46:d4  txqueuelen 0  (Ethernet)
@@ -321,6 +321,7 @@ Now we need to edit the <code>/etc/nova/nova.conf</code> configuration file.
  		</pre>
 	</li>
 </ol>
+
 <p>Start the Compute and Network services and configure them to be automatically started at boot time.</p>
 
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash">systemctl <span class="nb">enable </span>openstack-nova-compute.service openstack-nova-network.service openstack-nova-metadata-api.service
@@ -391,6 +392,7 @@ yum <span class="nb">install </span>openstack-cinder python-oslo-db MySQL-python
 <p>
 Edit the <code>/etc/cinder/cinder.conf</code> configuration file.
 </p>
+
 <ol>
 	<li>
 		<strong>Message broker settings</strong>
@@ -429,7 +431,7 @@ Edit the <code>/etc/cinder/cinder.conf</code> configuration file.
 	</li>
 	<li>
 		<strong>Image service and management IP address</strong>
-		<p>In the <code>[DEFAULT]</code> section configure the location of the Image Service. Modify management interface address to match your storage node IP. Enable verbose logging.
+		<p>In the <code>[DEFAULT]</code> section configure the location of the Image Service. Modify management interface address to match your storage node IP. Enable verbose logging.</p>
 				<pre>
  [DEFAULT]
  host = controller
@@ -437,6 +439,7 @@ Edit the <code>/etc/cinder/cinder.conf</code> configuration file.
 
  verbose = true
  		</pre>
+    </li>
 	<li>
 		<strong>Target administration service</strong>
 		<p>In the <code>[DEFAULT]</code> configure Cinder to use <code>tgtadm</code> service for iSCSI storage management:</p>
@@ -449,13 +452,12 @@ Edit the <code>/etc/cinder/cinder.conf</code> configuration file.
  include /etc/cinder/volumes/*
 		</pre>
 	</li>
-
+</ol>
 
 <p>Start the Block Storage and target service and configure them to be automatically started at boot time.</p>
 
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash">systemctl <span class="nb">enable </span>openstack-cinder-volume.service tgtd.service
 systemctl start openstack-cinder-volume.service tgtd.service</code></pre></figure>
-
 
 <p> Run this command on the controller node to ensure the Storage service is up and running. </p>
 
@@ -467,7 +469,6 @@ systemctl start openstack-cinder-volume.service tgtd.service</code></pre></figur
 |  cinder-volume   | cinder | nova | enabled |   up  | 2015-01-31T17:57:55.000000 |
 +------------------+--------+------+---------+-------+----------------------------+</code></pre></figure>
 
-
 <p class="notice">
 <strong>Tip:</strong> If you are able to attach cinder volumes from OpenStack, but the file system creation is taking too long or got stuck, try to disable the checksumming of your storage node VIF. Use <code> ethtool -K vifz.0 tx off </code> where <code>z</code> is the domain identifier of the storage VM.
 </p>
@@ -476,8 +477,6 @@ systemctl start openstack-cinder-volume.service tgtd.service</code></pre></figur
 
 <p> You should go through <a href="http://docs.cloudfoundry.org/deploying/openstack/validate_openstack.html" target="_blank">this</a> steps to validate your OpenStack environment. In the second part we will see how to deploy Cloud Foundry using <strong>BOSH</strong> and push our first application.
 </p>
-<br />
-</p></li></ol>
 
       <hr />
       <footer role="contentinfo">
@@ -545,7 +544,7 @@ systemctl start openstack-cinder-volume.service tgtd.service</code></pre></figur
   <footer>
     
 
-<span>&copy; 2018 Nedim Šabić. Rabbit Stack blog is powered by Jekyll. Bunny icon is courtesy of <a href="http://www.freepik.com" title="Freepik">Freepik.</a>
+<span>&copy;2018 Nedim Šabić. Rabbit Stack blog is powered by Jekyll. Bunny icon is courtesy of <a href="http://www.freepik.com" title="Freepik">Freepik.</a>
 
   </footer>
 </div><!-- /.footer-wrap -->
