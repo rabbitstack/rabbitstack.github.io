@@ -136,8 +136,7 @@
 4971 nginx           nginx: master process nginx <span class="nt">-g</span> daemon off<span class="p">;</span>
 4987 nginx           nginx: worker process</code></pre></figure>
 
-<p>From the output of the <code class="highlighter-rouge">ps</code> command it’s hard to differentiate containerized processes from other processes running on the host. We can provide another option to the <code class="highlighter-rouge">ps</code> command so it also shows the <strong>cgroup</strong> to which the process is bound.
-d</p>
+<p>From the output of the <code class="highlighter-rouge">ps</code> command it’s hard to differentiate containerized processes from other processes running on the host. We can provide another option to the <code class="highlighter-rouge">ps</code> command so it also shows the <strong>cgroup</strong> to which the process is bound.</p>
 
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="o">[</span>nedo@archrabbit]<span class="nv">$ </span>ps  <span class="nt">-eo</span> pid,comm,cmd,cgroup | <span class="nb">grep </span>nginx
 4971 nginx           nginx: master process nginx      9:blkio:/docker/91dfd31b99a29c145b2f183970fc9c197261c8381463330aef8c262abe751326,

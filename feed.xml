@@ -4,7 +4,7 @@
 <generator uri="https://github.com/jekyll/jekyll">Jekyll</generator>
 <link rel="self" type="application/atom+xml" href="https://rabbitstack.github.io/feed.xml" />
 <link rel="alternate" type="text/html" href="https://rabbitstack.github.io" />
-<updated>2018-07-17T18:46:34+02:00</updated>
+<updated>2018-07-19T11:44:18+02:00</updated>
 <id>https://rabbitstack.github.io/</id>
 <author>
   <name>Nedim Šabić</name>
@@ -104,8 +104,7 @@ In the next blog post I’ll focus on explaining the remaining kernel namespaces
 4971 nginx           nginx: master process nginx &lt;span class=&quot;nt&quot;&gt;-g&lt;/span&gt; daemon off&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 4987 nginx           nginx: worker process&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;From the output of the &lt;code class=&quot;highlighter-rouge&quot;&gt;ps&lt;/code&gt; command it’s hard to differentiate containerized processes from other processes running on the host. We can provide another option to the &lt;code class=&quot;highlighter-rouge&quot;&gt;ps&lt;/code&gt; command so it also shows the &lt;strong&gt;cgroup&lt;/strong&gt; to which the process is bound.
-d&lt;/p&gt;
+&lt;p&gt;From the output of the &lt;code class=&quot;highlighter-rouge&quot;&gt;ps&lt;/code&gt; command it’s hard to differentiate containerized processes from other processes running on the host. We can provide another option to the &lt;code class=&quot;highlighter-rouge&quot;&gt;ps&lt;/code&gt; command so it also shows the &lt;strong&gt;cgroup&lt;/strong&gt; to which the process is bound.&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;nedo@archrabbit]&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ps  &lt;span class=&quot;nt&quot;&gt;-eo&lt;/span&gt; pid,comm,cmd,cgroup | &lt;span class=&quot;nb&quot;&gt;grep &lt;/span&gt;nginx
 4971 nginx           nginx: master process nginx      9:blkio:/docker/91dfd31b99a29c145b2f183970fc9c197261c8381463330aef8c262abe751326,
@@ -599,15 +598,10 @@ Just add the process name (including the extension) to the &lt;code class=&quot;
   </author>
   <content type="html">&lt;p&gt;Pardon me for not announcing the pre-release availability of &lt;a href=&quot;https://github.com/rabbitstack/fibratus&quot;&gt;&lt;strong&gt;Fibratus&lt;/strong&gt;&lt;/a&gt; here on the blog. It was a pretty busy month for me.&lt;/p&gt;
 
-&lt;p class=&quot;image-pull-right&quot;&gt;
-  &lt;img src=&quot;/images/fibratus.png&quot; /&gt;
-&lt;/p&gt;
-
 &lt;p&gt;Anyway, I feel very excited about Fibratus. At the moment of writing, it has &lt;strong&gt;205&lt;/strong&gt; stars and &lt;strong&gt;23&lt;/strong&gt; forks on Github. I didn’t expect much acceptance during these &lt;strong&gt;3&lt;/strong&gt; weeks since I pushed the code to the repository! The production ready release should be out shortly. There are some minor issues to fix.&lt;/p&gt;
 
 &lt;p&gt;I’m figuring out on how to avoid blocking the main thread when calling the &lt;code class=&quot;highlighter-rouge&quot;&gt;NtQueryObject&lt;/code&gt; function on a synchronous kernel object. Since Windows doesn’t provide any facility to get the I/O status of an object opened for synchronous access, the famous work-around consists on calling the &lt;code class=&quot;highlighter-rouge&quot;&gt;NtQueryObject&lt;/code&gt; in a new thread and terminating it if the timeout is reached. The support for &lt;strong&gt;Windows 10&lt;/strong&gt; and a whole new set of filaments is also on the roadmap.&lt;/p&gt;
 
-&lt;p&gt;I would like to thank my mate &lt;a href=&quot;http://www.ildesign.es/&quot;&gt;Ilde&lt;/a&gt; (check out his portfolio) for an awesome Fibratus logo, the contributions, pull requests and encouragements from the community.&lt;/p&gt;
 
   &lt;p&gt;&lt;a href=&quot;https://rabbitstack.github.io/operating%20systems/fibratus-pre-release/&quot;&gt;Fibratus Pre-Release&lt;/a&gt; was originally published by Nedim Šabić at &lt;a href=&quot;https://rabbitstack.github.io&quot;&gt;Rabbit Stack&lt;/a&gt; on June 12, 2016.&lt;/p&gt;</content>
 </entry>

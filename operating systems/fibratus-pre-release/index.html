@@ -132,15 +132,10 @@
     <div class="article-wrap">
       <p>Pardon me for not announcing the pre-release availability of <a href="https://github.com/rabbitstack/fibratus"><strong>Fibratus</strong></a> here on the blog. It was a pretty busy month for me.</p>
 
-<p class="image-pull-right">
-  <img src="/images/fibratus.png" />
-</p>
-
 <p>Anyway, I feel very excited about Fibratus. At the moment of writing, it has <strong>205</strong> stars and <strong>23</strong> forks on Github. I didn’t expect much acceptance during these <strong>3</strong> weeks since I pushed the code to the repository! The production ready release should be out shortly. There are some minor issues to fix.</p>
 
 <p>I’m figuring out on how to avoid blocking the main thread when calling the <code class="highlighter-rouge">NtQueryObject</code> function on a synchronous kernel object. Since Windows doesn’t provide any facility to get the I/O status of an object opened for synchronous access, the famous work-around consists on calling the <code class="highlighter-rouge">NtQueryObject</code> in a new thread and terminating it if the timeout is reached. The support for <strong>Windows 10</strong> and a whole new set of filaments is also on the roadmap.</p>
 
-<p>I would like to thank my mate <a href="http://www.ildesign.es/">Ilde</a> (check out his portfolio) for an awesome Fibratus logo, the contributions, pull requests and encouragements from the community.</p>
 
       <hr />
       <footer role="contentinfo">
